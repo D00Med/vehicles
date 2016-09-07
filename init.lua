@@ -180,10 +180,10 @@ minetest.register_entity("vehicles:nizzan", {
 			{x=0, y=0, z=0}, --maxvel
 			{x=-0,y=-0,z=-0}, --minacc
 			{x=0,y=0,z=0}, --maxacc
-			2, --minexptime
-			3, --maxexptime
-			5, --minsize
-			7, --maxsize
+			0.5, --minexptime
+			1, --maxexptime
+			10, --minsize
+			15, --maxsize
 			false, --collisiondetection
 			"vehicles_dust.png" --texture
 		)
@@ -225,10 +225,10 @@ minetest.register_entity("vehicles:nizzan2", {
 			{x=0, y=0, z=0}, --maxvel
 			{x=-0,y=-0,z=-0}, --minacc
 			{x=0,y=0,z=0}, --maxacc
-			2, --minexptime
-			3, --maxexptime
-			5, --minsize
-			7, --maxsize
+			0.2, --minexptime
+			0.5, --maxexptime
+			20, --minsize
+			25, --maxsize
 			false, --collisiondetection
 			"vehicles_dust.png" --texture
 		)
@@ -269,6 +269,34 @@ minetest.register_entity("vehicles:masda", {
 
 register_vehicle_spawner("vehicles:masda", "Masda (pink)", "vehicles_masda_inv.png")
 
+minetest.register_entity("vehicles:pooshe", {
+	visual = "mesh",
+	mesh = "pooshe.b3d",
+	textures = {"vehicles_pooshe.png"},
+	velocity = 15,
+	acceleration = -5,
+	stepheight = 1,
+	hp_max = 200,
+	physical = true,
+	collisionbox = {-1, 0, -1, 1.3, 1, 1},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif not self.driver then
+		object_attach(self, clicker, {x=0, y=5, z=4}, {x=0, y=2, z=4}, {x=0, y=3, z=-72})
+		end
+	end,
+	on_step = function(self, dtime)
+	if self.driver then
+		object_drive_simple(self, dtime, 10, 0.95)
+		return false
+		end
+		return true
+	end,
+})
+
+register_vehicle_spawner("vehicles:pooshe", "Pooshe (red)", "vehicles_pooshe_inv.png")
+
 minetest.register_entity("vehicles:masda2", {
 	visual = "mesh",
 	mesh = "masda.b3d",
@@ -308,8 +336,8 @@ minetest.register_entity("vehicles:jet", {
 	animation_speed = 5,
 	physical = true,
 	animations = {
-      gear = { x=1, y=1},
-      nogear = { x=10, y=10},
+      gear = { x=1, x=1},
+      nogear = { x=10, x=10},
 	},
 	collisionbox = {-1, -0.9, -0.9, 1, 0.9, 0.9},
 	on_rightclick = function(self, clicker)
@@ -321,7 +349,7 @@ minetest.register_entity("vehicles:jet", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_fly(self, dtime, 20, 0.2, 0.92, true, "vehicles:missile_2", "nogear", "gear")
+		object_fly(self, dtime, 15, 0.1, 0.95, true, "vehicles:missile_2", { x=1, y=1}, { x=10, y=10})
 		return false
 		end
 		return true
@@ -383,64 +411,73 @@ minetest.register_tool("vehicles:backpack", {
 	end,
 })
 
-minetest.register_entity("vehicles:wing_glider", {
-	visual = "mesh",
-	mesh = "wings.b3d",
-	textures = {"vehicles_wings.png"},
-	velocity = 15,
-	acceleration = -5,
-	hp_max = 2,
-	physical = true,
-	collisionbox = {-0.5, -1, -0.5, 0.5, 1, 0.5},
-	on_step = function(self, dtime)
-	if self.driver then
-		local dir = self.driver:get_look_dir();
-		local velo = self.object:getvelocity();
-		local vec = {x=dir.x*5,y=((velo.y)+(dir.y*2))*0.3,z=dir.z*5}
-		local yaw = self.driver:get_look_yaw();
-		self.object:setyaw(yaw+math.pi/2)
-		self.object:setvelocity(vec)
-		return false
-		end
-		return true
-	end,
-})
 
-minetest.register_tool("vehicles:wings", {
-	description = "Wings",
-	inventory_image = "vehicles_backpack.png",
-	wield_scale = {x = 1.5, y = 1.5, z = 1},
-	tool_capabilities = {
-		full_punch_interval = 0.7,
-		max_drop_level=1,
-		groupcaps={
-			snappy={times={[1]=2.0, [2]=1.00, [3]=0.35}, uses=30, maxlevel=3},
-		},
-		damage_groups = {fleshy=1},
-	},
-	on_use = function(item, placer, pointed_thing)
-			local dir = placer:get_look_dir();
-			local playerpos = placer:getpos();
-			local pname = placer:get_player_name();
-			local obj = minetest.env:add_entity({x=playerpos.x+0+dir.x,y=playerpos.y+1+dir.y,z=playerpos.z+0+dir.z}, "vehicles:wing_glider")
-			local entity = obj:get_luaentity()
-			if obj.driver and placer == obj.driver then
-			object_detach(entity, placer, {x=1, y=0, z=1})
-			placer:set_properties({
-			visual_size = {x=1, y=1},
-			})
-			elseif not obj.driver then
-			placer:set_attach(entity.object, "", {x=0,y=0,z=0}, {x=0,y=0,z=0})
-			entity.driver = placer
-			placer:set_properties({
-			visual_size = {x=1, y=-1},
-			})
-			placer:set_animation({x=162, y=167}, 0, 0)
-			end
-			item:add_wear(500)
-			return item
-	end,
-})
+--wings
+-- minetest.register_entity("vehicles:wing_glider", {
+	-- visual = "mesh",
+	-- mesh = "wings.b3d",
+	-- textures = {"vehicles_wings.png"},
+	-- velocity = 15,
+	-- acceleration = -5,
+	-- hp_max = 2,
+	-- physical = true,
+	-- collisionbox = {-0.5, -0.1, -0.5, 0.5, 0.1, 0.5},
+	-- on_step = function(self, dtime)
+	-- if self.driver then
+		-- local dir = self.driver:get_look_dir();
+		-- local velo = self.object:getvelocity();
+		-- local vec = {x=dir.x*5,y=(dir.y*5)-0.5,z=dir.z*5}
+		-- local yaw = self.driver:get_look_yaw();
+		-- self.object:setyaw(yaw+math.pi/2)
+		-- self.object:setvelocity(vec)
+		-- self.driver:set_animation({x=162, y=167}, 0, 0)
+		-- return false
+		-- end
+		-- return true
+	-- end,
+-- })
+
+-- minetest.register_tool("vehicles:wings", {
+	-- description = "Wings",
+	-- inventory_image = "vehicles_backpack.png",
+	-- wield_scale = {x = 1.5, y = 1.5, z = 1},
+	-- tool_capabilities = {
+		-- full_punch_interval = 0.7,
+		-- max_drop_level=1,
+		-- groupcaps={
+			-- snappy={times={[1]=2.0, [2]=1.00, [3]=0.35}, uses=30, maxlevel=3},
+		-- },
+		-- damage_groups = {fleshy=1},
+	-- },
+	-- on_use = function(item, placer, pointed_thing)
+			-- local dir = placer:get_look_dir();
+			-- local playerpos = placer:getpos();
+			-- local objs = minetest.get_objects_inside_radius({x=playerpos.x,y=playerpos.y,z=playerpos.z}, 2)	
+			-- for k, obj2 in pairs(objs) do
+				-- if obj2:get_luaentity() ~= nil then
+					-- if obj2:get_luaentity().name == "vehicles:wings" then
+					-- local wings = false
+					-- end
+					-- end
+					-- end
+			-- if wings then
+			-- object_detach(obj2:get_luaentity(), placer, {x=1, y=0, z=1})
+			-- placer:set_properties({
+			-- visual_size = {x=1, y=1},
+			-- })
+			-- else
+			-- local obj = minetest.env:add_entity({x=playerpos.x+0+dir.x,y=playerpos.y+1+dir.y,z=playerpos.z+0+dir.z}, "vehicles:wing_glider")
+			-- local entity = obj:get_luaentity()
+			-- placer:set_attach(entity.object, "", {x=0,y=-5,z=0}, {x=0,y=0,z=0})
+			-- entity.driver = placer
+			-- placer:set_properties({
+			-- visual_size = {x=1, y=-1},
+			-- })
+			-- end
+			-- item:add_wear(500)
+			-- return item
+	-- end,
+-- })
 
 minetest.register_tool("vehicles:rc", {
 	description = "Rc",
