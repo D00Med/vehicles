@@ -1,4 +1,6 @@
 
+dofile(minetest.get_modpath("vehicles").."/api.lua")
+
 --very laggy and buggy flight
 -- minetest.register_globalstep(function(dtime)
 	-- for _, player in ipairs(minetest.get_connected_players()) do
@@ -146,6 +148,156 @@ minetest.register_entity("vehicles:tank", {
 	end,
 })
 
+register_vehicle_spawner("vehicles:tank", "Tank", "vehicles_tank_inv.png")
+
+minetest.register_entity("vehicles:nizzan", {
+	visual = "mesh",
+	mesh = "nizzan.b3d",
+	textures = {"vehicles_nizzan.png"},
+	velocity = 15,
+	acceleration = -5,
+	stepheight = 1,
+	hp_max = 200,
+	physical = true,
+	collisionbox = {-1, 0, -1, 1.3, 1, 1},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif not self.driver then
+		object_attach(self, clicker, {x=0, y=5, z=4}, {x=0, y=2, z=4}, {x=0, y=3, z=-72})
+		end
+	end,
+	on_step = function(self, dtime)
+	if self.driver then
+		object_drive_simple(self, dtime, 9, 0.8)
+		local pos = self.object:getpos()
+			minetest.add_particlespawner(
+			15, --amount
+			1, --time
+			{x=pos.x, y=pos.y, z=pos.z}, --minpos
+			{x=pos.x, y=pos.y, z=pos.z}, --maxpos
+			{x=0, y=0, z=0}, --minvel
+			{x=0, y=0, z=0}, --maxvel
+			{x=-0,y=-0,z=-0}, --minacc
+			{x=0,y=0,z=0}, --maxacc
+			2, --minexptime
+			3, --maxexptime
+			5, --minsize
+			7, --maxsize
+			false, --collisiondetection
+			"vehicles_dust.png" --texture
+		)
+		return false
+		end
+		return true
+	end,
+})
+
+register_vehicle_spawner("vehicles:nizzan", "Nizzan (brown)", "vehicles_nizzan_inv.png")
+
+minetest.register_entity("vehicles:nizzan2", {
+	visual = "mesh",
+	mesh = "nizzan.b3d",
+	textures = {"vehicles_nizzan2.png"},
+	velocity = 15,
+	acceleration = -5,
+	stepheight = 1,
+	hp_max = 200,
+	physical = true,
+	collisionbox = {-1, 0, -1, 1.3, 1, 1},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif not self.driver then
+		object_attach(self, clicker, {x=0, y=5, z=4}, {x=0, y=2, z=4}, {x=0, y=3, z=-72})
+		end
+	end,
+	on_step = function(self, dtime)
+	if self.driver then
+		object_drive_simple(self, dtime, 9, 0.8)
+		local pos = self.object:getpos()
+			minetest.add_particlespawner(
+			15, --amount
+			1, --time
+			{x=pos.x, y=pos.y, z=pos.z}, --minpos
+			{x=pos.x, y=pos.y, z=pos.z}, --maxpos
+			{x=0, y=0, z=0}, --minvel
+			{x=0, y=0, z=0}, --maxvel
+			{x=-0,y=-0,z=-0}, --minacc
+			{x=0,y=0,z=0}, --maxacc
+			2, --minexptime
+			3, --maxexptime
+			5, --minsize
+			7, --maxsize
+			false, --collisiondetection
+			"vehicles_dust.png" --texture
+		)
+		return false
+		end
+		return true
+	end,
+})
+
+register_vehicle_spawner("vehicles:nizzan2", "Nizzan (green)", "vehicles_nizzan_inv2.png")
+
+
+minetest.register_entity("vehicles:masda", {
+	visual = "mesh",
+	mesh = "masda.b3d",
+	textures = {"vehicles_masda.png"},
+	velocity = 15,
+	acceleration = -5,
+	stepheight = 1,
+	hp_max = 200,
+	physical = true,
+	collisionbox = {-1, 0, -1, 1.3, 1, 1},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif not self.driver then
+		object_attach(self, clicker, {x=0, y=5, z=4}, {x=0, y=2, z=4}, {x=0, y=3, z=-72})
+		end
+	end,
+	on_step = function(self, dtime)
+	if self.driver then
+		object_drive_simple(self, dtime, 10, 0.95)
+		return false
+		end
+		return true
+	end,
+})
+
+register_vehicle_spawner("vehicles:masda", "Masda (pink)", "vehicles_masda_inv.png")
+
+minetest.register_entity("vehicles:masda2", {
+	visual = "mesh",
+	mesh = "masda.b3d",
+	textures = {"vehicles_masda2.png"},
+	velocity = 15,
+	acceleration = -5,
+	stepheight = 1,
+	hp_max = 200,
+	physical = true,
+	collisionbox = {-1, 0, -1, 1.3, 1, 1},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif not self.driver then
+		object_attach(self, clicker, {x=0, y=5, z=4}, {x=0, y=2, z=4}, {x=0, y=3, z=-72})
+		end
+	end,
+	on_step = function(self, dtime)
+	if self.driver then
+		object_drive_simple(self, dtime, 10, 0.95)
+		return false
+		end
+		return true
+	end,
+})
+
+register_vehicle_spawner("vehicles:masda2", "Masda (orange)", "vehicles_masda_inv2.png")
+
+
 minetest.register_entity("vehicles:jet", {
 	visual = "mesh",
 	mesh = "jet.b3d",
@@ -164,7 +316,7 @@ minetest.register_entity("vehicles:jet", {
 		if self.driver and clicker == self.driver then
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
-		object_attach(self, clicker, {x=0, y=5, z=5}, {x=0, y=3, z=-52})
+		object_attach(self, clicker, {x=0, y=5, z=5}, {x=0, y=3, z=4})
 		end
 	end,
 	on_step = function(self, dtime)
@@ -175,6 +327,8 @@ minetest.register_entity("vehicles:jet", {
 		return true
 	end,
 })
+
+register_vehicle_spawner("vehicles:jet", "Jet", "vehicles_jet_inv.png")
 
 minetest.register_entity("vehicles:parachute", {
 	visual = "mesh",
@@ -242,7 +396,7 @@ minetest.register_entity("vehicles:wing_glider", {
 	if self.driver then
 		local dir = self.driver:get_look_dir();
 		local velo = self.object:getvelocity();
-		local vec = {x=dir.x*4,y=((1-velo.y)*dir.y)-9.8,z=dir.z*4}
+		local vec = {x=dir.x*5,y=((velo.y)+(dir.y*2))*0.3,z=dir.z*5}
 		local yaw = self.driver:get_look_yaw();
 		self.object:setyaw(yaw+math.pi/2)
 		self.object:setvelocity(vec)
@@ -276,12 +430,12 @@ minetest.register_tool("vehicles:wings", {
 			visual_size = {x=1, y=1},
 			})
 			elseif not obj.driver then
-			default.player_set_animation(placer, "lay", 30)
-			placer:set_attach(entity.object, "", {x=0,y=0,z=0}, {x=0,y=1,z=0})
+			placer:set_attach(entity.object, "", {x=0,y=0,z=0}, {x=0,y=0,z=0})
 			entity.driver = placer
 			placer:set_properties({
 			visual_size = {x=1, y=-1},
 			})
+			placer:set_animation({x=162, y=167}, 0, 0)
 			end
 			item:add_wear(500)
 			return item
@@ -315,48 +469,6 @@ minetest.register_tool("vehicles:rc", {
 	end,
 })
 
-minetest.register_tool("vehicles:tank_placer", {
-	description = "Tank",
-	inventory_image = "vehicles_tank_inv.png",
-	wield_scale = {x = 1.5, y = 1.5, z = 1},
-	tool_capabilities = {
-		full_punch_interval = 0.7,
-		max_drop_level=1,
-		groupcaps={
-			snappy={times={[1]=2.0, [2]=1.00, [3]=0.35}, uses=30, maxlevel=3},
-		},
-		damage_groups = {fleshy=1},
-	},
-	on_use = function(item, placer, pointed_thing)
-			local dir = placer:get_look_dir();
-			local playerpos = placer:getpos();
-			local obj = minetest.env:add_entity({x=playerpos.x+2+dir.x,y=playerpos.y+1+dir.y,z=playerpos.z+2+dir.z}, "vehicles:tank")
-			item:take_item()
-			return item
-	end,
-})
-
-minetest.register_tool("vehicles:jet_placer", {
-	description = "Jet",
-	inventory_image = "vehicles_jet_inv.png",
-	wield_scale = {x = 1.5, y = 1.5, z = 1},
-	tool_capabilities = {
-		full_punch_interval = 0.7,
-		max_drop_level=1,
-		groupcaps={
-			snappy={times={[1]=2.0, [2]=1.00, [3]=0.35}, uses=30, maxlevel=3},
-		},
-		damage_groups = {fleshy=1},
-	},
-	on_use = function(item, placer, pointed_thing)
-			local dir = placer:get_look_dir();
-			local playerpos = placer:getpos();
-			local obj = minetest.env:add_entity({x=playerpos.x+2+dir.x,y=playerpos.y+1+dir.y,z=playerpos.z+2+dir.z}, "vehicles:jet")
-			item:take_item()
-			return item
-	end,
-})
 
 
 
-dofile(minetest.get_modpath("vehicles").."/api.lua")

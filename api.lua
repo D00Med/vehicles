@@ -166,14 +166,12 @@ function object_drive_simple(entity, dtime, speed, decell)
 	local vec_backward = {x=-dir.x*speed,y=velo.y+1*-2,z=-dir.z*speed}
 	local vec_stop = {x=velo.x*decell,y=velo.y+1*-2,z=velo.z*decell}
 	local yaw = entity.driver:get_look_yaw();
-	if ctrl.up then
 		entity.object:setyaw(yaw+math.pi+math.pi/2)
+	if ctrl.up then
 		entity.object:setvelocity(vec_forward)
 	elseif ctrl.down then
-		entity.object:setyaw(yaw+math.pi+math.pi/2)
 		entity.object:setvelocity(vec_backward)
 	elseif not ctrl.down or ctrl.up then
-		entity.object:setyaw(yaw+math.pi+math.pi/2)
 		entity.object:setvelocity(vec_stop)
 	end
 end
@@ -496,4 +494,33 @@ function lib_mount.drive(entity, dtime, moving_anim, stand_anim, can_fly)
 	end
 	entity.object:setvelocity(new_velo)
 	entity.object:setacceleration(new_acce)
+end
+
+--other stuff
+
+
+
+function register_vehicle_spawner(vehicle, desc, texture)
+minetest.register_tool(vehicle.."_spawner", {
+	description = desc,
+	inventory_image = texture,
+	wield_scale = {x = 1.5, y = 1.5, z = 1},
+	tool_capabilities = {
+		full_punch_interval = 0.7,
+		max_drop_level=1,
+		groupcaps={
+			snappy={times={[1]=2.0, [2]=1.00, [3]=0.35}, uses=30, maxlevel=3},
+		},
+		damage_groups = {fleshy=1},
+	},
+	on_use = function(item, placer, pointed_thing)
+			local dir = placer:get_look_dir();
+			local playerpos = placer:getpos();
+			if pointed_thing.type == "node" then
+			local obj = minetest.env:add_entity(pointed_thing.above, vehicle)
+			item:take_item()
+			return item
+			end
+	end,
+})
 end
