@@ -158,6 +158,9 @@ function object_drive(entity, dtime, speed, decell, shoots, arrow, moving_anim, 
 	-- end
 end
 
+
+
+
 function object_drive_simple(entity, dtime, speed, decell)
 	local ctrl = entity.driver:get_player_control()
 	local velo = entity.object:getvelocity()
@@ -168,6 +171,53 @@ function object_drive_simple(entity, dtime, speed, decell)
 	local yaw = entity.driver:get_look_yaw();
 		entity.object:setyaw(yaw+math.pi+math.pi/2)
 	if ctrl.up then
+		entity.object:setvelocity(vec_forward)
+	elseif ctrl.down then
+		entity.object:setvelocity(vec_backward)
+	elseif not ctrl.down or ctrl.up then
+		entity.object:setvelocity(vec_stop)
+	end
+end
+
+function object_drive_car(entity, dtime, speed, decell, nitro_duration)
+	local ctrl = entity.driver:get_player_control()
+	local velo = entity.object:getvelocity()
+	local nitro_remaining = entity.nitro
+	local dir = entity.driver:get_look_dir();
+	local vec_forward = {x=dir.x*speed,y=velo.y-0.5,z=dir.z*speed}
+	local vec_nitro = {x=dir.x*(speed*1.5),y=velo.y-0.5,z=dir.z*(speed*1.5)}
+	local vec_backward = {x=-dir.x*speed,y=velo.y-0.5,z=-dir.z*speed}
+	local vec_stop = {x=velo.x*decell,y=velo.y-1,z=velo.z*decell}
+	local yaw = entity.driver:get_look_yaw();
+		entity.object:setyaw(yaw+math.pi+math.pi/2)
+	if not entity.nitro then
+		minetest.after(4, function()
+		entity.nitro = true
+		end)
+	end
+	if ctrl.up and ctrl.sneak and entity.nitro then
+		entity.object:setvelocity(vec_nitro)
+		local pos = entity.object:getpos()
+			minetest.add_particlespawner(
+			15, --amount
+			1, --time
+			{x=pos.x-0.5, y=pos.y, z=pos.z-0.5}, --minpos
+			{x=pos.x+0.5, y=pos.y, z=pos.z+0.5}, --maxpos
+			{x=0, y=0, z=0}, --minvel
+			{x=-velo.x, y=-velo.y, z=-velo.z}, --maxvel
+			{x=-0,y=-0,z=-0}, --minacc
+			{x=0,y=0,z=0}, --maxacc
+			0.1, --minexptime
+			0.2, --maxexptime
+			10, --minsize
+			15, --maxsize
+			false, --collisiondetection
+			"vehicles_nitro.png" --texture
+			)
+			minetest.after(nitro_duration, function()
+			entity.nitro = false
+			end)
+	elseif ctrl.up then
 		entity.object:setvelocity(vec_forward)
 	elseif ctrl.down then
 		entity.object:setvelocity(vec_backward)

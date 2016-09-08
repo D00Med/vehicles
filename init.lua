@@ -141,11 +141,23 @@ minetest.register_entity("vehicles:tank", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive(self, dtime, 6, 0.5, true, "vehicles:missile_2", nil, nil, true)
+		object_drive(self, dtime, 6, 0.5, true, "vehicles:missile_2", nil, nil, false)
 		return false
 		end
 		return true
 	end,
+})
+
+minetest.register_entity("vehicles:turret", {
+	visual = "mesh",
+	mesh = "turret.b3d",
+	textures = {"vehicles_tank.png"},
+	velocity = 15,
+	acceleration = -5,
+	stepheight = 1.5,
+	hp_max = 200,
+	physical = true,
+	collisionbox = {-1, -0.6, -0.9, 1, 0.9, 0.9},
 })
 
 register_vehicle_spawner("vehicles:tank", "Tank", "vehicles_tank_inv.png")
@@ -167,9 +179,12 @@ minetest.register_entity("vehicles:nizzan", {
 		object_attach(self, clicker, {x=0, y=5, z=4}, {x=0, y=2, z=4}, {x=0, y=3, z=-72})
 		end
 	end,
+	on_activate = function(self)
+	self.nitro = true
+	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_simple(self, dtime, 9, 0.8)
+		object_drive_car(self, dtime, 14, 0.8, 5)
 		local pos = self.object:getpos()
 			minetest.add_particlespawner(
 			15, --amount
@@ -212,9 +227,12 @@ minetest.register_entity("vehicles:nizzan2", {
 		object_attach(self, clicker, {x=0, y=5, z=4}, {x=0, y=2, z=4}, {x=0, y=3, z=-72})
 		end
 	end,
+	on_activate = function(self)
+	self.nitro = true
+	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_simple(self, dtime, 9, 0.8)
+		object_drive_car(self, dtime, 14, 0.8, 5)
 		local pos = self.object:getpos()
 			minetest.add_particlespawner(
 			15, --amount
@@ -240,6 +258,36 @@ minetest.register_entity("vehicles:nizzan2", {
 
 register_vehicle_spawner("vehicles:nizzan2", "Nizzan (green)", "vehicles_nizzan_inv2.png")
 
+minetest.register_entity("vehicles:lambogoni", {
+	visual = "mesh",
+	mesh = "lambogoni.b3d",
+	textures = {"vehicles_lambogoni.png"},
+	velocity = 15,
+	acceleration = -5,
+	stepheight = 1,
+	hp_max = 200,
+	physical = true,
+	collisionbox = {-1, 0, -1, 1.3, 1, 1},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif not self.driver then
+		object_attach(self, clicker, {x=0, y=5, z=4}, {x=0, y=2, z=4}, {x=0, y=3, z=-72})
+		end
+	end,
+	on_activate = function(self)
+	self.nitro = true
+	end,
+	on_step = function(self, dtime)
+	if self.driver then
+		object_drive_car(self, dtime, 15, 0.8, 4)
+		return false
+		end
+		return true
+	end,
+})
+
+register_vehicle_spawner("vehicles:lambogoni", "Lambogoni (grey)", "vehicles_lambogoni_inv.png")
 
 minetest.register_entity("vehicles:masda", {
 	visual = "mesh",
@@ -258,9 +306,12 @@ minetest.register_entity("vehicles:masda", {
 		object_attach(self, clicker, {x=0, y=5, z=4}, {x=0, y=2, z=4}, {x=0, y=3, z=-72})
 		end
 	end,
+	on_activate = function(self)
+	self.nitro = true
+	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_simple(self, dtime, 10, 0.95)
+		object_drive_car(self, dtime, 15, 0.95, 4)
 		return false
 		end
 		return true
@@ -268,6 +319,68 @@ minetest.register_entity("vehicles:masda", {
 })
 
 register_vehicle_spawner("vehicles:masda", "Masda (pink)", "vehicles_masda_inv.png")
+
+minetest.register_entity("vehicles:musting", {
+	visual = "mesh",
+	mesh = "musting.b3d",
+	textures = {"vehicles_musting.png"},
+	velocity = 15,
+	acceleration = -5,
+	stepheight = 1,
+	hp_max = 200,
+	physical = true,
+	collisionbox = {-1, 0, -1, 1.3, 1, 1},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif not self.driver then
+		object_attach(self, clicker, {x=0, y=5, z=4}, {x=0, y=2, z=4}, {x=0, y=3, z=-72})
+		end
+	end,
+	on_activate = function(self)
+	self.nitro = true
+	end,
+	on_step = function(self, dtime)
+	if self.driver then
+		object_drive_car(self, dtime, 15, 0.95, 4)
+		return false
+		end
+		return true
+	end,
+})
+
+register_vehicle_spawner("vehicles:musting", "Musting (purple)", "vehicles_musting_inv2.png")
+
+minetest.register_entity("vehicles:musting2", {
+	visual = "mesh",
+	mesh = "musting.b3d",
+	textures = {"vehicles_musting2.png"},
+	velocity = 15,
+	acceleration = -5,
+	stepheight = 1,
+	hp_max = 200,
+	physical = true,
+	collisionbox = {-1, 0, -1, 1.3, 1, 1},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif not self.driver then
+		object_attach(self, clicker, {x=0, y=5, z=4}, {x=0, y=2, z=4}, {x=0, y=3, z=-72})
+		end
+	end,
+	on_activate = function(self)
+	self.nitro = true
+	end,
+	on_step = function(self, dtime)
+	if self.driver then
+		object_drive_car(self, dtime, 15, 0.85, 4)
+		return false
+		end
+		return true
+	end,
+})
+
+register_vehicle_spawner("vehicles:musting2", "Musting (white)", "vehicles_musting_inv.png")
 
 minetest.register_entity("vehicles:pooshe", {
 	visual = "mesh",
@@ -286,9 +399,12 @@ minetest.register_entity("vehicles:pooshe", {
 		object_attach(self, clicker, {x=0, y=5, z=4}, {x=0, y=2, z=4}, {x=0, y=3, z=-72})
 		end
 	end,
+	on_activate = function(self)
+	self.nitro = true
+	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_simple(self, dtime, 10, 0.95)
+		object_drive_car(self, dtime, 15, 0.95, 4)
 		return false
 		end
 		return true
@@ -296,6 +412,37 @@ minetest.register_entity("vehicles:pooshe", {
 })
 
 register_vehicle_spawner("vehicles:pooshe", "Pooshe (red)", "vehicles_pooshe_inv.png")
+
+minetest.register_entity("vehicles:pooshe2", {
+	visual = "mesh",
+	mesh = "pooshe.b3d",
+	textures = {"vehicles_pooshe2.png"},
+	velocity = 15,
+	acceleration = -5,
+	stepheight = 1,
+	hp_max = 200,
+	physical = true,
+	collisionbox = {-1, 0, -1, 1.3, 1, 1},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif not self.driver then
+		object_attach(self, clicker, {x=0, y=5, z=4}, {x=0, y=2, z=4}, {x=0, y=3, z=-72})
+		end
+	end,
+	on_activate = function(self)
+	self.nitro = true
+	end,
+	on_step = function(self, dtime)
+	if self.driver then
+		object_drive_car(self, dtime, 15, 0.95, 4)
+		return false
+		end
+		return true
+	end,
+})
+
+register_vehicle_spawner("vehicles:pooshe2", "Pooshe (yellow)", "vehicles_pooshe_inv2.png")
 
 minetest.register_entity("vehicles:masda2", {
 	visual = "mesh",
@@ -314,9 +461,12 @@ minetest.register_entity("vehicles:masda2", {
 		object_attach(self, clicker, {x=0, y=5, z=4}, {x=0, y=2, z=4}, {x=0, y=3, z=-72})
 		end
 	end,
+	on_activate = function(self)
+	self.nitro = true
+	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_simple(self, dtime, 10, 0.95)
+		object_drive_car(self, dtime, 15, 0.95, 4)
 		return false
 		end
 		return true
