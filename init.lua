@@ -1,3 +1,4 @@
+vehicles = {}
 
 dofile(minetest.get_modpath("vehicles").."/api.lua")
 
@@ -161,6 +162,97 @@ minetest.register_entity("vehicles:turret", {
 })
 
 register_vehicle_spawner("vehicles:tank", "Tank", "vehicles_tank_inv.png")
+
+minetest.register_entity("vehicles:ute", {
+	visual = "mesh",
+	mesh = "ute.b3d",
+	textures = {"vehicles_ute.png"},
+	velocity = 15,
+	acceleration = -5,
+	stepheight = 1.5,
+	hp_max = 200,
+	physical = true,
+	collisionbox = {-1.4, 0, -1.4, 1.4, 1, 1.4},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif self.driver and clicker ~= self.driver and not self.rider then
+		clicker:set_attach(self.object, "", {x=0, y=5, z=-5}, {x=0, y=0, z=0})
+		self.rider = true
+		elseif self.driver and clicker ~=self.driver and self.rider then
+		clicker:set_detach()
+		self.rider = false
+		elseif not self.driver then
+		object_attach(self, clicker, {x=0, y=5, z=4}, {x=0, y=2, z=4}, {x=0, y=3, z=-72})
+		end
+	end,
+	on_activate = function(self)
+	self.nitro = true
+	end,
+	on_step = function(self, dtime)
+	if self.driver then
+		object_drive_car(self, dtime, 14, 0.6, 6)
+		local pos = self.object:getpos()
+			minetest.add_particlespawner(
+			15, --amount
+			1, --time
+			{x=pos.x, y=pos.y, z=pos.z}, --minpos
+			{x=pos.x, y=pos.y, z=pos.z}, --maxpos
+			{x=0, y=0, z=0}, --minvel
+			{x=0, y=0, z=0}, --maxvel
+			{x=-0,y=-0,z=-0}, --minacc
+			{x=0,y=0,z=0}, --maxacc
+			0.5, --minexptime
+			1, --maxexptime
+			10, --minsize
+			15, --maxsize
+			false, --collisiondetection
+			"vehicles_dust.png" --texture
+		)
+		return false
+		end
+		return true
+	end,
+})
+
+register_vehicle_spawner("vehicles:ute", "Ute (dirty)", "vehicles_ute_inv.png")
+
+minetest.register_entity("vehicles:ute2", {
+	visual = "mesh",
+	mesh = "ute.b3d",
+	textures = {"vehicles_ute2.png"},
+	velocity = 15,
+	acceleration = -5,
+	stepheight = 1.5,
+	hp_max = 200,
+	physical = true,
+	collisionbox = {-1.4, 0, -1.4, 1.4, 1, 1.4},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif self.driver and clicker ~= self.driver and not self.rider then
+		clicker:set_attach(self.object, "", {x=0, y=5, z=-5}, {x=0, y=0, z=0})
+		self.rider = true
+		elseif self.driver and clicker ~=self.driver and self.rider then
+		clicker:set_detach()
+		self.rider = false
+		elseif not self.driver then
+		object_attach(self, clicker, {x=0, y=5, z=4}, {x=0, y=2, z=4}, {x=0, y=3, z=-72})
+		end
+	end,
+	on_activate = function(self)
+	self.nitro = true
+	end,
+	on_step = function(self, dtime)
+	if self.driver then
+		object_drive_car(self, dtime, 14, 0.6, 6)
+		return false
+		end
+		return true
+	end,
+})
+
+register_vehicle_spawner("vehicles:ute2", "Ute (clean)", "vehicles_ute_inv.png")
 
 minetest.register_entity("vehicles:nizzan", {
 	visual = "mesh",
@@ -656,6 +748,307 @@ minetest.register_tool("vehicles:rc", {
 	end,
 })
 
+--decorative nodes
+
+function vehicles.register_simplenode(name, desc, texture, light)
+minetest.register_node("vehicles:"..name, {
+	description = desc,
+	tiles = {texture},
+	groups = {cracky=1},
+	paramtype2 = "facedir",
+	light_source = light,
+})
+end
+
+vehicles.register_simplenode("road", "Road surface", "vehicles_road.png", 0)
+vehicles.register_simplenode("concrete", "Concrete", "vehicles_concrete.png", 0)
+vehicles.register_simplenode("arrows", "Turning Arrows(left)", "vehicles_arrows.png", 10)
+vehicles.register_simplenode("arrows_flp", "Turning Arrows(right)", "vehicles_arrows_flp.png", 10)
+vehicles.register_simplenode("checker", "Checkered surface", "vehicles_checker.png", 0)
+vehicles.register_simplenode("stripe", "Road surface (stripe)", "vehicles_road_stripe.png", 0)
+vehicles.register_simplenode("stripe2", "Road surface (double stripe)", "vehicles_road_stripe2.png", 0)
+vehicles.register_simplenode("stripe3", "Road surface (white stripes)", "vehicles_road_stripes3.png", 0)
+vehicles.register_simplenode("stripe4", "Road surface (yellow stripes)", "vehicles_road_stripe4.png", 0)
+vehicles.register_simplenode("window", "Building glass", "vehicles_window.png", 0)
+vehicles.register_simplenode("stripes", "Hazard stipes", "vehicles_stripes.png", 10)
+vehicles.register_simplenode("lights", "Tunnel lights", "vehicles_lights.png", 20)
+
+minetest.register_node("vehicles:neon_arrow", {
+	description = "neon arrows (left)",
+	drawtype = "signlike",
+	visual_scale = 2.0,
+	tiles = {{
+		name = "vehicles_neon_arrow.png",
+		animation = {type = "vertical_frames", aspect_w = 32, aspect_h = 32, length = 1.00},
+	}},
+	inventory_image = "vehicles_neon_arrow_inv.png",
+	weild_image = "vehicles_neon_arrow_inv.png",
+	use_texture_alpha = true,
+	paramtype = "light",
+	paramtype2 = "wallmounted",
+	sunlight_propagates = true,	
+	light_source = 50,
+	walkable = false,
+	is_ground_content = true,
+	selection_box = {
+		type = "wallmounted",
+		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
+	},
+	groups = {cracky=3,dig_immediate=3},
+})
+
+minetest.register_node("vehicles:neon_arrow_flp", {
+	description = "neon arrows (right)",
+	drawtype = "signlike",
+	visual_scale = 2.0,
+	tiles = {{
+		name = "vehicles_neon_arrow.png^[transformFX",
+		animation = {type = "vertical_frames", aspect_w = 32, aspect_h = 32, length = 1.00},
+	}},
+	inventory_image = "vehicles_neon_arrow_inv.png^[transformFX",
+	weild_image = "vehicles_neon_arrow_inv.png^[transformFX",
+	use_texture_alpha = true,
+	paramtype = "light",
+	paramtype2 = "wallmounted",
+	sunlight_propagates = true,	
+	light_source = 50,
+	walkable = false,
+	is_ground_content = true,
+	selection_box = {
+		type = "wallmounted",
+		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
+	},
+	groups = {cracky=3,dig_immediate=3},
+})
+
+minetest.register_node("vehicles:add_arrow", {
+	description = "arrows(left)",
+	drawtype = "signlike",
+	visual_scale = 2.0,
+	tiles = {"vehicles_arrows.png"},
+	inventory_image = "vehicles_arrows.png",
+	use_texture_alpha = true,
+	paramtype = "light",
+	paramtype2 = "wallmounted",
+	sunlight_propagates = true,	
+	light_source = 50,
+	walkable = false,
+	is_ground_content = true,
+	selection_box = {
+		type = "wallmounted",
+		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
+	},
+	groups = {cracky=3,dig_immediate=3},
+})
+
+minetest.register_node("vehicles:add_arrow_flp", {
+	description = "arrows(right)",
+	drawtype = "signlike",
+	visual_scale = 2.0,
+	tiles = {"vehicles_arrows_flp.png"},
+	inventory_image = "vehicles_arrows_flp.png",
+	use_texture_alpha = true,
+	paramtype = "light",
+	paramtype2 = "wallmounted",
+	sunlight_propagates = true,	
+	light_source = 50,
+	walkable = false,
+	is_ground_content = true,
+	selection_box = {
+		type = "wallmounted",
+		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
+	},
+	groups = {cracky=3,dig_immediate=3},
+})
+
+minetest.register_node("vehicles:scifi_ad", {
+	description = "scifi_nodes sign",
+	drawtype = "signlike",
+	visual_scale = 3.0,
+	tiles = {{
+		name = "vehicles_scifinodes.png",
+		animation = {type = "vertical_frames", aspect_w = 58, aspect_h = 58, length = 1.00},
+	}},
+	inventory_image = "vehicles_scifinodes_inv.png",
+	weild_image = "vehicles_scifinodes_inv.png",
+	use_texture_alpha = true,
+	paramtype = "light",
+	paramtype2 = "wallmounted",
+	sunlight_propagates = true,	
+	light_source = 50,
+	walkable = false,
+	is_ground_content = true,
+	selection_box = {
+		type = "wallmounted",
+		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
+	},
+	groups = {cracky=3,dig_immediate=3},
+})
+
+minetest.register_node("vehicles:mt_sign", {
+	description = "mt sign",
+	drawtype = "signlike",
+	visual_scale = 3.0,
+	tiles = {"vehicles_neonmt.png",},
+	inventory_image = "vehicles_neonmt.png",
+	use_texture_alpha = true,
+	paramtype = "light",
+	paramtype2 = "wallmounted",
+	sunlight_propagates = true,	
+	light_source = 50,
+	walkable = false,
+	is_ground_content = true,
+	selection_box = {
+		type = "wallmounted",
+		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
+	},
+	groups = {cracky=3,dig_immediate=3},
+})
+
+minetest.register_node("vehicles:pacman_sign", {
+	description = "pacman sign",
+	drawtype = "signlike",
+	visual_scale = 2.0,
+	tiles = {"vehicles_pacman.png",},
+	inventory_image = "vehicles_pacman.png",
+	use_texture_alpha = true,
+	paramtype = "light",
+	paramtype2 = "wallmounted",
+	sunlight_propagates = true,	
+	light_source = 50,
+	walkable = false,
+	is_ground_content = true,
+	selection_box = {
+		type = "wallmounted",
+		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
+	},
+	groups = {cracky=3,dig_immediate=3},
+})
+
+minetest.register_node("vehicles:whee_sign", {
+	description = "whee sign",
+	drawtype = "signlike",
+	visual_scale = 3.0,
+	tiles = {"vehicles_whee.png",},
+	inventory_image = "vehicles_whee.png",
+	use_texture_alpha = true,
+	paramtype = "light",
+	paramtype2 = "wallmounted",
+	sunlight_propagates = true,	
+	light_source = 50,
+	walkable = false,
+	is_ground_content = true,
+	selection_box = {
+		type = "wallmounted",
+		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
+	},
+	groups = {cracky=3,dig_immediate=3},
+})
+
+minetest.register_node("vehicles:checker_sign", {
+	description = "Checkered sign",
+	drawtype = "signlike",
+	visual_scale = 3.0,
+	tiles = {"vehicles_checker2.png",},
+	inventory_image = "vehicles_checker2.png",
+	use_texture_alpha = true,
+	paramtype = "light",
+	paramtype2 = "wallmounted",
+	sunlight_propagates = true,
+	walkable = false,
+	light_source = 5,
+	is_ground_content = true,
+	selection_box = {
+		type = "wallmounted",
+		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
+	},
+	groups = {cracky=3,dig_immediate=3},
+})
+
+minetest.register_node("vehicles:car_sign", {
+	description = "Car sign",
+	drawtype = "signlike",
+	visual_scale = 3.0,
+	tiles = {"vehicles_sign1.png",},
+	inventory_image = "vehicles_sign1.png",
+	use_texture_alpha = true,
+	paramtype = "light",
+	paramtype2 = "wallmounted",
+	sunlight_propagates = true,
+	walkable = false,
+	light_source = 5,
+	is_ground_content = true,
+	selection_box = {
+		type = "wallmounted",
+		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
+	},
+	groups = {cracky=3,dig_immediate=3},
+})
+
+minetest.register_node("vehicles:nyan_sign", {
+	description = "Nyancat sign",
+	drawtype = "signlike",
+	visual_scale = 2.0,
+	tiles = {"vehicles_sign2.png",},
+	inventory_image = "vehicles_sign2.png",
+	use_texture_alpha = true,
+	paramtype = "light",
+	paramtype2 = "wallmounted",
+	sunlight_propagates = true,
+	walkable = false,
+	light_source = 5,
+	is_ground_content = true,
+	selection_box = {
+		type = "wallmounted",
+		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
+	},
+	groups = {cracky=3,dig_immediate=3},
+})
+
+minetest.register_node("vehicles:flag", {
+	description = "Flag",
+	drawtype = "torchlike",
+	visual_scale = 3.0,
+	tiles = {"vehicles_flag.png",},
+	inventory_image = "vehicles_flag.png",
+	use_texture_alpha = true,
+	paramtype = "light",
+	paramtype2 = "wallmounted",
+	sunlight_propagates = true,
+	walkable = false,
+	light_source = 5,
+	is_ground_content = true,
+	selection_box = {
+		type = "fixed",
+		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
+	},
+	groups = {cracky=3,dig_immediate=3},
+})
+
+minetest.register_node("vehicles:tyres", {
+	description = "tyre stack",
+	tiles = {
+		"vehicles_tyre.png",
+		"vehicles_tyre.png",
+		"vehicles_tyre_side.png",
+		"vehicles_tyre_side.png",
+		"vehicles_tyre_side.png",
+		"vehicles_tyre_side.png"
+	},
+	drawtype = "nodebox",
+	paramtype = "light",
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{-0.4375, -0.5, -0.4375, 0.4375, 0.5, 0.4375}, -- NodeBox1
+			{-0.5, -0.4375, -0.4375, 0.5, -0.0625, 0.4375}, -- NodeBox2
+			{-0.5, 0, -0.4375, 0.5, 0.4375, 0.4375}, -- NodeBox3
+			{-0.4375, 0, -0.5, 0.4375, 0.4375, 0.5}, -- NodeBox4
+			{-0.4375, -0.4375, -0.5, 0.4375, -0.0625, 0.5}, -- NodeBox5
+		}
+	},
+	groups = {cracky=1},
+})
 
 
 
