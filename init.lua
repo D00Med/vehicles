@@ -16,6 +16,8 @@ dofile(minetest.get_modpath("vehicles").."/api.lua")
 	-- end
 -- end)
 
+
+
 minetest.register_entity("vehicles:missile", {
 	visual = "mesh",
 	mesh = "missile.b3d",
@@ -221,6 +223,9 @@ minetest.register_entity("vehicles:tank", {
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		end
 	end,
+	on_punch = function(self, puncher)
+		vehicle_drop(self, puncher, "vehicles:tank")
+	end,
 	on_step = function(self, dtime)
 	if self.driver then
 		object_drive(self, dtime, 6, 0.5, true, "vehicles:missile_2", 1, nil, nil, false)
@@ -246,6 +251,9 @@ minetest.register_entity("vehicles:turret", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, true, {x=0, y=2, z=4})
 		end
+	end,
+	on_punch = function(self, puncher)
+		vehicle_drop(self, puncher, "vehicles:turret")
 	end,
 	on_step = function(self, dtime)
 	self.object:setvelocity({x=0, y=-1, z=0})
@@ -276,6 +284,9 @@ minetest.register_entity("vehicles:firetruck", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		end
+	end,
+	on_punch = function(self, puncher)
+		vehicle_drop(self, puncher, "vehicles:firetruck")
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
@@ -310,6 +321,9 @@ minetest.register_entity("vehicles:ute", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		end
+	end,
+	on_punch = function(self, puncher)
+		vehicle_drop(self, puncher, "vehicles:ute")
 	end,
 	on_activate = function(self)
 	self.nitro = true
@@ -365,6 +379,9 @@ minetest.register_entity("vehicles:ute2", {
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		end
 	end,
+	on_punch = function(self, puncher)
+		vehicle_drop(self, puncher, "vehicles:ute2")
+	end,
 	on_activate = function(self)
 	self.nitro = true
 	end,
@@ -396,6 +413,9 @@ minetest.register_entity("vehicles:astonmaaton", {
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		end
 	end,
+	on_punch = function(self, puncher)
+		vehicle_drop(self, puncher, "vehicles:astonmaaton")
+	end,
 	on_activate = function(self)
 	self.nitro = true
 	end,
@@ -426,6 +446,9 @@ minetest.register_entity("vehicles:nizzan", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		end
+	end,
+	on_punch = function(self, puncher)
+		vehicle_drop(self, puncher, "vehicles:nizzan")
 	end,
 	on_activate = function(self)
 	self.nitro = true
@@ -478,6 +501,9 @@ minetest.register_entity("vehicles:nizzan2", {
 	on_activate = function(self)
 	self.nitro = true
 	end,
+	on_punch = function(self, puncher)
+		vehicle_drop(self, puncher, "vehicles:nizzan2")
+	end,
 	on_step = function(self, dtime)
 	if self.driver then
 		object_drive_car(self, dtime, 14, 0.8, 5)
@@ -523,6 +549,9 @@ minetest.register_entity("vehicles:lambogoni", {
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		end
 	end,
+	on_punch = function(self, puncher)
+		vehicle_drop(self, puncher, "vehicles:lambogoni")
+	end,
 	on_activate = function(self)
 	self.nitro = true
 	end,
@@ -553,6 +582,9 @@ minetest.register_entity("vehicles:masda", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		end
+	end,
+	on_punch = function(self, puncher)
+		vehicle_drop(self, puncher, "vehicles:masda")
 	end,
 	on_activate = function(self)
 	self.nitro = true
@@ -588,6 +620,9 @@ minetest.register_entity("vehicles:musting", {
 	on_activate = function(self)
 	self.nitro = true
 	end,
+	on_punch = function(self, puncher)
+		vehicle_drop(self, puncher, "vehicles:musting")
+	end,
 	on_step = function(self, dtime)
 	if self.driver then
 		object_drive_car(self, dtime, 15, 0.95, 4)
@@ -615,6 +650,9 @@ minetest.register_entity("vehicles:musting2", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		end
+	end,
+	on_punch = function(self, puncher)
+		vehicle_drop(self, puncher, "vehicles:musting2")
 	end,
 	on_activate = function(self)
 	self.nitro = true
@@ -658,6 +696,9 @@ minetest.register_entity("vehicles:fewawi", {
 		end
 		end
 	end,
+	on_punch = function(self, puncher)
+		vehicle_drop(self, puncher, "vehicles:fewawi")
+	end,
 	on_activate = function(self)
 	self.nitro = true
 	end,
@@ -700,6 +741,9 @@ minetest.register_entity("vehicles:fewawi2", {
 		end
 		end
 	end,
+	on_punch = function(self, puncher)
+		vehicle_drop(self, puncher, "vehicles:fewawi2")
+	end,
 	on_activate = function(self)
 	self.nitro = true
 	end,
@@ -734,6 +778,9 @@ minetest.register_entity("vehicles:pooshe", {
 	on_activate = function(self)
 	self.nitro = true
 	end,
+	on_punch = function(self, puncher)
+		vehicle_drop(self, puncher, "vehicles:pooshe")
+	end,
 	on_step = function(self, dtime)
 	if self.driver then
 		object_drive_car(self, dtime, 15, 0.95, 4)
@@ -761,6 +808,9 @@ minetest.register_entity("vehicles:pooshe2", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		end
+	end,
+	on_punch = function(self, puncher)
+		vehicle_drop(self, puncher, "vehicles:pooshe2")
 	end,
 	on_activate = function(self)
 	self.nitro = true
@@ -796,6 +846,9 @@ minetest.register_entity("vehicles:masda2", {
 	on_activate = function(self)
 	self.nitro = true
 	end,
+	on_punch = function(self, puncher)
+		vehicle_drop(self, puncher, "vehicles:masda2")
+	end,
 	on_step = function(self, dtime)
 	if self.driver then
 		object_drive_car(self, dtime, 15, 0.85, 4)
@@ -823,6 +876,9 @@ minetest.register_entity("vehicles:boat", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		end
+	end,
+	on_punch = function(self, puncher)
+		vehicle_drop(self, puncher, "vehicles:boat")
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
@@ -857,6 +913,9 @@ minetest.register_entity("vehicles:jet", {
 		object_attach(self, clicker, {x=0, y=5, z=5}, false, {x=0, y=3, z=4})
 		end
 	end,
+	on_punch = function(self, puncher)
+		vehicle_drop(self, puncher, "vehicles:jet")
+	end,
 	on_step = function(self, dtime)
 	if self.driver then
 		object_fly(self, dtime, 14, 0.2, 0.95, true, "vehicles:missile_2", 1, {x=1, y=1}, {x=10, y=10})
@@ -888,6 +947,9 @@ minetest.register_entity("vehicles:plane", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=8, z=3}, false, {x=0, y=9, z=0})
 		end
+	end,
+	on_punch = function(self, puncher)
+		vehicle_drop(self, puncher, "vehicles:plane")
 	end,
 	on_step = function(self, dtime)
 	if self.anim and not self.driver then 

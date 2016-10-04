@@ -664,13 +664,24 @@ minetest.register_tool(vehicle.."_spawner", {
 			local playerpos = placer:getpos();
 			if pointed_thing.type == "node" and not is_boat then
 			local obj = minetest.env:add_entity(pointed_thing.above, vehicle)
+			local object = obj:get_luaentity()
+			object.owner = placer
 			item:take_item()
 			return item
 			elseif pointed_thing.type == "node" and minetest.get_item_group(pointed_thing.name, "water")then
 			local obj = minetest.env:add_entity(pointed_thing.under, vehicle)
+			obj.owner = placer
 			item:take_item()
 			return item
 			end
 	end,
 })
+end
+
+function vehicle_drop(ent, player, name)
+	if ent.owner == player then
+	local pos = ent.object:getpos()
+	minetest.env:add_item(pos, name.."_spawner")
+	ent.object:remove()
+	end
 end
