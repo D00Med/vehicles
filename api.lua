@@ -670,7 +670,7 @@ minetest.register_tool(vehicle.."_spawner", {
 			return item
 			elseif pointed_thing.type == "node" and minetest.get_item_group(pointed_thing.name, "water")then
 			local obj = minetest.env:add_entity(pointed_thing.under, vehicle)
-			obj.owner = placer
+			object.owner = placer
 			item:take_item()
 			return item
 			end
