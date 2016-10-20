@@ -94,6 +94,14 @@ minetest.register_entity("vehicles:missile_2", {
 		minetest.after(10, function()
 			self.object:remove()
 		end)
+		local velo = self.object:getvelocity()
+		if velo.y <= 1 and velo.y >= -1 then
+			self.object:set_animation({x=1, y=1}, 5, 0)
+		elseif velo.y <= -1 then
+			self.object:set_animation({x=4, y=4}, 5, 0)
+		elseif velo.y >= 1 then
+			self.object:set_animation({x=2, y=2}, 5, 0)
+		end
 		local pos = self.object:getpos()
 		local objs = minetest.get_objects_inside_radius({x=pos.x,y=pos.y,z=pos.z}, 2)	
 			for k, obj in pairs(objs) do
@@ -212,6 +220,7 @@ minetest.register_entity("vehicles:tank", {
 	textures = {"vehicles_tank.png"},
 	velocity = 15,
 	acceleration = -5,
+	owner = "",
 	stepheight = 1.5,
 	hp_max = 200,
 	physical = true,
@@ -224,7 +233,7 @@ minetest.register_entity("vehicles:tank", {
 		end
 	end,
 	on_punch = function(self, puncher)
-		vehicle_drop(self, puncher, "vehicles:tank")
+		destroy(self, puncher, "vehicles:tank")
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
@@ -242,7 +251,8 @@ minetest.register_entity("vehicles:turret", {
 	velocity = 15,
 	acceleration = -5,
 	stepheight = 1.5,
-	hp_max = 200,
+	hp_max = 50,
+	groups = {fleshy=3, level=5},
 	physical = true,
 	collisionbox = {-0.6, 0, -0.6, 0.6, 0.9, 0.6},
 	on_rightclick = function(self, clicker)

@@ -362,6 +362,11 @@ function object_fly(entity, dtime, speed, accel, decell, shoots, arrow, moving_a
 		entity.object:setvelocity(vec_stop)
 		entity.object:setacceleration({x=0, y=-4.5, z=0})
 	end
+	if ctrl.jump and ctrl.up then
+	entity.object:setvelocity({x=dir.x*speed, y=0, z=dir.z*speed})
+	elseif ctrl.jump and not ctrl.up then
+	entity.object:setvelocity({x=velo.x*decell, y=0, z=velo.z*decell})
+	end
 	if ctrl.sneak and shoots and entity.loaded then
 			entity.loaded = false
 			local pos = entity.object:getpos()
@@ -679,10 +684,19 @@ minetest.register_tool(vehicle.."_spawner", {
 })
 end
 
+
+--out of date, left behind in case it is needed again
 function vehicle_drop(ent, player, name)
 	if ent.owner == player then
 	local pos = ent.object:getpos()
 	minetest.env:add_item(pos, name.."_spawner")
 	ent.object:remove()
 	end
+end
+
+function destroy(ent, player, name)
+	if ent.object:get_hp() == 0 and ent.owner == player then
+		local pos = ent.object:getpos()
+		minetest.env:add_item(pos, "vehicles:tank_spawner")
+		end
 end
