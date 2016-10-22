@@ -132,6 +132,8 @@ function object_drive(entity, dtime, speed, decell, shoots, arrow, reload, movin
 			local yaw = entity.driver:get_look_yaw();
 			obj:setyaw(yaw+math.pi/2)
 			obj:setvelocity(vec)
+			local object = obj:get_luaentity()
+			object.launcher = entity.driver
 			minetest.after(reload, function()
 			entity.loaded = true
 			end)
@@ -328,6 +330,8 @@ function object_turret(entity, dtime, height, arrow, shoot_interval)
 			local vec = {x=dir.x*9, y=dir.y*9, z=dir.z*9}
 			obj:setyaw(yaw+math.pi/2)
 			obj:setvelocity(vec)
+			local object = obj:get_luaentity()
+			object.launcher = entity.driver
 			minetest.after(shoot_interval, function()
 			entity.loaded = true
 			end)
@@ -374,6 +378,8 @@ function object_fly(entity, dtime, speed, accel, decell, shoots, arrow, moving_a
 			local vec = {x=dir.x*9,y=dir.y*9,z=dir.z*9}
 			obj:setyaw(yaw+math.pi/2)
 			obj:setvelocity(vec)
+			local object = obj:get_luaentity()
+			object.launcher = entity.driver
 			minetest.after(1, function()
 			entity.loaded = true
 			end)
