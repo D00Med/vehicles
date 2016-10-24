@@ -96,7 +96,7 @@ minetest.register_node("racedecor:stripes", {
 })
 minetest.register_node("racedecor:lights", {
 	description = "Tunnel lights",
-	tiles = {"racedecor_lights.png"},
+	tiles = {"racedecor_lights_top.png", "racedecor_lights_bottom.png", "racedecor_lights.png", "racedecor_lights.png", "racedecor_lights.png", "racedecor_lights.png"},
 	groups = {cracky=3},
 	sounds = snd_glass,
 	paramtype2 = "facedir",
