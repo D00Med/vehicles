@@ -255,7 +255,7 @@ minetest.register_node("racedecor:mt_sign", {
 })
 
 minetest.register_node("racedecor:pacman_sign", {
-	description = "Neon pacman sign",
+	description = "Neon Pacman sign",
 	drawtype = "signlike",
 	visual_scale = 2.0,
 	tiles = {"racedecor_pacman.png",},
