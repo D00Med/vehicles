@@ -25,7 +25,7 @@ minetest.register_node("racedecor:concrete", {
 	is_ground_content = false,
 })
 minetest.register_node("racedecor:arrows", {
-	description = "Turning Arrows (left)",
+	description = "Turning arrows block (left)",
 	tiles = {"racedecor_arrows_top.png", "racedecor_arrows_top.png", "racedecor_arrows.png", "racedecor_arrows.png", "racedecor_arrows.png", "racedecor_arrows.png"},
 	groups = {cracky=3},
 	sounds = snd_stone,
@@ -33,7 +33,7 @@ minetest.register_node("racedecor:arrows", {
 	is_ground_content = false,
 })
 minetest.register_node("racedecor:arrows_flp", {
-	description = "Turning Arrows (right)",
+	description = "Turning arrows block (right)",
 	tiles = {"racedecor_arrows_top.png", "racedecor_arrows_top.png", "racedecor_arrows_flp.png", "racedecor_arrows_flp.png", "racedecor_arrows_flp.png", "racedecor_arrows_flp.png"},
 	groups = {cracky=3},
 	sounds = snd_stone,
@@ -48,7 +48,7 @@ minetest.register_node("racedecor:checker", {
 	is_ground_content = false,
 })
 minetest.register_node("racedecor:stripe", {
-	description = "Road surface (stripe)",
+	description = "Road surface (white stripe)",
 	tiles = {"racedecor_road_stripe.png", "racedecor_road.png"},
 	groups = {cracky=3},
 	sounds = snd_stone,
@@ -56,7 +56,7 @@ minetest.register_node("racedecor:stripe", {
 	is_ground_content = false,
 })
 minetest.register_node("racedecor:stripe2", {
-	description = "Road surface (double stripe)",
+	description = "Road surface (double yellow stripe)",
 	tiles = {"racedecor_road_stripe2.png", "racedecor_road.png"},
 	groups = {cracky=3},
 	sounds = snd_stone,
@@ -64,7 +64,7 @@ minetest.register_node("racedecor:stripe2", {
 	is_ground_content = false,
 })
 minetest.register_node("racedecor:stripe3", {
-	description = "Road surface (white stripe)",
+	description = "Road surface (white safety stripes)",
 	tiles = {"racedecor_road_stripes3.png", "racedecor_road.png"},
 	groups = {cracky=3},
 	sounds = snd_stone,
@@ -72,7 +72,7 @@ minetest.register_node("racedecor:stripe3", {
 	is_ground_content = false,
 })
 minetest.register_node("racedecor:stripe4", {
-	description = "Road surface (yellow stripe)",
+	description = "Road surface (yellow safety stripes)",
 	tiles = {"racedecor_road_stripe4.png", "racedecor_road.png"},
 	groups = {cracky=3},
 	sounds = snd_stone,
@@ -112,7 +112,7 @@ if minetest.get_modpath("stairs") then
 end
 
 minetest.register_node("racedecor:neon_arrow", {
-	description = "neon arrows (left)",
+	description = "Neon arrows (left)",
 	drawtype = "signlike",
 	visual_scale = 2.0,
 	tiles = {{
@@ -137,7 +137,7 @@ minetest.register_node("racedecor:neon_arrow", {
 })
 
 minetest.register_node("racedecor:neon_arrow_flp", {
-	description = "neon arrows (right)",
+	description = "Neon arrows (right)",
 	drawtype = "signlike",
 	visual_scale = 2.0,
 	tiles = {{
@@ -162,7 +162,7 @@ minetest.register_node("racedecor:neon_arrow_flp", {
 })
 
 minetest.register_node("racedecor:add_arrow", {
-	description = "arrows(left)",
+	description = "Turning arrows sign (left)",
 	drawtype = "signlike",
 	visual_scale = 2.0,
 	tiles = {"racedecor_arrows.png"},
@@ -184,7 +184,7 @@ minetest.register_node("racedecor:add_arrow", {
 })
 
 minetest.register_node("racedecor:add_arrow_flp", {
-	description = "arrows(right)",
+	description = "Turning arrows sign (right)",
 	drawtype = "signlike",
 	visual_scale = 2.0,
 	tiles = {"racedecor_arrows_flp.png"},
@@ -206,7 +206,7 @@ minetest.register_node("racedecor:add_arrow_flp", {
 })
 
 minetest.register_node("racedecor:scifi_ad", {
-	description = "scifi_nodes sign",
+	description = "Neon sign “SCIFI_NODES”",
 	drawtype = "signlike",
 	visual_scale = 3.0,
 	tiles = {{
@@ -231,7 +231,7 @@ minetest.register_node("racedecor:scifi_ad", {
 })
 
 minetest.register_node("racedecor:mt_sign", {
-	description = "mt sign",
+	description = "Neon sign “MT”",
 	drawtype = "signlike",
 	visual_scale = 3.0,
 	tiles = {"racedecor_neonmt.png",},
@@ -253,7 +253,7 @@ minetest.register_node("racedecor:mt_sign", {
 })
 
 minetest.register_node("racedecor:pacman_sign", {
-	description = "pacman sign",
+	description = "Neon pacman sign",
 	drawtype = "signlike",
 	visual_scale = 2.0,
 	tiles = {"racedecor_pacman.png",},
@@ -275,7 +275,7 @@ minetest.register_node("racedecor:pacman_sign", {
 })
 
 minetest.register_node("racedecor:whee_sign", {
-	description = "whee sign",
+	description = "Neon sign “WHEEE”",
 	drawtype = "signlike",
 	visual_scale = 3.0,
 	tiles = {"racedecor_whee.png",},
@@ -319,7 +319,7 @@ minetest.register_node("racedecor:checker_sign", {
 })
 
 minetest.register_node("racedecor:car_sign", {
-	description = "Car sign",
+	description = "Car racing poster",
 	drawtype = "signlike",
 	visual_scale = 3.0,
 	tiles = {"racedecor_sign1.png",},
@@ -341,7 +341,7 @@ minetest.register_node("racedecor:car_sign", {
 })
 
 minetest.register_node("racedecor:nyan_sign", {
-	description = "Nyancat sign",
+	description = "Nyan Cat poster",
 	drawtype = "signlike",
 	visual_scale = 2.0,
 	tiles = {"racedecor_sign2.png",},
@@ -363,7 +363,7 @@ minetest.register_node("racedecor:nyan_sign", {
 })
 
 minetest.register_node("racedecor:flag", {
-	description = "Flag",
+	description = "Checkered flag",
 	drawtype = "torchlike",
 	visual_scale = 3.0,
 	tiles = {"racedecor_flag.png",},
@@ -385,7 +385,7 @@ minetest.register_node("racedecor:flag", {
 })
 
 minetest.register_node("racedecor:tyres", {
-	description = "tyre stack",
+	description = "Tyre stack",
 	tiles = {
 		"racedecor_tyre.png",
 		"racedecor_tyre.png",
