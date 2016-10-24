@@ -1234,12 +1234,14 @@ minetest.register_node("vehicles:lights", {
 	is_ground_content = false,
 })
 
-stairs.register_stair_and_slab("road_surface", "vehicles:road",
+if minetest.get_modpath("stairs") then
+	stairs.register_stair_and_slab("road_surface", "vehicles:road",
 		{cracky = 3},
 		{"vehicles_road.png"},
 		"Road Surface Stair",
 		"Road Surface Slab",
 		snd_stone)
+end
 
 minetest.register_node("vehicles:neon_arrow", {
 	description = "neon arrows (left)",
