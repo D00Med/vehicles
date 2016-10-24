@@ -1130,37 +1130,116 @@ minetest.register_tool("vehicles:rc", {
 	end,
 })
 
---decorative nodes
-
-function vehicles.register_simplenode(name, desc, texture, light)
-minetest.register_node("vehicles:"..name, {
-	description = desc,
-	tiles = {texture},
-	groups = {cracky=1},
-	paramtype2 = "facedir",
-	light_source = light,
-})
+local snd_stone, snd_glass
+if minetest.get_modpath("default") then
+	snd_stone = default.node_sound_stone_defaults()
+	snd_glass = default.node_sound_glass_defaults()
+	snd_default = default.node_sound_defaults()
+	snd_paper = default.node_sound_leaves_defaults()
+	snd_tyre = default.node_sound_defaults({
+		footstep = {name = "default_dirt_footstep", gain = 0.5},
+	})
 end
 
-vehicles.register_simplenode("road", "Road surface", "vehicles_road.png", 0)
-vehicles.register_simplenode("concrete", "Concrete", "vehicles_concrete.png", 0)
-vehicles.register_simplenode("arrows", "Turning Arrows(left)", "vehicles_arrows.png", 10)
-vehicles.register_simplenode("arrows_flp", "Turning Arrows(right)", "vehicles_arrows_flp.png", 10)
-vehicles.register_simplenode("checker", "Checkered surface", "vehicles_checker.png", 0)
-vehicles.register_simplenode("stripe", "Road surface (stripe)", "vehicles_road_stripe.png", 0)
-vehicles.register_simplenode("stripe2", "Road surface (double stripe)", "vehicles_road_stripe2.png", 0)
-vehicles.register_simplenode("stripe3", "Road surface (white stripes)", "vehicles_road_stripes3.png", 0)
-vehicles.register_simplenode("stripe4", "Road surface (yellow stripes)", "vehicles_road_stripe4.png", 0)
-vehicles.register_simplenode("window", "Building glass", "vehicles_window.png", 0)
-vehicles.register_simplenode("stripes", "Hazard stipes", "vehicles_stripes.png", 10)
-vehicles.register_simplenode("lights", "Tunnel lights", "vehicles_lights.png", 20)
+--decorative nodes
+minetest.register_node("vehicles:road", {
+	description = "Road surface",
+	tiles = {"vehicles_road.png"},
+	groups = {cracky=3},
+	sounds = snd_stone,
+	is_ground_content = false,
+})
+minetest.register_node("vehicles:concrete", {
+	description = "Concrete",
+	tiles = {"vehicles_concrete.png"},
+	groups = {cracky=3},
+	sounds = snd_stone,
+	is_ground_content = false,
+})
+minetest.register_node("vehicles:arrows", {
+	description = "Turning Arrows (left)",
+	tiles = {"vehicles_arrows_top.png", "vehicles_arrows_top.png", "vehicles_arrows.png", "vehicles_arrows.png", "vehicles_arrows.png", "vehicles_arrows.png"},
+	groups = {cracky=3},
+	sounds = snd_stone,
+	light_source = 10,
+	is_ground_content = false,
+})
+minetest.register_node("vehicles:arrows_flp", {
+	description = "Turning Arrows (right)",
+	tiles = {"vehicles_arrows_top.png", "vehicles_arrows_top.png", "vehicles_arrows_flp.png", "vehicles_arrows_flp.png", "vehicles_arrows_flp.png", "vehicles_arrows_flp.png"},
+	groups = {cracky=3},
+	sounds = snd_stone,
+	light_source = 10,
+	is_ground_content = false,
+})
+minetest.register_node("vehicles:checker", {
+	description = "Checkered surface",
+	tiles = {"vehicles_checker.png", "vehicles_road.png"},
+	groups = {cracky=3},
+	sounds = snd_stone,
+	is_ground_content = false,
+})
+minetest.register_node("vehicles:stripe", {
+	description = "Road surface (stripe)",
+	tiles = {"vehicles_road_stripe.png", "vehicles_road.png"},
+	groups = {cracky=3},
+	sounds = snd_stone,
+	paramtype2 = "facedir",
+	is_ground_content = false,
+})
+minetest.register_node("vehicles:stripe2", {
+	description = "Road surface (double stripe)",
+	tiles = {"vehicles_road_stripe2.png", "vehicles_road.png"},
+	groups = {cracky=3},
+	sounds = snd_stone,
+	paramtype2 = "facedir",
+	is_ground_content = false,
+})
+minetest.register_node("vehicles:stripe3", {
+	description = "Road surface (white stripe)",
+	tiles = {"vehicles_road_stripes3.png", "vehicles_road.png"},
+	groups = {cracky=3},
+	sounds = snd_stone,
+	paramtype2 = "facedir",
+	is_ground_content = false,
+})
+minetest.register_node("vehicles:stripe4", {
+	description = "Road surface (yellow stripe)",
+	tiles = {"vehicles_road_stripe4.png", "vehicles_road.png"},
+	groups = {cracky=3},
+	sounds = snd_stone,
+	paramtype2 = "facedir",
+	is_ground_content = false,
+})
+minetest.register_node("vehicles:window", {
+	description = "Building glass",
+	tiles = {"vehicles_window.png"},
+	groups = {cracky=3},
+	sounds = snd_glass,
+	is_ground_content = false,
+})
+minetest.register_node("vehicles:stripes", {
+	description = "Hazard stripes",
+	tiles = {"vehicles_stripes.png", "vehicles_road.png"},
+	groups = {cracky=3},
+	sounds = snd_stone,
+	paramtype2 = "facedir",
+	is_ground_content = false,
+})
+minetest.register_node("vehicles:lights", {
+	description = "Tunnel lights",
+	tiles = {"vehicles_lights.png"},
+	groups = {cracky=3},
+	sounds = snd_glass,
+	is_ground_content = false,
+})
 
 stairs.register_stair_and_slab("road_surface", "vehicles:road",
-		{cracky = 1},
+		{cracky = 3},
 		{"vehicles_road.png"},
 		"Road Surface Stair",
 		"Road Surface Slab",
-		default.node_sound_stone_defaults())
+		snd_stone)
 
 minetest.register_node("vehicles:neon_arrow", {
 	description = "neon arrows (left)",
@@ -1171,19 +1250,20 @@ minetest.register_node("vehicles:neon_arrow", {
 		animation = {type = "vertical_frames", aspect_w = 32, aspect_h = 32, length = 1.00},
 	}},
 	inventory_image = "vehicles_neon_arrow_inv.png",
-	weild_image = "vehicles_neon_arrow_inv.png",
+	wield_image = "vehicles_neon_arrow_inv.png",
 	use_texture_alpha = true,
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
 	light_source = 50,
 	walkable = false,
-	is_ground_content = true,
+	is_ground_content = false,
 	selection_box = {
 		type = "wallmounted",
 		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
 	},
 	groups = {cracky=3,dig_immediate=3},
+	sounds = snd_default,
 })
 
 minetest.register_node("vehicles:neon_arrow_flp", {
@@ -1195,19 +1275,20 @@ minetest.register_node("vehicles:neon_arrow_flp", {
 		animation = {type = "vertical_frames", aspect_w = 32, aspect_h = 32, length = 1.00},
 	}},
 	inventory_image = "vehicles_neon_arrow_inv.png^[transformFX",
-	weild_image = "vehicles_neon_arrow_inv.png^[transformFX",
+	wield_image = "vehicles_neon_arrow_inv.png^[transformFX",
 	use_texture_alpha = true,
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
 	light_source = 50,
 	walkable = false,
-	is_ground_content = true,
+	is_ground_content = false,
 	selection_box = {
 		type = "wallmounted",
 		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
 	},
 	groups = {cracky=3,dig_immediate=3},
+	sounds = snd_default,
 })
 
 minetest.register_node("vehicles:add_arrow", {
@@ -1216,18 +1297,20 @@ minetest.register_node("vehicles:add_arrow", {
 	visual_scale = 2.0,
 	tiles = {"vehicles_arrows.png"},
 	inventory_image = "vehicles_arrows.png",
+	wield_image = "vehicles_arrows.png",
 	use_texture_alpha = true,
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
 	light_source = 50,
 	walkable = false,
-	is_ground_content = true,
+	is_ground_content = false,
 	selection_box = {
 		type = "wallmounted",
 		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
 	},
 	groups = {cracky=3,dig_immediate=3},
+	sounds = snd_default,
 })
 
 minetest.register_node("vehicles:add_arrow_flp", {
@@ -1236,18 +1319,20 @@ minetest.register_node("vehicles:add_arrow_flp", {
 	visual_scale = 2.0,
 	tiles = {"vehicles_arrows_flp.png"},
 	inventory_image = "vehicles_arrows_flp.png",
+	wield_image = "vehicles_arrows_flp.png",
 	use_texture_alpha = true,
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
 	light_source = 50,
 	walkable = false,
-	is_ground_content = true,
+	is_ground_content = false,
 	selection_box = {
 		type = "wallmounted",
 		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
 	},
 	groups = {cracky=3,dig_immediate=3},
+	sounds = snd_default,
 })
 
 minetest.register_node("vehicles:scifi_ad", {
@@ -1259,19 +1344,20 @@ minetest.register_node("vehicles:scifi_ad", {
 		animation = {type = "vertical_frames", aspect_w = 58, aspect_h = 58, length = 1.00},
 	}},
 	inventory_image = "vehicles_scifinodes_inv.png",
-	weild_image = "vehicles_scifinodes_inv.png",
+	wield_image = "vehicles_scifinodes_inv.png",
 	use_texture_alpha = true,
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
 	light_source = 50,
 	walkable = false,
-	is_ground_content = true,
+	is_ground_content = false,
 	selection_box = {
 		type = "wallmounted",
 		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
 	},
 	groups = {cracky=3,dig_immediate=3},
+	sounds = snd_default,
 })
 
 minetest.register_node("vehicles:mt_sign", {
@@ -1280,18 +1366,20 @@ minetest.register_node("vehicles:mt_sign", {
 	visual_scale = 3.0,
 	tiles = {"vehicles_neonmt.png",},
 	inventory_image = "vehicles_neonmt.png",
+	wield_image = "vehicles_neonmt.png",
 	use_texture_alpha = true,
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
 	light_source = 50,
 	walkable = false,
-	is_ground_content = true,
+	is_ground_content = false,
 	selection_box = {
 		type = "wallmounted",
 		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
 	},
 	groups = {cracky=3,dig_immediate=3},
+	sounds = snd_default,
 })
 
 minetest.register_node("vehicles:pacman_sign", {
@@ -1300,18 +1388,20 @@ minetest.register_node("vehicles:pacman_sign", {
 	visual_scale = 2.0,
 	tiles = {"vehicles_pacman.png",},
 	inventory_image = "vehicles_pacman.png",
+	wield_image = "vehicles_pacman.png",
 	use_texture_alpha = true,
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
 	light_source = 50,
 	walkable = false,
-	is_ground_content = true,
+	is_ground_content = false,
 	selection_box = {
 		type = "wallmounted",
 		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
 	},
 	groups = {cracky=3,dig_immediate=3},
+	sounds = snd_default,
 })
 
 minetest.register_node("vehicles:whee_sign", {
@@ -1320,6 +1410,7 @@ minetest.register_node("vehicles:whee_sign", {
 	visual_scale = 3.0,
 	tiles = {"vehicles_whee.png",},
 	inventory_image = "vehicles_whee.png",
+	wield_image = "vehicles_whee.png",
 	use_texture_alpha = true,
 	paramtype = "light",
 	paramtype2 = "wallmounted",
@@ -1332,6 +1423,7 @@ minetest.register_node("vehicles:whee_sign", {
 		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
 	},
 	groups = {cracky=3,dig_immediate=3},
+	sounds = snd_default,
 })
 
 minetest.register_node("vehicles:checker_sign", {
@@ -1340,6 +1432,7 @@ minetest.register_node("vehicles:checker_sign", {
 	visual_scale = 3.0,
 	tiles = {"vehicles_checker2.png",},
 	inventory_image = "vehicles_checker2.png",
+	wield_image = "vehicles_checker2.png",
 	use_texture_alpha = true,
 	paramtype = "light",
 	paramtype2 = "wallmounted",
@@ -1351,7 +1444,8 @@ minetest.register_node("vehicles:checker_sign", {
 		type = "wallmounted",
 		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
 	},
-	groups = {cracky=3,dig_immediate=3},
+	groups = {snappy=3,dig_immediate=3},
+	sounds = snd_default,
 })
 
 minetest.register_node("vehicles:car_sign", {
@@ -1360,6 +1454,7 @@ minetest.register_node("vehicles:car_sign", {
 	visual_scale = 3.0,
 	tiles = {"vehicles_sign1.png",},
 	inventory_image = "vehicles_sign1.png",
+	wield_image = "vehicles_sign1.png",
 	use_texture_alpha = true,
 	paramtype = "light",
 	paramtype2 = "wallmounted",
@@ -1371,7 +1466,8 @@ minetest.register_node("vehicles:car_sign", {
 		type = "wallmounted",
 		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
 	},
-	groups = {cracky=3,dig_immediate=3},
+	groups = {snappy=3,dig_immediate=3},
+	sounds = snd_default,
 })
 
 minetest.register_node("vehicles:nyan_sign", {
@@ -1380,6 +1476,7 @@ minetest.register_node("vehicles:nyan_sign", {
 	visual_scale = 2.0,
 	tiles = {"vehicles_sign2.png",},
 	inventory_image = "vehicles_sign2.png",
+	wield_image = "vehicles_sign2.png",
 	use_texture_alpha = true,
 	paramtype = "light",
 	paramtype2 = "wallmounted",
@@ -1391,7 +1488,8 @@ minetest.register_node("vehicles:nyan_sign", {
 		type = "wallmounted",
 		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
 	},
-	groups = {cracky=3,dig_immediate=3},
+	groups = {snappy=3,dig_immediate=3},
+	sounds = snd_paper,
 })
 
 minetest.register_node("vehicles:flag", {
@@ -1400,6 +1498,7 @@ minetest.register_node("vehicles:flag", {
 	visual_scale = 3.0,
 	tiles = {"vehicles_flag.png",},
 	inventory_image = "vehicles_flag.png",
+	wield_image = "vehicles_flag.png",
 	use_texture_alpha = true,
 	paramtype = "light",
 	paramtype2 = "wallmounted",
@@ -1411,7 +1510,8 @@ minetest.register_node("vehicles:flag", {
 		type = "fixed",
 		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
 	},
-	groups = {cracky=3,dig_immediate=3},
+	groups = {snappy=3,dig_immediate=3},
+	sounds = snd_default,
 })
 
 
@@ -1437,7 +1537,8 @@ minetest.register_node("vehicles:tyres", {
 			{-0.4375, -0.4375, -0.5, 0.4375, -0.0625, 0.5}, -- NodeBox5
 		}
 	},
-	groups = {cracky=1},
+	groups = {choppy=2, snappy=1, dig_immediate=2, falling_node=1},
+	sounds = snd_tyre,
 })
 
 
