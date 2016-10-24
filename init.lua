@@ -576,6 +576,40 @@ minetest.register_entity("vehicles:lambogoni", {
 
 register_vehicle_spawner("vehicles:lambogoni", "Lambogoni (grey)", "vehicles_lambogoni_inv.png")
 
+minetest.register_entity("vehicles:lambogoni2", {
+	visual = "mesh",
+	mesh = "lambogoni.b3d",
+	textures = {"vehicles_lambogoni2.png"},
+	velocity = 15,
+	acceleration = -5,
+	stepheight = step,
+	hp_max = 200,
+	physical = true,
+	collisionbox = {-1, 0, -1, 1.3, 1, 1},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif not self.driver then
+		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		end
+	end,
+	on_punch = function(self, puncher)
+		vehicle_drop(self, puncher, "vehicles:lambogoni2")
+	end,
+	on_activate = function(self)
+	self.nitro = true
+	end,
+	on_step = function(self, dtime)
+	if self.driver then
+		object_drive_car(self, dtime, 15, 0.8, 4)
+		return false
+		end
+		return true
+	end,
+})
+
+register_vehicle_spawner("vehicles:lambogoni2", "Lambogoni (yellow)", "vehicles_lambogoni2_inv.png")
+
 minetest.register_entity("vehicles:masda", {
 	visual = "mesh",
 	mesh = "masda.b3d",
