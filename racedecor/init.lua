@@ -99,6 +99,7 @@ minetest.register_node("racedecor:lights", {
 	tiles = {"racedecor_lights.png"},
 	groups = {cracky=3},
 	sounds = snd_glass,
+	paramtype2 = "facedir",
 	is_ground_content = false,
 })
 
