@@ -101,6 +101,7 @@ minetest.register_node("racedecor:lights", {
 	sounds = snd_glass,
 	paramtype2 = "facedir",
 	is_ground_content = false,
+	light_source = 14,
 })
 
 if minetest.get_modpath("stairs") then
