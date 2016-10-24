@@ -321,7 +321,7 @@ minetest.register_node("racedecor:checker_sign", {
 })
 
 minetest.register_node("racedecor:car_sign", {
-	description = "Car racing poster",
+	description = "Car racing sign",
 	drawtype = "signlike",
 	visual_scale = 3.0,
 	tiles = {"racedecor_sign1.png",},
@@ -343,7 +343,7 @@ minetest.register_node("racedecor:car_sign", {
 })
 
 minetest.register_node("racedecor:nyan_sign", {
-	description = "Nyan Cat poster",
+	description = "Nyan Cat sign",
 	drawtype = "signlike",
 	visual_scale = 2.0,
 	tiles = {"racedecor_sign2.png",},
