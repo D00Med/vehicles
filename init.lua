@@ -980,10 +980,6 @@ minetest.register_entity("vehicles:plane", {
 	hp_max = 200,
 	animation_speed = 5,
 	physical = true,
-	animations = {
-      fly = { x=1, y=9},
-      nofly = { x=1, y=1},
-	},
 	collisionbox = {-1.1, 0, -1, 1, 1.9, 1.1},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
@@ -1000,7 +996,7 @@ minetest.register_entity("vehicles:plane", {
 	self.object:set_animation({x=1, y=1}, 5, 0)
 	end
 	if self.driver then
-		object_fly(self, dtime, 10, 0.1, 0.95, false, nil, "nofly", "fly")
+		object_fly(self, dtime, 10, 0.1, 0.95, false, nil, nil, nil)
 		if not self.anim then
 		self.object:set_animation({x=1, y=9}, 20, 0)
 		self.anim = true
