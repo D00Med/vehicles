@@ -141,12 +141,12 @@ function object_drive(entity, dtime, speed, decell, shoots, arrow, reload, movin
 	--lib_mount animation
 	if velo.x == 0 and velo.y == 0 and velo.z == 0 then
 		if stand_anim and stand_anim ~= nil and mobs_redo == true then
-			set_animation(entity, stand_anim)
+			self.object:set_animation(entity, stand_anim)
 		end
 		return
 	end
 	if moving_anim and moving_anim ~= nil then
-		set_animation(entity, moving_anim)
+		self.object:set_animation(entity, moving_anim)
 	end
 	--jumping not working
 	-- local jumps = jumps or false
@@ -387,13 +387,13 @@ function object_fly(entity, dtime, speed, accel, decell, shoots, arrow, moving_a
 	--lib_mount animation
 	if minetest.get_modpath("mobs")then
 	if velo.x == 0 and velo.y == 0 and velo.z == 0 then
-		if stand_anim and stand_anim ~= nilthen then
-			set_animation(entity, stand_anim)
+		if stand_anim and stand_anim ~= nil then
+			entity.object:set_animation(entity, stand_anim)
 		end
 		return
 	end
 	if moving_anim and moving_anim ~= nil then
-		set_animation(entity, moving_anim)
+		entity.object:set_animation(entity, moving_anim)
 	end
 	end
 end
@@ -441,14 +441,14 @@ function object_fly_2(entity, dtime, speed, accel, decell, shoots, arrow, moving
 	--lib_mount animation
 	local velo = entity.object:getvelocity()
 	if velo.x == 0 and velo.y == 0 and velo.z == 0 then
-		if stand_anim and stand_anim ~= nilthen then
-			set_animation(entity, stand_anim)
+		if stand_anim and stand_anim ~= nil then then
+			self.object:set_animation(entity, stand_anim)
 		end
 		entity.object:setpos(entity.object:getpos())
 		return
 	end
 	if moving_anim and moving_anim ~= nil then
-		set_animation(entity, moving_anim)
+		self.object:set_animation(entity, moving_anim)
 	end
 end
 
