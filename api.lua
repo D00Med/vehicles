@@ -441,7 +441,7 @@ function object_fly_2(entity, dtime, speed, accel, decell, shoots, arrow, moving
 	--lib_mount animation
 	local velo = entity.object:getvelocity()
 	if velo.x == 0 and velo.y == 0 and velo.z == 0 then
-		if stand_anim and stand_anim ~= nil then then
+		if stand_anim and stand_anim ~= nil then
 			self.object:set_animation(entity, stand_anim)
 		end
 		entity.object:setpos(entity.object:getpos())
