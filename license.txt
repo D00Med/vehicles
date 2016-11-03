@@ -24,6 +24,9 @@ License for Textures, Models
 
 CC BY-SA 3.0 UNPORTED. Created by D00Med
 
+License for sounds:
+CC BY-NC 3.0 oniwe https://freesound.org/people/oniwe/sounds/32316/
+
 --License of lib_mount:
 -- Minetest mod: lib_mount
 -- =======================

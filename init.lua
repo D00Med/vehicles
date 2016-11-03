@@ -16,7 +16,7 @@ dofile(minetest.get_modpath("vehicles").."/api.lua")
 	-- end
 -- end)
 
-local step = 1.2
+local step = 1.1
 
 minetest.register_entity("vehicles:missile", {
 	visual = "mesh",
@@ -76,9 +76,14 @@ minetest.register_entity("vehicles:missile", {
 })
 
 
-minetest.register_craftitem("vehicles:miss", {
+minetest.register_craftitem("vehicles:missile_2_item", {
 	description = "Missile",
 	inventory_image = "vehicles_missile_inv.png"
+})
+
+minetest.register_craftitem("vehicles:bullet_item", {
+	description = "Bullet",
+	inventory_image = "vehicles_bullet_inv.png"
 })
 
 
@@ -233,7 +238,18 @@ minetest.register_entity("vehicles:tank", {
 		end
 	end,
 	on_punch = function(self, puncher)
-		destroy(self, puncher, "vehicles:tank")
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
@@ -263,7 +279,18 @@ minetest.register_entity("vehicles:turret", {
 		end
 	end,
 	on_punch = function(self, puncher)
-		vehicle_drop(self, puncher, "vehicles:turret")
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
 	end,
 	on_step = function(self, dtime)
 	self.object:setvelocity({x=0, y=-1, z=0})
@@ -296,7 +323,18 @@ minetest.register_entity("vehicles:firetruck", {
 		end
 	end,
 	on_punch = function(self, puncher)
-		vehicle_drop(self, puncher, "vehicles:firetruck")
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
@@ -323,17 +361,34 @@ minetest.register_entity("vehicles:ute", {
 		if self.driver and clicker == self.driver then
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif self.driver and clicker ~= self.driver and not self.rider then
-		clicker:set_attach(self.object, "", {x=0, y=5, z=-5}, {x=0, y=0, z=0})
+		clicker:set_attach(self.object, "", {x=0, y=5, z=-5}, false, {x=0, y=0, z=-2})
 		self.rider = true
 		elseif self.driver and clicker ~=self.driver and self.rider then
 		clicker:set_detach()
 		self.rider = false
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		minetest.sound_play("engine_start", 
+		{gain = 6, max_hear_distance = 3, loop = false})
+		self.sound_ready = false
+		minetest.after(14, function()
+		self.sound_ready = true
+		end)
 		end
 	end,
 	on_punch = function(self, puncher)
-		vehicle_drop(self, puncher, "vehicles:ute")
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
 	end,
 	on_activate = function(self)
 	self.nitro = true
@@ -387,10 +442,27 @@ minetest.register_entity("vehicles:ute2", {
 		self.rider = false
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		minetest.sound_play("engine_start", 
+		{gain = 6, max_hear_distance = 3, loop = false})
+		self.sound_ready = false
+		minetest.after(14, function()
+		self.sound_ready = true
+		end)
 		end
 	end,
 	on_punch = function(self, puncher)
-		vehicle_drop(self, puncher, "vehicles:ute2")
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
 	end,
 	on_activate = function(self)
 	self.nitro = true
@@ -421,10 +493,27 @@ minetest.register_entity("vehicles:astonmaaton", {
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		minetest.sound_play("engine_start", 
+		{gain = 6, max_hear_distance = 3, loop = false})
+		self.sound_ready = false
+		minetest.after(14, function()
+		self.sound_ready = true
+		end)
 		end
 	end,
 	on_punch = function(self, puncher)
-		vehicle_drop(self, puncher, "vehicles:astonmaaton")
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
 	end,
 	on_activate = function(self)
 	self.nitro = true
@@ -455,10 +544,27 @@ minetest.register_entity("vehicles:nizzan", {
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		minetest.sound_play("engine_start", 
+		{gain = 6, max_hear_distance = 3, loop = false})
+		self.sound_ready = false
+		minetest.after(14, function()
+		self.sound_ready = true
+		end)
 		end
 	end,
 	on_punch = function(self, puncher)
-		vehicle_drop(self, puncher, "vehicles:nizzan")
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
 	end,
 	on_activate = function(self)
 	self.nitro = true
@@ -506,13 +612,30 @@ minetest.register_entity("vehicles:nizzan2", {
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		minetest.sound_play("engine_start", 
+		{gain = 6, max_hear_distance = 3, loop = false})
+		self.sound_ready = false
+		minetest.after(14, function()
+		self.sound_ready = true
+		end)
 		end
 	end,
 	on_activate = function(self)
 	self.nitro = true
 	end,
 	on_punch = function(self, puncher)
-		vehicle_drop(self, puncher, "vehicles:nizzan2")
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
@@ -557,10 +680,27 @@ minetest.register_entity("vehicles:lambogoni", {
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		minetest.sound_play("engine_start", 
+		{gain = 6, max_hear_distance = 3, loop = false})
+		self.sound_ready = false
+		minetest.after(14, function()
+		self.sound_ready = true
+		end)
 		end
 	end,
 	on_punch = function(self, puncher)
-		vehicle_drop(self, puncher, "vehicles:lambogoni")
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
 	end,
 	on_activate = function(self)
 	self.nitro = true
@@ -591,10 +731,27 @@ minetest.register_entity("vehicles:lambogoni2", {
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		minetest.sound_play("engine_start", 
+		{gain = 6, max_hear_distance = 3, loop = false})
+		self.sound_ready = false
+		minetest.after(14, function()
+		self.sound_ready = true
+		end)
 		end
 	end,
 	on_punch = function(self, puncher)
-		vehicle_drop(self, puncher, "vehicles:lambogoni2")
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
 	end,
 	on_activate = function(self)
 	self.nitro = true
@@ -625,10 +782,27 @@ minetest.register_entity("vehicles:masda", {
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		minetest.sound_play("engine_start", 
+		{gain = 6, max_hear_distance = 3, loop = false})
+		self.sound_ready = false
+		minetest.after(14, function()
+		self.sound_ready = true
+		end)
 		end
 	end,
 	on_punch = function(self, puncher)
-		vehicle_drop(self, puncher, "vehicles:masda")
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
 	end,
 	on_activate = function(self)
 	self.nitro = true
@@ -659,13 +833,30 @@ minetest.register_entity("vehicles:musting", {
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		minetest.sound_play("engine_start", 
+		{gain = 6, max_hear_distance = 3, loop = false})
+		self.sound_ready = false
+		minetest.after(14, function()
+		self.sound_ready = true
+		end)
 		end
 	end,
 	on_activate = function(self)
 	self.nitro = true
 	end,
 	on_punch = function(self, puncher)
-		vehicle_drop(self, puncher, "vehicles:musting")
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
@@ -693,10 +884,27 @@ minetest.register_entity("vehicles:musting2", {
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		minetest.sound_play("engine_start", 
+		{gain = 6, max_hear_distance = 3, loop = false})
+		self.sound_ready = false
+		minetest.after(14, function()
+		self.sound_ready = true
+		end)
 		end
 	end,
 	on_punch = function(self, puncher)
-		vehicle_drop(self, puncher, "vehicles:musting2")
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
 	end,
 	on_activate = function(self)
 	self.nitro = true
@@ -737,11 +945,28 @@ minetest.register_entity("vehicles:fewawi", {
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		minetest.sound_play("engine_start", 
+		{gain = 6, max_hear_distance = 3, loop = false})
+		self.sound_ready = false
+		minetest.after(14, function()
+		self.sound_ready = true
+		end)
 		end
 		end
 	end,
 	on_punch = function(self, puncher)
-		vehicle_drop(self, puncher, "vehicles:fewawi")
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
 	end,
 	on_activate = function(self)
 	self.nitro = true
@@ -782,11 +1007,28 @@ minetest.register_entity("vehicles:fewawi2", {
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		minetest.sound_play("engine_start", 
+		{gain = 6, max_hear_distance = 3, loop = false})
+		self.sound_ready = false
+		minetest.after(14, function()
+		self.sound_ready = true
+		end)
 		end
 		end
 	end,
 	on_punch = function(self, puncher)
-		vehicle_drop(self, puncher, "vehicles:fewawi2")
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
 	end,
 	on_activate = function(self)
 	self.nitro = true
@@ -817,13 +1059,30 @@ minetest.register_entity("vehicles:pooshe", {
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		minetest.sound_play("engine_start", 
+		{gain = 6, max_hear_distance = 3, loop = false})
+		self.sound_ready = false
+		minetest.after(14, function()
+		self.sound_ready = true
+		end)
 		end
 	end,
 	on_activate = function(self)
 	self.nitro = true
 	end,
 	on_punch = function(self, puncher)
-		vehicle_drop(self, puncher, "vehicles:pooshe")
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
@@ -851,10 +1110,27 @@ minetest.register_entity("vehicles:pooshe2", {
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		minetest.sound_play("engine_start", 
+		{gain = 6, max_hear_distance = 3, loop = false})
+		self.sound_ready = false
+		minetest.after(14, function()
+		self.sound_ready = true
+		end)
 		end
 	end,
 	on_punch = function(self, puncher)
-		vehicle_drop(self, puncher, "vehicles:pooshe2")
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
 	end,
 	on_activate = function(self)
 	self.nitro = true
@@ -885,13 +1161,30 @@ minetest.register_entity("vehicles:masda2", {
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		minetest.sound_play("engine_start", 
+		{gain = 6, max_hear_distance = 3, loop = false})
+		self.sound_ready = false
+		minetest.after(14, function()
+		self.sound_ready = true
+		end)
 		end
 	end,
 	on_activate = function(self)
 	self.nitro = true
 	end,
 	on_punch = function(self, puncher)
-		vehicle_drop(self, puncher, "vehicles:masda2")
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
@@ -922,7 +1215,18 @@ minetest.register_entity("vehicles:boat", {
 		end
 	end,
 	on_punch = function(self, puncher)
-		vehicle_drop(self, puncher, "vehicles:boat")
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
@@ -958,13 +1262,25 @@ minetest.register_entity("vehicles:jet", {
 		end
 	end,
 	on_punch = function(self, puncher)
-		vehicle_drop(self, puncher, "vehicles:jet")
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
 		object_fly(self, dtime, 14, 0.2, 0.95, true, "vehicles:missile_2", 1, {x=1, y=1}, {x=10, y=10})
 		return false
 		end
+		self.object:setvelocity({x=0, y=-1, z=0})
 		return true
 	end,
 })
@@ -989,14 +1305,25 @@ minetest.register_entity("vehicles:plane", {
 		end
 	end,
 	on_punch = function(self, puncher)
-		vehicle_drop(self, puncher, "vehicles:plane")
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
 	end,
 	on_step = function(self, dtime)
 	if self.anim and not self.driver then 
 	self.object:set_animation({x=1, y=1}, 5, 0)
 	end
 	if self.driver then
-		object_fly(self, dtime, 10, 0.1, 0.95, false, nil, nil, nil)
+		object_fly(self, dtime, 10, 0.1, 0.95, false, nil, nil, nil, nil)
 		if not self.anim then
 		self.object:set_animation({x=1, y=9}, 20, 0)
 		self.anim = true
@@ -1150,8 +1477,8 @@ minetest.register_tool("vehicles:rc", {
 			local playerpos = placer:getpos();
 			local pname = placer:get_player_name();
 			local inv = minetest.get_inventory({type="player", name=pname});
-			if inv:contains_item("main", "vehicles:miss") then
-			local remov = inv:remove_item("main", "vehicles:miss")
+			if inv:contains_item("main", "vehicles:missile_2_item") then
+			local remov = inv:remove_item("main", "vehicles:missile_2_item")
 			local obj = minetest.env:add_entity({x=playerpos.x+0+dir.x,y=playerpos.y+1+dir.y,z=playerpos.z+0+dir.z}, "vehicles:missile")
 			local vec = {x=dir.x*6,y=dir.y*6,z=dir.z*6}
 			obj:setvelocity(vec)
@@ -1160,8 +1487,331 @@ minetest.register_tool("vehicles:rc", {
 	end,
 })
 
+--crafting recipes and materials
+
+minetest.register_craftitem("vehicles:wheel", {
+	description = "Wheel",
+	inventory_image = "vehicles_wheel.png",
+})
+
+minetest.register_craftitem("vehicles:engine", {
+	description = "Engine",
+	inventory_image = "vehicles_engine.png",
+})
+
+minetest.register_craftitem("vehicles:body", {
+	description = "Car Body",
+	inventory_image = "vehicles_car_body.png",
+})
+
+minetest.register_craftitem("vehicles:armor", {
+	description = "Armor plating",
+	inventory_image = "vehicles_armor.png",
+})
+
+minetest.register_craftitem("vehicles:gun", {
+	description = "Vehicle Gun",
+	inventory_image = "vehicles_gun.png",
+})
+
+minetest.register_craftitem("vehicles:propeller", {
+	description = "Propeller",
+	inventory_image = "vehicles_propeller.png",
+})
+
+minetest.register_craftitem("vehicles:jet_engine", {
+	description = "Jet Engine",
+	inventory_image = "vehicles_jet_engine.png",
+})
+
+minetest.register_craft({
+	output = "vehicles:propeller",
+	recipe = {
+		{"default:steel_ingot", "", ""},
+		{"", "group:stick", ""},
+		{"", "", "default:steel_ingot"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:jet_engine",
+	recipe = {
+		{"", "default:steel_ingot", ""},
+		{"default:steel_ingot", "vehicles:propeller", "default:steel_ingot"},
+		{"", "default:steel_ingot", ""}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:armor",
+	recipe = {
+		{"", "default:gold_lump", ""},
+		{"", "default:iron_lump", ""},
+		{"", "default:copper_lump", ""}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:gun",
+	recipe = {
+		{"", "vehicles:armor", ""},
+		{"vehicles:armor", "default:coal_lump", "vehicles:armor"},
+		{"", "default:steel_ingot", ""}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:wheel",
+	recipe = {
+		{"", "default:coal_lump", ""},
+		{"default:coal_lump", "default:steel_ingot", "default:coal_lump"},
+		{"", "default:coal_lump", ""}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:engine",
+	recipe = {
+		{"default:copper_ingot", "", "default:copper_ingot"},
+		{"default:steel_ingot", "default:mese_crystal", "default:steel_ingot"},
+		{"", "default:steel_ingot", ""}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:body",
+	recipe = {
+		{"", "default:glass", ""},
+		{"default:glass", "default:steel_ingot", "default:glass"},
+		{"", "", ""}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:bullet_item 5",
+	recipe = {
+		{"default:coal_lump", "default:iron_lump",},
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:missile_2_item",
+	recipe = {
+		{"", "default:steel_ingot", ""},
+		{"", "default:torch", ""},
+		{"default:stick", "default:coal_lump", "default:stick"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:masda_spawner",
+	recipe = {
+		{"", "dye:magenta", ""},
+		{"", "vehicles:body", ""},
+		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:masda2_spawner",
+	recipe = {
+		{"", "dye:orange", ""},
+		{"", "vehicles:body", ""},
+		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:ute_spawner",
+	recipe = {
+		{"", "dye:brown", ""},
+		{"default:steel_ingot", "vehicles:body", ""},
+		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:ute2_spawner",
+	recipe = {
+		{"", "dye:white", ""},
+		{"default:steel_ingot", "vehicles:body", ""},
+		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:nizzan2_spawner",
+	recipe = {
+		{"", "dye:green", ""},
+		{"", "vehicles:body", ""},
+		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:nizzan_spawner",
+	recipe = {
+		{"", "dye:brown", ""},
+		{"", "vehicles:body", ""},
+		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:astonmaaton_spawner",
+	recipe = {
+		{"", "dye:white", ""},
+		{"", "vehicles:body", ""},
+		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:pooshe_spawner",
+	recipe = {
+		{"", "dye:red", ""},
+		{"", "vehicles:body", ""},
+		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:pooshe2_spawner",
+	recipe = {
+		{"", "dye:yellow", ""},
+		{"", "vehicles:body", ""},
+		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:lambogoni_spawner",
+	recipe = {
+		{"", "dye:grey", ""},
+		{"", "vehicles:body", ""},
+		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:lambogoni2_spawner",
+	recipe = {
+		{"", "dye:yellow", ""},
+		{"", "vehicles:body", "dye:grey"},
+		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:fewawi_spawner",
+	recipe = {
+		{"", "dye:red", ""},
+		{"", "vehicles:body", "default:glass"},
+		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:fewawi2_spawner",
+	recipe = {
+		{"", "dye:blue", ""},
+		{"", "vehicles:body", "default:glass"},
+		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:musting_spawner",
+	recipe = {
+		{"", "dye:violet", ""},
+		{"", "vehicles:body", ""},
+		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:musting2_spawner",
+	recipe = {
+		{"", "dye:blue", ""},
+		{"", "vehicles:body", ""},
+		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:tank_spawner",
+	recipe = {
+		{"", "vehicles:gun", ""},
+		{"vehicles:armor", "vehicles:engine", "vehicles:armor"},
+		{"vehicles:wheel", "vehicles:wheel", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:turret_spawner",
+	recipe = {
+		{"", "vehicles:gun", ""},
+		{"vehicles:armor", "vehicles:engine", "vehicles:armor"},
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:jet_spawner",
+	recipe = {
+		{"", "vehicles:gun", ""},
+		{"vehicles:jet_engine", "default:steel_ingot", "vehicles:jet_engine"},
+		{"", "default:steel_ingot", ""}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:plane_spawner",
+	recipe = {
+		{"", "vehicles:propeller", ""},
+		{"default:steel_ingot", "vehicles:engine", "default:steel_ingot"},
+		{"", "default:steel_ingot", ""}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:boat_spawner",
+	recipe = {
+		{"", "", ""},
+		{"default:steel_ingot", "vehicles:engine", "default:steel_ingot"},
+		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:firetruck_spawner",
+	recipe = {
+		{"", "dye:red", ""},
+		{"vehicles:body", "vehicles:engine", "vehicles:body"},
+		{"vehicles:wheel", "default:steel_ingot", "vehicles:wheel"}
+	}
+})
+
+
+minetest.register_craft({
+	output = "vehicles:backpack",
+	recipe = {
+		{"group:grass", "group:grass", "group:grass"},
+		{"group:stick", "", "group:stick"},
+		{"", "group:wood", ""}
+	}
+})
+
+
+
+
+
 --decorative nodes
 
+if minetest.setting_get("vehicles_nodes") == nil then
+minetest.setting_set("vehicles_nodes", "true")
+end
+
+if minetest.setting_get("vehicles_nodes") then
 function vehicles.register_simplenode(name, desc, texture, light)
 minetest.register_node("vehicles:"..name, {
 	description = desc,
@@ -1169,6 +1819,7 @@ minetest.register_node("vehicles:"..name, {
 	groups = {cracky=1},
 	paramtype2 = "facedir",
 	light_source = light,
+	default.node_sound_stone_defaults(),
 })
 end
 
@@ -1183,14 +1834,23 @@ vehicles.register_simplenode("stripe3", "Road surface (white stripes)", "vehicle
 vehicles.register_simplenode("stripe4", "Road surface (yellow stripes)", "vehicles_road_stripe4.png", 0)
 vehicles.register_simplenode("window", "Building glass", "vehicles_window.png", 0)
 vehicles.register_simplenode("stripes", "Hazard stipes", "vehicles_stripes.png", 10)
-vehicles.register_simplenode("lights", "Tunnel lights", "vehicles_lights.png", 20)
 
+minetest.register_node("vehicles:lights", {
+	description = "Tunnel Lights",
+	tiles = {"vehicles_lights_top.png", "vehicles_lights_top.png", "vehicles_lights.png", "vehicles_lights.png", "vehicles_lights.png", "vehicles_lights.png"},
+	groups = {cracky=1},
+	paramtype2 = "facedir",
+	light_source = 20,
+})
+
+if minetest.get_modpath("stairs") then
 stairs.register_stair_and_slab("road_surface", "vehicles:road",
 		{cracky = 1},
 		{"vehicles_road.png"},
 		"Road Surface Stair",
 		"Road Surface Slab",
 		default.node_sound_stone_defaults())
+end
 
 minetest.register_node("vehicles:neon_arrow", {
 	description = "neon arrows (left)",
@@ -1467,8 +2127,8 @@ minetest.register_node("vehicles:tyres", {
 			{-0.4375, -0.4375, -0.5, 0.4375, -0.0625, 0.5}, -- NodeBox5
 		}
 	},
-	groups = {cracky=1},
+	groups = {cracky=1, falling_node=1},
 })
-
+end
 
 
