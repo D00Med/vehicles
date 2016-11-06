@@ -237,10 +237,11 @@ function object_drive_car(entity, dtime, speed, decell, nitro_duration)
 	local accell = 1
 	
 	--vectors
-	local vec_forward = {x=dir.x*speed/4*math.atan(0.5*timer-2)+8*dir.x,y=velo.y-0.5,z=dir.z*speed/4*math.atan(0.5*timer-2)+8*dir.z}
+	local vec_forward = {x=dir.x*(speed*0.2)*math.log(timer+0.5)+4*dir.x,y=velo.y-0.5,z=dir.z*(speed*0.2)*math.log(timer+0.5)+4*dir.z}
+	--local vec_forward = {x=dir.x*speed/4*math.atan(0.5*timer-2)+8*dir.x,y=velo.y-0.5,z=dir.z*speed/4*math.atan(0.5*timer-2)+8*dir.z}
 	--local vec_forward = {x=dir.x*speed*accell,y=velo.y-0.5,z=dir.z*speed*accell}
 	--local vec_nitro = {x=dir.x*(speed*1.5)*accell,y=velo.y-0.5,z=dir.z*(speed*1.5)*accell}
-	local vec_nitro = {x=dir.x*speed*2/4*math.atan(timer-2)+5*dir.x,y=velo.y-0.5,z=dir.z*speed*2/4*math.atan(timer-2)+5*dir.z}
+	local vec_nitro = {x=dir.x*(speed*0.2)*math.log(timer+0.5)+8*dir.x,y=velo.y-0.5,z=dir.z*(speed*0.2)*math.log(timer+0.5)+8*dir.z}
 	local vec_backward = {x=-dir.x*(speed/4)*accell,y=velo.y-0.5,z=-dir.z*(speed/4)*accell}
 	local vec_stop = {x=velo.x*decell,y=velo.y-1,z=velo.z*decell}
 	
