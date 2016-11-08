@@ -1819,7 +1819,7 @@ minetest.register_node("vehicles:"..name, {
 	groups = {cracky=1},
 	paramtype2 = "facedir",
 	light_source = light,
-	default.node_sound_stone_defaults(),
+	sound = default.node_sound_stone_defaults(),
 })
 end
 
