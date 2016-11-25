@@ -394,11 +394,13 @@ function object_turret(entity, dtime, height, arrow, shoot_interval)
 end
 
 --basic flying, with optional weapons
-function object_fly(entity, dtime, speed, accel, decell, shoots, arrow, reload, moving_anim, stand_anim)
+function object_fly(entity, dtime, speed, accel, decell, shoots, arrow, reload, moving_anim, stand_anim, mode2)
+	local mode2 = mode2 or "hold"
 	local ctrl = entity.driver:get_player_control()
 	local dir = entity.driver:get_look_dir();
 	local velo = entity.object:getvelocity()
 	local vec_forward = {x=dir.x*speed,y=(dir.y*speed)/4+math.abs(velo.z+velo.x)/10,z=dir.z*speed}
+	local vec_rise = {x=entity.object:getvelocity().x, y=speed*accel, z=entity.object:getvelocity().z}
 	local acc_forward = {x=dir.x*accel/2,y=dir.y*accel/2+3,z=dir.z*accel/2}
 	--local vec_backward = {x=-dir.x*speed,y=dir.y*speed+3,z=-dir.z*speed}
 	--local acc_backward = {x=dir.x*accel/2,y=dir.y*accel/2+3,z=dir.z*accel/2}
@@ -407,6 +409,16 @@ function object_fly(entity, dtime, speed, accel, decell, shoots, arrow, reload, 
 	--pitch doesn't work/exist
 	--local pitch = entity.driver:get_look_pitch();
 	
+	-- --timer
+	-- local absolute_speed = math.sqrt(math.pow(velo.x, 2)+math.pow(velo.z, 2))
+	-- if absolute_speed <= speed and ctrl.up then
+	-- timer = timer + 1*dtime
+	-- end
+	-- if not ctrl.up then
+	-- timer = 0
+	-- end
+	-- --timer dependant variables
+	-- local vec_forward = {x=dir.x*speed/4*math.atan(0.5*timer-2)+8*dir.x,y=dir.y*speed/4*math.atan(0.5*timer-2)+8*dir.y,z=dir.z*speed/4*math.atan(0.5*timer-2)+8*dir.z}
 	
 	--water effects
 	local pos = entity.object:getpos()
@@ -423,84 +435,34 @@ function object_fly(entity, dtime, speed, accel, decell, shoots, arrow, reload, 
 		--entity.object:setpitch(pitch+math.pi+math.pi/2)
 		--entity.object:setvelocity(vec_backward)
 		--entity.object:setacceleration(acc_backward)
-	elseif not ctrl.down or ctrl.up then
-		entity.object:setyaw(yaw+math.pi+math.pi/2)
-		entity.object:setvelocity(vec_stop)
-		entity.object:setacceleration({x=0, y=-4.5, z=0})
+		
+		--lib_mount animation
+	if moving_anim ~= nil and not entity.moving then
+		entity.object:set_animation(moving_anim, 20, 0)
+		entity.moving = true
 	end
-	if ctrl.jump and ctrl.up then
-	entity.object:setvelocity({x=dir.x*speed, y=0, z=dir.z*speed})
-	elseif ctrl.jump and not ctrl.up then
-	entity.object:setvelocity({x=velo.x*decell, y=0, z=velo.z*decell})
-	end
-	if ctrl.sneak and shoots and entity.loaded then
-		local pname = entity.driver:get_player_name();
-			local inv = minetest.get_inventory({type="player", name=pname});
-			if inv:contains_item("main", arrow.."_item") then
-			local remov = inv:remove_item("main", arrow.."_item")
-			entity.loaded = false
-			local pos = entity.object:getpos()
-			local obj = minetest.env:add_entity({x=pos.x+0+dir.x*2,y=pos.y+1.5+dir.y,z=pos.z+0+dir.z*2}, arrow)
-			local vec = {x=dir.x*9,y=dir.y*9,z=dir.z*9}
-			local yaw = entity.driver:get_look_yaw();
-			obj:setyaw(yaw+math.pi/2)
-			obj:setvelocity(vec)
-			local object = obj:get_luaentity()
-			object.launcher = entity.driver
-			minetest.after(reload, function()
-			entity.loaded = true
-			end)
-			end
-	end
-	--lib_mount animation
-	if minetest.get_modpath("mobs")then
-	if velo.x == 0 and velo.y == 0 and velo.z == 0 then
-		if stand_anim and stand_anim ~= nil then
-			entity.object:set_animation(entity, stand_anim)
-		end
-		return
-	end
-	if moving_anim and moving_anim ~= nil then
-		entity.object:set_animation(entity, moving_anim)
-	end
-	end
-end
-
---flying with jump to increase height in addition to looking up/down
-function object_fly_2(entity, dtime, speed, accel, decell, shoots, arrow, reload, moving_anim, stand_anim)
-	local ctrl = entity.driver:get_player_control()
-	local dir = entity.driver:get_look_dir();
-	local yvel = entity.object:getvelocity().y
-	local vec_forward = {x=dir.x*speed,y=yvel,z=dir.z*speed}
-	local acc_forward = {x=dir.x*accel/2,y=yvel,z=dir.z*accel/2}
-	--local vec_backward = {x=-dir.x*speed,y=yvel,z=-dir.z*speed}
-	--local acc_backward = {x=dir.x*accel/2,y=yvel,z=dir.z*accel/2}
-	local vec_stop = {x=entity.object:getvelocity().x*decell, y=entity.object:getvelocity().y, z=entity.object:getvelocity().z*decell}
-	local vec_rise = {x=entity.object:getvelocity().x, y=speed*accel, z=entity.object:getvelocity().z}
-	local yaw = entity.driver:get_look_yaw();
-	
-	
-	
-	--water effects
-	local pos = entity.object:getpos()
-	local node = minetest.get_node(pos).name
-	if node == "default:water_source" or node == "default:river_water_source" or node == "default:river_water_flowing" or node == "default:water_flowing" then
-		entity.object:setvelocity({x=velo.x*0.9, y=-1, z=velo.z*0.9})	
-	elseif ctrl.up then
-		entity.object:setyaw(yaw+math.pi+math.pi/2)
-		entity.object:setvelocity(vec_forward)
-		entity.object:setacceleration(acc_forward)
-	--elseif ctrl.down then
-	--	entity.object:setyaw(yaw+math.pi+math.pi/2)
-	--	entity.object:setvelocity(vec_backward)
-	--	entity.object:setacceleration(acc_backward)
-	elseif ctrl.jump then
+	elseif ctrl.jump and mode2 == "rise" then
 		entity.object:setyaw(yaw+math.pi+math.pi/2)
 		entity.object:setvelocity(vec_rise)
-	elseif not ctrl.down or ctrl.up or ctrl.jump then
+		--lib_mount animation
+	if moving_anim ~= nil and not entity.moving then
+		entity.object:set_animation(moving_anim, 20, 0)
+		entity.moving = true
+	end
+	elseif not ctrl.up and not ctrl.jump then
 		entity.object:setyaw(yaw+math.pi+math.pi/2)
 		entity.object:setvelocity(vec_stop)
 		entity.object:setacceleration({x=0, y=-4.5, z=0})
+		--lib_mount animation
+	if stand_anim ~= nil and entity.moving then
+		entity.object:set_animation(stand_anim, 20, 0)
+		entity.moving = false
+	end
+	end
+	if ctrl.jump and ctrl.up and mode2 == "hold" then
+	entity.object:setvelocity({x=dir.x*speed, y=0, z=dir.z*speed})
+	elseif not ctrl.jump and not ctrl.up then
+	entity.object:setvelocity({x=velo.x*decell, y=-1, z=velo.z*decell})
 	end
 	if ctrl.sneak and shoots and entity.loaded then
 		local pname = entity.driver:get_player_name();
@@ -520,18 +482,6 @@ function object_fly_2(entity, dtime, speed, accel, decell, shoots, arrow, reload
 			entity.loaded = true
 			end)
 			end
-	end
-	--lib_mount animation
-	local velo = entity.object:getvelocity()
-	if velo.x == 0 and velo.y == 0 and velo.z == 0 then
-		if stand_anim and stand_anim ~= nil then
-			self.object:set_animation(entity, stand_anim)
-		end
-		entity.object:setpos(entity.object:getpos())
-		return
-	end
-	if moving_anim and moving_anim ~= nil then
-		self.object:set_animation(entity, moving_anim)
 	end
 end
 

@@ -253,7 +253,7 @@ minetest.register_entity("vehicles:tank", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive(self, dtime, 6, 0.5, true, "vehicles:missile_2", 1, nil, nil, false)
+		object_drive(self, dtime, 6, 0.5, true, "vehicles:missile_2", 1, {x=1, y=1}, {x=1, y=1}, false, nil, {x=1, y=1})
 		return false
 		end
 		return true
@@ -396,10 +396,10 @@ minetest.register_entity("vehicles:firetruck", {
 
 register_vehicle_spawner("vehicles:firetruck", "Fire truck", "vehicles_firetruck_inv.png")
 
-minetest.register_entity("vehicles:jeep", {
+minetest.register_entity("vehicles:geep", {
 	visual = "mesh",
-	mesh = "jeep.b3d",
-	textures = {"vehicles_jeep.png"},
+	mesh = "geep.b3d",
+	textures = {"vehicles_geep.png"},
 	velocity = 15,
 	acceleration = -5,
 	stepheight = 1.5,
@@ -468,7 +468,7 @@ minetest.register_entity("vehicles:jeep", {
 	end,
 })
 
-register_vehicle_spawner("vehicles:jeep", "Jeep", "vehicles_jeep_inv.png")
+register_vehicle_spawner("vehicles:geep", "Geep", "vehicles_geep_inv.png")
 
 minetest.register_entity("vehicles:ute", {
 	visual = "mesh",
@@ -1381,7 +1381,7 @@ minetest.register_entity("vehicles:jet", {
 		if self.driver and clicker == self.driver then
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
-		object_attach(self, clicker, {x=0, y=5, z=5}, false, {x=0, y=3, z=4})
+		object_attach(self, clicker, {x=0, y=3, z=3}, false, {x=0, y=3, z=3})
 		end
 	end,
 	on_punch = function(self, puncher)
@@ -1400,7 +1400,7 @@ minetest.register_entity("vehicles:jet", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_fly(self, dtime, 14, 0.2, 0.95, true, "vehicles:missile_2", 1, {x=1, y=1}, {x=10, y=10})
+		object_fly(self, dtime, 14, 0.2, 0.95, true, "vehicles:missile_2", 1, {x=10, y=10}, {x=1, y=1}, "rise")
 		return false
 		end
 		self.object:setvelocity({x=0, y=-1, z=0})
