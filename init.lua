@@ -2034,6 +2034,15 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "vehicles:policecar_spawner",
+	recipe = {
+		{"", "dye:blue", "dye:red"},
+		{"", "vehicles:body", ""},
+		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
 	output = "vehicles:tank_spawner",
 	recipe = {
 		{"", "vehicles:gun", ""},
