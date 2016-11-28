@@ -115,7 +115,7 @@ function object_drive(entity, dtime, speed, decell, shoots, arrow, reload, movin
 	local velo = entity.object:getvelocity()
 	local dir = entity.driver:get_look_dir();
 	--local vec_forward = {x=dir.x*speed,y=velo.y+1*-2,z=dir.z*speed}
-	local vec_backward = {x=-dir.x*speed,y=velo.y+1*-2,z=-dir.z*speed}
+	local vec_backward = {x=-dir.x*speed/4,y=velo.y+1*-2,z=-dir.z*speed/4}
 	local vec_stop = {x=velo.x*decell,y=velo.y+1*-2,z=velo.z*decell}
 	local yaw = entity.driver:get_look_yaw();
 	--timer
@@ -170,7 +170,7 @@ function object_drive(entity, dtime, speed, decell, shoots, arrow, reload, movin
 			entity.loaded = false
 			local pos = entity.object:getpos()
 			local obj = minetest.env:add_entity({x=pos.x+0+dir.x*2,y=pos.y+shoot_y+dir.y,z=pos.z+0+dir.z*2}, arrow)
-			local vec = {x=dir.x*9,y=dir.y*9,z=dir.z*9}
+			local vec = {x=dir.x*14,y=dir.y*14,z=dir.z*14}
 			local yaw = entity.driver:get_look_yaw();
 			obj:setyaw(yaw+math.pi/2)
 			obj:setvelocity(vec)
@@ -350,7 +350,7 @@ function object_drive_car(entity, dtime, speed, decell, nitro_duration, move_ani
 	--play engine sound
 	if entity.sound_ready then
 	minetest.sound_play("engine", 
-		{gain = 6, max_hear_distance = 3, loop = false})
+		{gain = 4, max_hear_distance = 3, loop = false})
 	entity.sound_ready = false
 	minetest.after(11, function()
 	entity.sound_ready = true
@@ -400,7 +400,7 @@ function object_turret(entity, dtime, height, arrow, shoot_interval)
 			local dir = entity.driver:get_look_dir();
 			local obj = minetest.env:add_entity({x=pos.x+dir.x*1.2,y=pos.y+height,z=pos.z+dir.z*1.2}, arrow)
 			local yaw = entity.driver:get_look_yaw();
-			local vec = {x=dir.x*9, y=dir.y*9, z=dir.z*9}
+			local vec = {x=dir.x*12, y=dir.y*12, z=dir.z*12}
 			obj:setyaw(yaw+math.pi/2)
 			obj:setvelocity(vec)
 			local object = obj:get_luaentity()
