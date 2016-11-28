@@ -29,6 +29,8 @@ geep.b3d, and vehicles_jeep.png - CC BY-SA 3.0 UNPORTED. Created by Kdog14
 License for sounds:
 CC BY-NC 3.0 oniwe https://freesound.org/people/oniwe/sounds/32316/
 
+shot.ogg - by Kibblesbob http://soundbible.com/1804-M4A1-Single.html
+
 --License of lib_mount:
 -- Minetest mod: lib_mount
 -- =======================

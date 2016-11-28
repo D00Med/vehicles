@@ -195,12 +195,18 @@ minetest.register_entity("vehicles:water", {
 })
 
 minetest.register_entity("vehicles:bullet", {
-	visual = "sprite",
+	visual = "mesh",
+	mesh = "bullet.b3d",
 	textures = {"vehicles_bullet.png"},
 	velocity = 15,
 	acceleration = -5,
 	damage = 2,
 	collisionbox = {0, 0, 0, 0, 0, 0},
+	on_activate = function(self)
+		local pos = self.object:getpos()
+		minetest.sound_play("shot", 
+		{gain = 0.2, max_hear_distance = 3, loop = false})
+	end,
 	on_step = function(self, obj, pos)
 		minetest.after(10, function()
 			self.object:remove()
