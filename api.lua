@@ -47,7 +47,6 @@ local function force_detach(player)
 end
 
 function object_attach(entity, player, attach_at, visible, eye_offset)
-	eye_offset = eye_offset or {x=0, y=0, z=0}
 	force_detach(player)
 	entity.driver = player
 	entity.loaded = true
@@ -253,7 +252,7 @@ end
 
 
 --same as above but with improvements for cars and nitro/boost
-function object_drive_car(entity, dtime, speed, decell, nitro_duration)
+function object_drive_car(entity, dtime, speed, decell, nitro_duration, move_anim, stand_anim)
 	local ctrl = entity.driver:get_player_control()
 	local velo = entity.object:getvelocity()
 	local dir = entity.driver:get_look_dir()
@@ -321,12 +320,32 @@ function object_drive_car(entity, dtime, speed, decell, nitro_duration)
 			minetest.after(nitro_duration, function()
 			entity.nitro = false
 			end)
+	--lib_mount animation
+	if moving_anim ~= nil and not entity.moving then
+		entity.object:set_animation(move_anim, 20, 0)
+		entity.moving = true
+	end
 	elseif ctrl.up then
 		entity.object:setvelocity(vec_forward)
+	--lib_mount animation
+	if moving_anim ~= nil and not entity.moving then
+		entity.object:set_animation(move_anim, 20, 0)
+		entity.moving = true
+	end
 	elseif ctrl.down then
 		entity.object:setvelocity(vec_backward)
+	--lib_mount animation
+	if moving_anim ~= nil and not entity.moving then
+		entity.object:set_animation(move_anim, 20, 0)
+		entity.moving = true
+	end
 	elseif not ctrl.down or ctrl.up then
 		entity.object:setvelocity(vec_stop)
+	--lib_mount animation
+	if stand_anim ~= nil and entity.moving then
+		entity.object:set_animation(stand_anim, 20, 0)
+		entity.moving = false
+	end
 	end
 	--play engine sound
 	if entity.sound_ready then

@@ -129,6 +129,22 @@ minetest.register_entity("vehicles:missile_2", {
 								local n = minetest.env:get_node(p).name
 								if n ~= "vehicles:missile_2" and n ~= "vehicles:tank" and n ~= "vehicles:jet" and n ~= "air" then
 									local pos = self.object:getpos()
+									minetest.add_particlespawner({
+			amount = 30,
+			time = 0.5,
+			minpos = {x=pos.x-0.5, y=pos.y-0.5, z=pos.z-0.5},
+			maxpos = {x=pos.x+0.5, y=pos.y+0.5, z=pos.z+0.5},
+			minvel = {x=-1, y=-1, z=-1},
+			maxvel = {x=1, y=1, z=1},
+			minacc = {x=0, y=0.2, z=0},
+			maxacc = {x=0, y=0.6, z=0},
+			minexptime = 0.5,
+			maxexptime = 1,
+			minsize = 10,
+			maxsize = 20,
+			collisiondetection = false,
+			texture = "vehicles_explosion.png"
+		})
 									tnt.boom(pos, {damage_radius=5,radius=5,ignore_protection=false})
 									self.object:remove()
 									return
@@ -470,6 +486,64 @@ minetest.register_entity("vehicles:geep", {
 
 register_vehicle_spawner("vehicles:geep", "Geep", "vehicles_geep_inv.png")
 
+minetest.register_entity("vehicles:ambulance", {
+	visual = "mesh",
+	mesh = "ambulance.b3d",
+	textures = {"vehicles_ambulance.png"},
+	velocity = 15,
+	acceleration = -5,
+	stepheight = 1.5,
+	hp_max = 200,
+	physical = true,
+	collisionbox = {-1.4, 0, -1.4, 1.4, 2, 1.4},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif self.driver and clicker ~= self.driver and not self.rider then
+		clicker:set_attach(self.object, clicker, {x=0, y=5, z=4}, false, {x=0, y=7, z=10})
+		self.rider = true
+		clicker:set_hp(20)
+		elseif self.driver and clicker ~= self.driver and self.rider then
+		clicker:set_detach()
+		self.rider = false
+		elseif not self.driver then
+		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=7, z=14})
+		minetest.sound_play("engine_start", 
+		{gain = 6, max_hear_distance = 3, loop = false})
+		self.sound_ready = false
+		minetest.after(14, function()
+		self.sound_ready = true
+		end)
+		end
+	end,
+	on_punch = function(self, puncher)
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
+	end,
+	on_activate = function(self)
+	self.nitro = true
+	end,
+	on_step = function(self, dtime)
+	if self.driver then
+		object_drive_car(self, dtime, 13, 0.6, 0, {x=1, y=3}, {x=1, y=1})
+		return false
+		end
+		return true
+	end,
+})
+
+register_vehicle_spawner("vehicles:ambulance", "Ambulance", "vehicles_ambulance_inv.png")
+
 minetest.register_entity("vehicles:ute", {
 	visual = "mesh",
 	mesh = "ute.b3d",
@@ -484,7 +558,7 @@ minetest.register_entity("vehicles:ute", {
 		if self.driver and clicker == self.driver then
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif self.driver and clicker ~= self.driver and not self.rider then
-		clicker:set_attach(self.object, "", {x=0, y=5, z=-5}, false, {x=0, y=0, z=-2})
+		clicker:set_attach(self.object, clicker, {x=0, y=5, z=-5}, false, {x=0, y=0, z=-2})
 		self.rider = true
 		elseif self.driver and clicker ~=self.driver and self.rider then
 		clicker:set_detach()
@@ -558,7 +632,7 @@ minetest.register_entity("vehicles:ute2", {
 		if self.driver and clicker == self.driver then
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif self.driver and clicker ~= self.driver and not self.rider then
-		clicker:set_attach(self.object, "", {x=0, y=5, z=-5}, {x=0, y=0, z=0})
+		clicker:set_attach(self.object, clicker, {x=0, y=5, z=-5}, {x=0, y=0, z=0})
 		self.rider = true
 		elseif self.driver and clicker ~=self.driver and self.rider then
 		clicker:set_detach()
@@ -1911,6 +1985,33 @@ minetest.register_craft({
 		{"", "dye:red", ""},
 		{"vehicles:body", "vehicles:engine", "vehicles:body"},
 		{"vehicles:wheel", "default:steel_ingot", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:geep_spawner",
+	recipe = {
+		{"", "", ""},
+		{"", "vehicles:engine", ""},
+		{"vehicles:wheel", "vehicles:armor", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:ambulance_spawner",
+	recipe = {
+		{"", "", ""},
+		{"vehicles:body", "vehicles:body", "dye:white"},
+		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:assaultsuit_spawner",
+	recipe = {
+		{"vehicles:gun", "default:glass", "vehicles:armor"},
+		{"", "vehicles:engine", ""},
+		{"vehicles:armor", "", "vehicles:armor"}
 	}
 })
 
