@@ -42,6 +42,23 @@ minetest.register_entity("vehicles:missile", {
 		self.object:setvelocity(vec)
 		end
 		local pos = self.object:getpos()
+		local vec = self.object:getvelocity()
+		minetest.add_particlespawner({
+		amount = 1,
+		time = 0.5,
+		minpos = {x=pos.x-0.2, y=pos.y, z=pos.z-0.2},
+		maxpos = {x=pos.x+0.2, y=pos.y, z=pos.z+0.2},
+		minvel = {x=-vec.x/2, y=-vec.y/2, z=-vec.z/2},
+		maxvel = {x=-vec.x, y=-vec.y, z=-vec.z},
+		minacc = {x=0, y=-1, z=0},
+		maxacc = {x=0, y=-1, z=0},
+		minexptime = 0.2,
+		maxexptime = 0.6,
+		minsize = 3,
+		maxsize = 4,
+		collisiondetection = false,
+		texture = "vehicles_smoke.png",
+	})
 		local objs = minetest.get_objects_inside_radius({x=pos.x,y=pos.y,z=pos.z}, 2)	
 			for k, obj in pairs(objs) do
 				if obj:get_luaentity() ~= nil then
@@ -100,14 +117,30 @@ minetest.register_entity("vehicles:missile_2", {
 			self.object:remove()
 		end)
 		local velo = self.object:getvelocity()
-		if velo.y <= 1 and velo.y >= -1 then
+		if velo.y <= 1.2 and velo.y >= -1.2 then
 			self.object:set_animation({x=1, y=1}, 5, 0)
-		elseif velo.y <= -1 then
+		elseif velo.y <= -1.2 then
 			self.object:set_animation({x=4, y=4}, 5, 0)
-		elseif velo.y >= 1 then
+		elseif velo.y >= 1.2 then
 			self.object:set_animation({x=2, y=2}, 5, 0)
 		end
 		local pos = self.object:getpos()
+		minetest.add_particlespawner({
+		amount = 2,
+		time = 0.5,
+		minpos = {x=pos.x-0.2, y=pos.y, z=pos.z-0.2},
+		maxpos = {x=pos.x+0.2, y=pos.y, z=pos.z+0.2},
+		minvel = {x=-velo.x/2, y=-velo.y/2, z=-velo.z/2},
+		maxvel = {x=-velo.x, y=-velo.y, z=-velo.z},
+		minacc = {x=0, y=-1, z=0},
+		maxacc = {x=0, y=-1, z=0},
+		minexptime = 0.2,
+		maxexptime = 0.6,
+		minsize = 3,
+		maxsize = 4,
+		collisiondetection = false,
+		texture = "vehicles_smoke.png",
+	})
 		local objs = minetest.get_objects_inside_radius({x=pos.x,y=pos.y,z=pos.z}, 2)	
 			for k, obj in pairs(objs) do
 				if obj:get_luaentity() ~= nil then
@@ -129,6 +162,22 @@ minetest.register_entity("vehicles:missile_2", {
 								local n = minetest.env:get_node(p).name
 								if n ~= "vehicles:missile_2" and n ~= "vehicles:tank" and n ~= "vehicles:jet" and n ~= "air" then
 									local pos = self.object:getpos()
+									minetest.add_particlespawner({
+			amount = 30,
+			time = 0.5,
+			minpos = {x=pos.x-0.5, y=pos.y-0.5, z=pos.z-0.5},
+			maxpos = {x=pos.x+0.5, y=pos.y+0.5, z=pos.z+0.5},
+			minvel = {x=-1, y=-1, z=-1},
+			maxvel = {x=1, y=1, z=1},
+			minacc = {x=0, y=0.2, z=0},
+			maxacc = {x=0, y=0.6, z=0},
+			minexptime = 0.5,
+			maxexptime = 1,
+			minsize = 10,
+			maxsize = 20,
+			collisiondetection = false,
+			texture = "vehicles_explosion.png"
+		})
 									tnt.boom(pos, {damage_radius=5,radius=5,ignore_protection=false})
 									self.object:remove()
 									return
@@ -179,12 +228,18 @@ minetest.register_entity("vehicles:water", {
 })
 
 minetest.register_entity("vehicles:bullet", {
-	visual = "sprite",
+	visual = "mesh",
+	mesh = "bullet.b3d",
 	textures = {"vehicles_bullet.png"},
 	velocity = 15,
 	acceleration = -5,
 	damage = 2,
 	collisionbox = {0, 0, 0, 0, 0, 0},
+	on_activate = function(self)
+		local pos = self.object:getpos()
+		minetest.sound_play("shot", 
+		{gain = 0.4, max_hear_distance = 3, loop = false})
+	end,
 	on_step = function(self, obj, pos)
 		minetest.after(10, function()
 			self.object:remove()
@@ -196,7 +251,7 @@ minetest.register_entity("vehicles:bullet", {
 					if obj:get_luaentity().name ~= "vehicles:bullet" and n ~= "vehicles:turret" and obj:get_luaentity().name ~= "__builtin:item" then
 						obj:punch(self.launcher, 1.0, {
 							full_punch_interval=1.0,
-							damage_groups={fleshy=0.5},
+							damage_groups={fleshy=1},
 						}, nil)
 						self.object:remove()
 					end
@@ -253,7 +308,7 @@ minetest.register_entity("vehicles:tank", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive(self, dtime, 6, 0.5, true, "vehicles:missile_2", 1, nil, nil, false)
+		object_drive(self, dtime, 6, 0.5, true, "vehicles:missile_2", 1, {x=1, y=1}, {x=1, y=1}, false, nil, {x=1, y=1})
 		return false
 		end
 		return true
@@ -305,6 +360,55 @@ minetest.register_entity("vehicles:turret", {
 register_vehicle_spawner("vehicles:tank", "Tank", "vehicles_tank_inv.png")
 register_vehicle_spawner("vehicles:turret", "Gun turret", "vehicles_turret_inv.png")
 
+minetest.register_entity("vehicles:assaultsuit", {
+	visual = "mesh",
+	mesh = "assaultsuit.b3d",
+	textures = {"vehicles_assaultsuit.png"},
+	velocity = 15,
+	acceleration = -5,
+	owner = "",
+	stepheight = 1.5,
+	hp_max = 200,
+	physical = true,
+	collisionbox = {-0.8, 0, -0.8, 0.8, 3, 0.8},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif not self.driver then
+		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=20, z=8})
+		end
+	end,
+	on_punch = function(self, puncher)
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
+	end,
+	on_step = function(self, dtime)
+	if self.driver then
+		object_drive(self, dtime, 6, 0.5, true, "vehicles:bullet", 0.2, {x=120, y=140}, {x=1, y=1}, "hover", {x=60, y=70}, {x=40, y=51}, 3.5)
+		self.standing = false
+		return false
+	else
+	if not standing then
+		self.object:set_animation({x=1, y=1}, 20, 0)
+		self.standing = true
+	end
+		end
+		return true
+	end,
+})
+
+register_vehicle_spawner("vehicles:assaultsuit", "Assault Suit", "vehicles_assaultsuit_inv.png")
+
 minetest.register_entity("vehicles:firetruck", {
 	visual = "mesh",
 	mesh = "firetruck.b3d",
@@ -347,6 +451,146 @@ minetest.register_entity("vehicles:firetruck", {
 
 register_vehicle_spawner("vehicles:firetruck", "Fire truck", "vehicles_firetruck_inv.png")
 
+minetest.register_entity("vehicles:geep", {
+	visual = "mesh",
+	mesh = "geep.b3d",
+	textures = {"vehicles_geep.png"},
+	velocity = 15,
+	acceleration = -5,
+	stepheight = 1.5,
+	hp_max = 200,
+	physical = true,
+	collisionbox = {-1.1, 0, -1.1, 1.1, 1, 1.1},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif self.driver and clicker ~= self.driver and not self.rider then
+		clicker:set_attach(self.object, "", {x=0, y=5, z=-5}, false, {x=0, y=0, z=-2})
+		self.rider = true
+		elseif self.driver and clicker ~=self.driver and self.rider then
+		clicker:set_detach()
+		self.rider = false
+		elseif not self.driver then
+		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		minetest.sound_play("engine_start", 
+		{gain = 4, max_hear_distance = 3, loop = false})
+		self.sound_ready = false
+		minetest.after(14, function()
+		self.sound_ready = true
+		end)
+		end
+	end,
+	on_punch = function(self, puncher)
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
+	end,
+	on_activate = function(self)
+	self.nitro = true
+	end,
+	on_step = function(self, dtime)
+	if self.driver then
+		object_drive_car(self, dtime, 14, 0.6, 6)
+		local pos = self.object:getpos()
+			minetest.add_particlespawner(
+			15, --amount
+			1, --time
+			{x=pos.x, y=pos.y, z=pos.z}, --minpos
+			{x=pos.x, y=pos.y, z=pos.z}, --maxpos
+			{x=0, y=0, z=0}, --minvel
+			{x=0, y=0, z=0}, --maxvel
+			{x=-0,y=-0,z=-0}, --minacc
+			{x=0,y=0,z=0}, --maxacc
+			0.5, --minexptime
+			1, --maxexptime
+			10, --minsize
+			15, --maxsize
+			false, --collisiondetection
+			"vehicles_dust.png" --texture
+		)
+		return false
+		end
+		return true
+	end,
+})
+
+register_vehicle_spawner("vehicles:geep", "Geep", "vehicles_geep_inv.png")
+
+minetest.register_entity("vehicles:ambulance", {
+	visual = "mesh",
+	mesh = "ambulance.b3d",
+	textures = {"vehicles_ambulance.png"},
+	velocity = 15,
+	acceleration = -5,
+	stepheight = 1.5,
+	hp_max = 200,
+	physical = true,
+	collisionbox = {-1.4, 0, -1.4, 1.4, 2, 1.4},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif self.driver and clicker ~= self.driver and not self.rider then
+		clicker:set_attach(self.object, clicker, {x=0, y=5, z=4}, false, {x=0, y=7, z=10})
+		self.rider = true
+		clicker:set_hp(20)
+		elseif self.driver and clicker ~= self.driver and self.rider then
+		clicker:set_detach()
+		self.rider = false
+		elseif not self.driver then
+		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=7, z=14})
+		minetest.sound_play("engine_start", 
+		{gain = 4, max_hear_distance = 3, loop = false})
+		self.sound_ready = false
+		minetest.after(14, function()
+		self.sound_ready = true
+		end)
+		end
+	end,
+	on_punch = function(self, puncher)
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
+	end,
+	on_activate = function(self)
+	self.nitro = true
+	end,
+	on_step = function(self, dtime)
+	if self.driver then
+		object_drive_car(self, dtime, 13, 0.6, 0, {x=1, y=3}, {x=1, y=1})
+		if not self.siren_ready then
+		minetest.sound_play("ambulance", 
+		{gain = 0.1, max_hear_distance = 3, loop = false})
+		self.siren_ready = true
+		minetest.after(4, function()
+		self.siren_ready = false
+		end)
+		end
+		return false
+		end
+		return true
+	end,
+})
+
+register_vehicle_spawner("vehicles:ambulance", "Ambulance", "vehicles_ambulance_inv.png")
+
 minetest.register_entity("vehicles:ute", {
 	visual = "mesh",
 	mesh = "ute.b3d",
@@ -361,7 +605,7 @@ minetest.register_entity("vehicles:ute", {
 		if self.driver and clicker == self.driver then
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif self.driver and clicker ~= self.driver and not self.rider then
-		clicker:set_attach(self.object, "", {x=0, y=5, z=-5}, false, {x=0, y=0, z=-2})
+		clicker:set_attach(self.object, clicker, {x=0, y=5, z=-5}, false, {x=0, y=0, z=-2})
 		self.rider = true
 		elseif self.driver and clicker ~=self.driver and self.rider then
 		clicker:set_detach()
@@ -369,7 +613,7 @@ minetest.register_entity("vehicles:ute", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 6, max_hear_distance = 3, loop = false})
+		{gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -435,7 +679,7 @@ minetest.register_entity("vehicles:ute2", {
 		if self.driver and clicker == self.driver then
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif self.driver and clicker ~= self.driver and not self.rider then
-		clicker:set_attach(self.object, "", {x=0, y=5, z=-5}, {x=0, y=0, z=0})
+		clicker:set_attach(self.object, clicker, {x=0, y=5, z=-5}, {x=0, y=0, z=0})
 		self.rider = true
 		elseif self.driver and clicker ~=self.driver and self.rider then
 		clicker:set_detach()
@@ -443,7 +687,7 @@ minetest.register_entity("vehicles:ute2", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 6, max_hear_distance = 3, loop = false})
+		{gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -494,7 +738,7 @@ minetest.register_entity("vehicles:astonmaaton", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 6, max_hear_distance = 3, loop = false})
+		{gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -545,7 +789,7 @@ minetest.register_entity("vehicles:nizzan", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 6, max_hear_distance = 3, loop = false})
+		{gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -613,7 +857,7 @@ minetest.register_entity("vehicles:nizzan2", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 6, max_hear_distance = 3, loop = false})
+		{gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -681,7 +925,7 @@ minetest.register_entity("vehicles:lambogoni", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 6, max_hear_distance = 3, loop = false})
+		{gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -732,7 +976,7 @@ minetest.register_entity("vehicles:lambogoni2", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 6, max_hear_distance = 3, loop = false})
+		{gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -783,7 +1027,7 @@ minetest.register_entity("vehicles:masda", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 6, max_hear_distance = 3, loop = false})
+		{gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -818,6 +1062,57 @@ minetest.register_entity("vehicles:masda", {
 
 register_vehicle_spawner("vehicles:masda", "Masda (pink)", "vehicles_masda_inv.png")
 
+minetest.register_entity("vehicles:policecar", {
+	visual = "mesh",
+	mesh = "policecar.b3d",
+	textures = {"vehicles_policecar.png"},
+	velocity = 15,
+	acceleration = -5,
+	stepheight = step,
+	hp_max = 190,
+	physical = true,
+	collisionbox = {-1, 0, -1, 1.3, 1, 1},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif not self.driver then
+		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		minetest.sound_play("engine_start", 
+		{gain = 4, max_hear_distance = 3, loop = false})
+		self.sound_ready = false
+		minetest.after(14, function()
+		self.sound_ready = true
+		end)
+		end
+	end,
+	on_activate = function(self)
+	self.nitro = true
+	end,
+	on_punch = function(self, puncher)
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		explode(self, 5)
+		end
+	end,
+	on_step = function(self, dtime)
+	if self.driver then
+		object_drive_car(self, dtime, 16, 0.95, 8)
+		return false
+		end
+		return true
+	end,
+})
+
+register_vehicle_spawner("vehicles:policecar", "Police Car (US)", "vehicles_policecar_inv.png")
+
 minetest.register_entity("vehicles:musting", {
 	visual = "mesh",
 	mesh = "musting.b3d",
@@ -834,7 +1129,7 @@ minetest.register_entity("vehicles:musting", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 6, max_hear_distance = 3, loop = false})
+		{gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -885,7 +1180,7 @@ minetest.register_entity("vehicles:musting2", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 6, max_hear_distance = 3, loop = false})
+		{gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -946,7 +1241,7 @@ minetest.register_entity("vehicles:fewawi", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 6, max_hear_distance = 3, loop = false})
+		{gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -1008,7 +1303,7 @@ minetest.register_entity("vehicles:fewawi2", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 6, max_hear_distance = 3, loop = false})
+		{gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -1060,7 +1355,7 @@ minetest.register_entity("vehicles:pooshe", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 6, max_hear_distance = 3, loop = false})
+		{gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -1111,7 +1406,7 @@ minetest.register_entity("vehicles:pooshe2", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 6, max_hear_distance = 3, loop = false})
+		{gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -1162,7 +1457,7 @@ minetest.register_entity("vehicles:masda2", {
 		elseif not self.driver then
 		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 6, max_hear_distance = 3, loop = false})
+		{gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -1258,7 +1553,7 @@ minetest.register_entity("vehicles:jet", {
 		if self.driver and clicker == self.driver then
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
-		object_attach(self, clicker, {x=0, y=5, z=5}, false, {x=0, y=3, z=4})
+		object_attach(self, clicker, {x=0, y=3, z=3}, false, {x=0, y=3, z=3})
 		end
 	end,
 	on_punch = function(self, puncher)
@@ -1277,7 +1572,7 @@ minetest.register_entity("vehicles:jet", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_fly(self, dtime, 14, 0.2, 0.95, true, "vehicles:missile_2", 1, {x=1, y=1}, {x=10, y=10})
+		object_fly(self, dtime, 14, 0.2, 0.95, true, "vehicles:missile_2", 1, {x=10, y=10}, {x=1, y=1}, "rise")
 		return false
 		end
 		self.object:setvelocity({x=0, y=-1, z=0})
@@ -1739,6 +2034,15 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "vehicles:policecar_spawner",
+	recipe = {
+		{"", "dye:blue", "dye:red"},
+		{"", "vehicles:body", ""},
+		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
 	output = "vehicles:tank_spawner",
 	recipe = {
 		{"", "vehicles:gun", ""},
@@ -1788,6 +2092,33 @@ minetest.register_craft({
 		{"", "dye:red", ""},
 		{"vehicles:body", "vehicles:engine", "vehicles:body"},
 		{"vehicles:wheel", "default:steel_ingot", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:geep_spawner",
+	recipe = {
+		{"", "", ""},
+		{"", "vehicles:engine", ""},
+		{"vehicles:wheel", "vehicles:armor", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:ambulance_spawner",
+	recipe = {
+		{"", "", ""},
+		{"vehicles:body", "vehicles:body", "dye:white"},
+		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:assaultsuit_spawner",
+	recipe = {
+		{"vehicles:gun", "default:glass", "vehicles:armor"},
+		{"", "vehicles:engine", ""},
+		{"vehicles:armor", "", "vehicles:armor"}
 	}
 })
 
