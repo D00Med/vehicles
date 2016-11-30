@@ -1646,7 +1646,7 @@ minetest.register_entity("vehicles:parachute", {
 		if self.driver and clicker == self.driver then
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
-		object_attach(self, clicker, {x=0, y=0, z=-1.5}, {x=0, y=-4, z=0})
+		object_attach(self, clicker, {x=0, y=0, z=-1.5}, false, {x=0, y=-4, z=0})
 		end
 	end,
 	on_step = function(self, dtime)
@@ -1679,7 +1679,7 @@ minetest.register_tool("vehicles:backpack", {
 			if obj.driver and placer == obj.driver then
 			object_detach(entity, placer, {x=1, y=0, z=1})
 			elseif not obj.driver then
-			object_attach(entity, placer, {x=0, y=0, z=0}, {x=0, y=2, z=0})
+			object_attach(entity, placer, {x=0, y=0, z=0}, false, {x=0, y=2, z=0})
 			end
 			item:take_item()
 			return item
