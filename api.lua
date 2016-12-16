@@ -302,18 +302,18 @@ function object_drive_car(entity, dtime, speed, decell, nitro_duration, move_ani
 		entity.object:setvelocity(vec_nitro)
 		local pos = entity.object:getpos()
 			minetest.add_particlespawner(
-			10, --amount
+			5, --amount
 			1, --time
 			{x=pos.x-0.5, y=pos.y, z=pos.z-0.5}, --minpos
 			{x=pos.x+0.5, y=pos.y, z=pos.z+0.5}, --maxpos
-			{x=0, y=0, z=0}, --minvel
+			{x=-velo.x, y=-velo.y, z=-velo.z}, --minvel
 			{x=-velo.x, y=-velo.y, z=-velo.z}, --maxvel
 			{x=-0,y=-0,z=-0}, --minacc
-			{x=0,y=0,z=0}, --maxacc
+			{x=0,y=1,z=0}, --maxacc
 			0.1, --minexptime
 			0.2, --maxexptime
-			10, --minsize
-			15, --maxsize
+			5, --minsize
+			10, --maxsize
 			false, --collisiondetection
 			"vehicles_nitro.png" --texture
 			)
@@ -709,19 +709,11 @@ end
 
 
 function register_vehicle_spawner(vehicle, desc, texture, is_boat)
-minetest.register_tool(vehicle.."_spawner", {
+minetest.register_craftitem(vehicle.."_spawner", {
 	description = desc,
 	inventory_image = texture,
 	liquids_pointable = is_boat,
 	wield_scale = {x = 1.5, y = 1.5, z = 1},
-	tool_capabilities = {
-		full_punch_interval = 0.7,
-		max_drop_level=1,
-		groupcaps={
-			snappy={times={[1]=2.0, [2]=1.00, [3]=0.35}, uses=30, maxlevel=3},
-		},
-		damage_groups = {fleshy=1},
-	},
 	on_place = function(item, placer, pointed_thing)
 			local dir = placer:get_look_dir();
 			local playerpos = placer:getpos();
@@ -733,6 +725,7 @@ minetest.register_tool(vehicle.."_spawner", {
 			return item
 			elseif pointed_thing.type == "node" and minetest.get_item_group(pointed_thing.name, "water") then
 			local obj = minetest.env:add_entity(pointed_thing.under, vehicle)
+			obj:setvelocity({x=0, y=-1, z=0})
 			local object = obj:get_luaentity()
 			object.owner = placer
 			item:take_item()

@@ -423,7 +423,7 @@ minetest.register_entity("vehicles:firetruck", {
 		if self.driver and clicker == self.driver then
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
-		object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		object_attach(self, clicker, {x=0, y=5, z=5}, false, {x=0, y=2, z=5})
 		end
 	end,
 	on_punch = function(self, puncher)
@@ -1553,7 +1553,7 @@ minetest.register_entity("vehicles:jet", {
 		if self.driver and clicker == self.driver then
 		object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
-		object_attach(self, clicker, {x=0, y=3, z=3}, false, {x=0, y=3, z=3})
+		object_attach(self, clicker, {x=0, y=4, z=3}, false, {x=0, y=4, z=3})
 		end
 	end,
 	on_punch = function(self, puncher)
@@ -1688,7 +1688,7 @@ minetest.register_tool("vehicles:backpack", {
 
 
 --wings
---currently doesn't work very well
+--currently doesn't work
 minetest.register_entity("vehicles:wing_glider", {
 	visual = "mesh",
 	mesh = "wings.b3d",
@@ -1713,50 +1713,50 @@ minetest.register_entity("vehicles:wing_glider", {
 	end,
 })
 
-minetest.register_tool("vehicles:wings", {
-	description = "Wings",
-	inventory_image = "vehicles_backpack.png",
-	wield_scale = {x = 1.5, y = 1.5, z = 1},
-	tool_capabilities = {
-		full_punch_interval = 0.7,
-		max_drop_level=1,
-		groupcaps={
-			snappy={times={[1]=2.0, [2]=1.00, [3]=0.35}, uses=30, maxlevel=3},
-		},
-		damage_groups = {fleshy=1},
-	},
-	on_use = function(item, placer, pointed_thing)
-			local dir = placer:get_look_dir();
-			local playerpos = placer:getpos();
-			local objs = minetest.get_objects_inside_radius({x=playerpos.x,y=playerpos.y,z=playerpos.z}, 2)	
-			for k, obj2 in pairs(objs) do
-				if obj2:get_luaentity() ~= nil then
-					if obj2:get_luaentity().name == "vehicles:wings" then
-					local wings = false
-					end
-					end
-					end
-			if wings then
-			object_detach(obj2:get_luaentity(), placer, {x=1, y=0, z=1})
-			placer:set_properties({
-			visual_size = {x=1, y=1},
-			})
-			else
-			local obj = minetest.env:add_entity({x=playerpos.x+0+dir.x,y=playerpos.y+1+dir.y,z=playerpos.z+0+dir.z}, "vehicles:wing_glider")
-			local entity = obj:get_luaentity()
-			placer:set_attach(entity.object, "", {x=0,y=-5,z=0}, {x=0,y=0,z=0})
-			entity.driver = placer
-			placer:set_properties({
-			visual_size = {x=1, y=-1},
-			})
-			end
-			item:add_wear(500)
-			return item
-	end,
-})
+-- minetest.register_tool("vehicles:wings", {
+	-- description = "Wings",
+	-- inventory_image = "vehicles_backpack.png",
+	-- wield_scale = {x = 1.5, y = 1.5, z = 1},
+	-- tool_capabilities = {
+		-- full_punch_interval = 0.7,
+		-- max_drop_level=1,
+		-- groupcaps={
+			-- snappy={times={[1]=2.0, [2]=1.00, [3]=0.35}, uses=30, maxlevel=3},
+		-- },
+		-- damage_groups = {fleshy=1},
+	-- },
+	-- on_use = function(item, placer, pointed_thing)
+			-- local dir = placer:get_look_dir();
+			-- local playerpos = placer:getpos();
+			-- local objs = minetest.get_objects_inside_radius({x=playerpos.x,y=playerpos.y,z=playerpos.z}, 2)	
+			-- for k, obj2 in pairs(objs) do
+				-- if obj2:get_luaentity() ~= nil then
+					-- if obj2:get_luaentity().name == "vehicles:wings" then
+					-- local wings = false
+					-- end
+					-- end
+					-- end
+			-- if wings then
+			-- object_detach(obj2:get_luaentity(), placer, {x=1, y=0, z=1})
+			-- placer:set_properties({
+			-- visual_size = {x=1, y=1},
+			-- })
+			-- else
+			-- local obj = minetest.env:add_entity({x=playerpos.x+0+dir.x,y=playerpos.y+1+dir.y,z=playerpos.z+0+dir.z}, "vehicles:wing_glider")
+			-- local entity = obj:get_luaentity()
+			-- placer:set_attach(entity.object, "", {x=0,y=-5,z=0}, {x=0,y=0,z=0})
+			-- entity.driver = placer
+			-- placer:set_properties({
+			-- visual_size = {x=1, y=-1},
+			-- })
+			-- end
+			-- item:add_wear(500)
+			-- return item
+	-- end,
+-- })
 
 minetest.register_tool("vehicles:rc", {
-	description = "Rc",
+	description = "Rc (use with missiles)",
 	inventory_image = "vehicles_rc.png",
 	wield_scale = {x = 1.5, y = 1.5, z = 1},
 	tool_capabilities = {
