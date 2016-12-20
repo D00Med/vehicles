@@ -44,6 +44,7 @@ local function force_detach(player)
 	end
 	default.player_attached[player:get_player_name()] = false
 	player:set_eye_offset({x=0, y=0, z=0}, {x=0, y=0, z=0})
+	player:set_properties({visual_size = {x=1, y=1}})
 end
 
 function object_attach(entity, player, attach_at, visible, eye_offset)
@@ -107,6 +108,7 @@ end)
 
 timer = 0
 
+
 --basic driving, use for basic vehicles/mounts, with optional weapons
 function object_drive(entity, dtime, speed, decell, shoots, arrow, reload, moving_anim, stand_anim, jump, jump_anim, shoot_anim, shoot_y)
 	--variables
@@ -169,7 +171,7 @@ function object_drive(entity, dtime, speed, decell, shoots, arrow, reload, movin
 			local remov = inv:remove_item("main", arrow.."_item")
 			entity.loaded = false
 			local pos = entity.object:getpos()
-			local obj = minetest.env:add_entity({x=pos.x+0+dir.x*2,y=pos.y+shoot_y+dir.y,z=pos.z+0+dir.z*2}, arrow)
+			local obj = minetest:add_entity({x=pos.x+0+dir.x*2,y=pos.y+shoot_y+dir.y,z=pos.z+0+dir.z*2}, arrow)
 			local vec = {x=dir.x*14,y=dir.y*14,z=dir.z*14}
 			local yaw = entity.driver:get_look_yaw();
 			obj:setyaw(yaw+math.pi/2)
@@ -398,7 +400,7 @@ function object_turret(entity, dtime, height, arrow, shoot_interval)
 			entity.loaded = false
 			local pos = entity.object:getpos()
 			local dir = entity.driver:get_look_dir();
-			local obj = minetest.env:add_entity({x=pos.x+dir.x*1.2,y=pos.y+height,z=pos.z+dir.z*1.2}, arrow)
+			local obj = minetest:add_entity({x=pos.x+dir.x*1.2,y=pos.y+height,z=pos.z+dir.z*1.2}, arrow)
 			local yaw = entity.driver:get_look_yaw();
 			local vec = {x=dir.x*12, y=dir.y*12, z=dir.z*12}
 			obj:setyaw(yaw+math.pi/2)
@@ -490,7 +492,7 @@ function object_fly(entity, dtime, speed, accel, decell, shoots, arrow, reload, 
 			local remov = inv:remove_item("main", arrow.."_item")
 			entity.loaded = false
 			local pos = entity.object:getpos()
-			local obj = minetest.env:add_entity({x=pos.x+0+dir.x*2,y=pos.y+1.5+dir.y,z=pos.z+0+dir.z*2}, arrow)
+			local obj = minetest:add_entity({x=pos.x+0+dir.x*2,y=pos.y+1.5+dir.y,z=pos.z+0+dir.z*2}, arrow)
 			local vec = {x=dir.x*9,y=dir.y*9,z=dir.z*9}
 			local yaw = entity.driver:get_look_yaw();
 			obj:setyaw(yaw+math.pi/2)
@@ -529,7 +531,7 @@ function object_glide(entity, dtime, speed, decell, gravity, moving_anim, stand_
 							for dz=-1,1 do
 								local p = {x=pos.x+dx, y=pos.y-1, z=pos.z+dz}
 								local t = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
-								local n = minetest.env:get_node(p).name
+								local n = minetest:get_node(p).name
 								if n ~= "massdestruct:parachute" and n ~= "air" then
 									local pos = entity.object:getpos()
 									entity.object:remove()
@@ -718,13 +720,13 @@ minetest.register_craftitem(vehicle.."_spawner", {
 			local dir = placer:get_look_dir();
 			local playerpos = placer:getpos();
 			if pointed_thing.type == "node" and not is_boat then
-			local obj = minetest.env:add_entity(pointed_thing.above, vehicle)
+			local obj = minetest:add_entity(pointed_thing.above, vehicle)
 			local object = obj:get_luaentity()
 			object.owner = placer
 			item:take_item()
 			return item
 			elseif pointed_thing.type == "node" and minetest.get_item_group(pointed_thing.name, "water") then
-			local obj = minetest.env:add_entity(pointed_thing.under, vehicle)
+			local obj = minetest:add_entity(pointed_thing.under, vehicle)
 			obj:setvelocity({x=0, y=-1, z=0})
 			local object = obj:get_luaentity()
 			object.owner = placer
@@ -779,7 +781,7 @@ end
 function vehicle_drop(ent, player, name)
 	if ent.owner == player then
 	local pos = ent.object:getpos()
-	minetest.env:add_item(pos, name.."_spawner")
+	minetest:add_item(pos, name.."_spawner")
 	ent.object:remove()
 	end
 end
@@ -787,6 +789,6 @@ end
 function destroy(ent, player, name)
 	if ent.object:get_hp() == 0 and ent.owner == player then
 		local pos = ent.object:getpos()
-		minetest.env:add_item(pos, "vehicles:tank_spawner")
+		minetest:add_item(pos, "vehicles:tank_spawner")
 		end
 end
