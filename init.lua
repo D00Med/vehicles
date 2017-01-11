@@ -18,6 +18,9 @@ dofile(minetest.get_modpath("vehicles").."/api.lua")
 
 local step = 1.1
 
+local enable_built_in = true
+
+if enable_built_in then
 minetest.register_entity("vehicles:missile", {
 	visual = "mesh",
 	mesh = "missile.b3d",
@@ -308,7 +311,16 @@ minetest.register_entity("vehicles:tank", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive(self, dtime, 6, 0.5, true, "vehicles:missile_2", 1, {x=1, y=1}, {x=1, y=1}, false, nil, {x=1, y=1})
+		object_drive(self, dtime, {
+		speed = 6,
+		decell = 0.5, 
+		shoots = true, 
+		arrow = "vehicles:missile_2",
+		reload_time = 1,
+		moving_anim = {x=1, y=1},
+		stand_anim = {x=1, y=1},
+		shoot_anim = {x=1, y=1},
+		})
 		return false
 		end
 		return true
@@ -350,7 +362,13 @@ minetest.register_entity("vehicles:turret", {
 	on_step = function(self, dtime)
 	self.object:setvelocity({x=0, y=-1, z=0})
 	if self.driver then
-		object_turret(self, dtime, 1.5, "vehicles:bullet", 0.2)
+		object_drive(self, dtime, {
+			fixed = true,
+			shoot_y = 1.5,
+			arrow = "vehicles:bullet",
+			shoots = true,
+			reload_time = 0.2,
+		})
 		return false
 		end
 		return true
@@ -394,7 +412,24 @@ minetest.register_entity("vehicles:assaultsuit", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive(self, dtime, 6, 0.5, true, "vehicles:bullet", 0.2, {x=120, y=140}, {x=1, y=1}, "hover", {x=60, y=70}, {x=40, y=51}, 3.5)
+		object_drive(self, dtime, {
+		speed = 6,
+		decell = 0.5, 
+		shoots = true,
+		arrow = "vehicles:bullet",
+		reload_time = 0.2,
+		shoots2 = true,
+		arrow2 = "vehicles:missile_2",
+		reload_time2 = 1,
+		moving_anim = {x=120, y=140},
+		stand_anim = {x=1, y=1},
+		jump = "hover",
+		jump_anim = {x=60, y=70},
+		shoot_anim = {x=40, y=51},
+		shoot_anim2 = {x=40, y=51},
+		shoot_y = 3.5,
+		shoot_y2 = 4,
+		})
 		self.standing = false
 		return false
 	else
@@ -442,7 +477,16 @@ minetest.register_entity("vehicles:firetruck", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive(self, dtime, 7, 0.5, true, "vehicles:water", 0.2, nil, nil, false)
+		object_drive(self, dtime, {
+			speed = 7,
+			decell = 0.5,
+			shoots = true,
+			arrow = "vehicles:water",
+			infinite_arrow = true,
+			reload_time = 0.2,
+			driving_sound = "engine",
+			sound_duration = 11,
+		})
 		return false
 		end
 		return true
@@ -499,7 +543,15 @@ minetest.register_entity("vehicles:geep", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_car(self, dtime, 14, 0.6, 6)
+		object_drive(self, dtime, {
+			speed = 14, 
+			decell = 0.6,
+			boost = true,
+			boost_duration = 6,
+			boost_effect = "vehicles_nitro.png",
+			sound_duration = 11,
+			driving_sound = "engine"
+		})
 		local pos = self.object:getpos()
 			minetest.add_particlespawner(
 			15, --amount
@@ -574,7 +626,14 @@ minetest.register_entity("vehicles:ambulance", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_car(self, dtime, 13, 0.6, 0, {x=1, y=3}, {x=1, y=1})
+		object_drive(self, dtime, {
+			speed = 13, 
+			decell = 0.6,
+			moving_anim = {x=1, y=3},
+			stand_anim = {x=1, y=1},
+			driving_sound = "engine",
+			sound_duration = 11,
+		})
 		if not self.siren_ready then
 		minetest.sound_play("ambulance", 
 		{gain = 0.1, max_hear_distance = 3, loop = false})
@@ -639,7 +698,15 @@ minetest.register_entity("vehicles:ute", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_car(self, dtime, 14, 0.6, 6)
+		object_drive(self, dtime, {
+			speed = 14, 
+			decell = 0.6,
+			boost = true,
+			boost_duration = 6,
+			boost_effect = "vehicles_nitro.png",
+			driving_sound = "engine",
+			sound_duration = 11,
+		})
 		local pos = self.object:getpos()
 			minetest.add_particlespawner(
 			15, --amount
@@ -713,7 +780,15 @@ minetest.register_entity("vehicles:ute2", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_car(self, dtime, 14, 0.6, 6)
+		object_drive(self, dtime, {
+			speed = 14, 
+			decell = 0.6,
+			boost = true,
+			boost_duration = 6,
+			boost_effect = "vehicles_nitro.png",
+			driving_sound = "engine",
+			sound_duration = 11,
+		})
 		return false
 		end
 		return true
@@ -764,7 +839,15 @@ minetest.register_entity("vehicles:astonmaaton", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_car(self, dtime, 14, 0.8, 5)
+		object_drive(self, dtime, {
+			speed = 14, 
+			decell = 0.8,
+			boost = true,
+			boost_duration = 5,
+			boost_effect = "vehicles_nitro.png",
+			driving_sound = "engine",
+			sound_duration = 11,
+		})
 		return false
 		end
 		return true
@@ -815,7 +898,15 @@ minetest.register_entity("vehicles:nizzan", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_car(self, dtime, 14, 0.8, 5)
+		object_drive(self, dtime, {
+			speed = 14, 
+			decell = 0.8,
+			boost = true,
+			boost_duration = 5,
+			boost_effect = "vehicles_nitro.png",
+			driving_sound = "engine",
+			sound_duration = 11,
+		})
 		local pos = self.object:getpos()
 			minetest.add_particlespawner(
 			15, --amount
@@ -883,7 +974,15 @@ minetest.register_entity("vehicles:nizzan2", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_car(self, dtime, 14, 0.8, 5)
+		object_drive(self, dtime, {
+			speed = 14, 
+			decell = 0.8,
+			boost = true,
+			boost_duration = 5,
+			boost_effect = "vehicles_nitro.png",
+			driving_sound = "engine",
+			sound_duration = 11,
+		})
 		local pos = self.object:getpos()
 			minetest.add_particlespawner(
 			15, --amount
@@ -951,7 +1050,15 @@ minetest.register_entity("vehicles:lambogoni", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_car(self, dtime, 15, 0.8, 4)
+		object_drive(self, dtime, {
+			speed = 15, 
+			decell = 0.8,
+			boost = true,
+			boost_duration = 4,
+			boost_effect = "vehicles_nitro.png",
+			driving_sound = "engine",
+			sound_duration = 11,
+		})
 		return false
 		end
 		return true
@@ -1002,7 +1109,15 @@ minetest.register_entity("vehicles:lambogoni2", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_car(self, dtime, 15, 0.8, 4)
+		object_drive(self, dtime, {
+			speed = 15, 
+			decell = 0.8,
+			boost = true,
+			boost_duration = 4,
+			boost_effect = "vehicles_nitro.png",
+			driving_sound = "engine",
+			sound_duration = 11,
+		})
 		return false
 		end
 		return true
@@ -1053,7 +1168,15 @@ minetest.register_entity("vehicles:masda", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_car(self, dtime, 15, 0.95, 4)
+		object_drive(self, dtime, {
+			speed = 15, 
+			decell = 0.95,
+			boost = true,
+			boost_duration = 4,
+			boost_effect = "vehicles_nitro.png",
+			driving_sound = "engine",
+			sound_duration = 11,
+		})
 		return false
 		end
 		return true
@@ -1104,7 +1227,15 @@ minetest.register_entity("vehicles:policecar", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_car(self, dtime, 16, 0.95, 8)
+		object_drive(self, dtime, {
+			speed = 16, 
+			decell = 0.95,
+			boost = true,
+			boost_duration = 8,
+			boost_effect = "vehicles_nitro.png",
+			driving_sound = "engine",
+			sound_duration = 11,
+		})
 		return false
 		end
 		return true
@@ -1155,7 +1286,15 @@ minetest.register_entity("vehicles:musting", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_car(self, dtime, 15, 0.95, 4)
+		object_drive(self, dtime, {
+			speed = 15, 
+			decell = 0.85,
+			boost = true,
+			boost_duration = 4,
+			boost_effect = "vehicles_nitro.png",
+			driving_sound = "engine",
+			sound_duration = 11,
+		})
 		return false
 		end
 		return true
@@ -1206,7 +1345,15 @@ minetest.register_entity("vehicles:musting2", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_car(self, dtime, 15, 0.85, 4)
+		object_drive(self, dtime, {
+			speed = 15, 
+			decell = 0.85,
+			boost = true,
+			boost_duration = 4,
+			boost_effect = "vehicles_nitro.png",
+			driving_sound = "engine",
+			sound_duration = 11,
+		})
 		return false
 		end
 		return true
@@ -1268,7 +1415,15 @@ minetest.register_entity("vehicles:fewawi", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_car(self, dtime, 15, 0.95, 4)
+		object_drive(self, dtime, {
+			speed = 15, 
+			decell = 0.95,
+			boost = true,
+			boost_duration = 4,
+			boost_effect = "vehicles_nitro.png",
+			driving_sound = "engine",
+			sound_duration = 11,
+		})
 		return false
 		end
 		return true
@@ -1330,7 +1485,15 @@ minetest.register_entity("vehicles:fewawi2", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_car(self, dtime, 15, 0.95, 4)
+		object_drive(self, dtime, {
+			speed = 15, 
+			decell = 0.95,
+			boost = true,
+			boost_duration = 4,
+			boost_effect = "vehicles_nitro.png",
+			driving_sound = "engine",
+			sound_duration = 11,
+		})
 		return false
 		end
 		return true
@@ -1381,7 +1544,15 @@ minetest.register_entity("vehicles:pooshe", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_car(self, dtime, 15, 0.95, 4)
+		object_drive(self, dtime, {
+			speed = 15, 
+			decell = 0.95,
+			boost = true,
+			boost_duration = 4,
+			boost_effect = "vehicles_nitro.png",
+			driving_sound = "engine",
+			sound_duration = 11,
+		})
 		return false
 		end
 		return true
@@ -1432,7 +1603,15 @@ minetest.register_entity("vehicles:pooshe2", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_car(self, dtime, 15, 0.95, 4)
+		object_drive(self, dtime, {
+			speed = 15, 
+			decell = 0.95,
+			boost = true,
+			boost_duration = 4,
+			boost_effect = "vehicles_nitro.png",
+			driving_sound = "engine",
+			sound_duration = 11,
+		})
 		return false
 		end
 		return true
@@ -1483,7 +1662,15 @@ minetest.register_entity("vehicles:masda2", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_drive_car(self, dtime, 15, 0.85, 4)
+		object_drive(self, dtime, {
+			speed = 15, 
+			decell = 0.85,
+			boost = true,
+			boost_duration = 4,
+			boost_effect = "vehicles_nitro.png",
+			driving_sound = "engine",
+			sound_duration = 11,
+		})
 		return false
 		end
 		return true
@@ -1525,15 +1712,21 @@ minetest.register_entity("vehicles:boat", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_float(self, dtime, 10, 0.85)
+		object_drive(self, dtime, {
+			speed = 10, 
+			decell = 0.85,
+			is_watercraft = true,
+			gravity = 0,
+		})
 		return false
+		else
+		self.object:setvelocity({x=0, y=0, z=0})
 		end
 		return true
 	end,
 })
 
 register_vehicle_spawner("vehicles:boat", "Speedboat", "vehicles_boat_inv.png", true)
-
 
 minetest.register_entity("vehicles:jet", {
 	visual = "mesh",
@@ -1572,7 +1765,17 @@ minetest.register_entity("vehicles:jet", {
 	end,
 	on_step = function(self, dtime)
 	if self.driver then
-		object_fly(self, dtime, 14, 0.2, 0.95, true, "vehicles:missile_2", 1, {x=10, y=10}, {x=1, y=1}, "rise")
+		object_drive(self, dtime, {
+			speed = 14, 
+			decell = 0.95,
+			shoot = true,
+			arrow = "vehicles:missile_2",
+			reload_time = 1,
+			moving_anim = {x=10, y=10},
+			stand_anim = {x=1, y=1},
+			fly = true,
+			fly_mode = "rise",
+		})
 		return false
 		end
 		self.object:setvelocity({x=0, y=-1, z=0})
@@ -1618,7 +1821,12 @@ minetest.register_entity("vehicles:plane", {
 	self.object:set_animation({x=1, y=1}, 5, 0)
 	end
 	if self.driver then
-		object_fly(self, dtime, 10, 0.1, 0.95, false, nil, nil, nil, nil)
+		object_drive(self, dtime, {
+			speed = 10, 
+			decell = 0.95,
+			fly = true,
+			fly_mode = "hold",
+		})
 		if not self.anim then
 		self.object:set_animation({x=1, y=9}, 20, 0)
 		self.anim = true
@@ -1679,7 +1887,7 @@ minetest.register_tool("vehicles:backpack", {
 			if obj.driver and placer == obj.driver then
 			object_detach(entity, placer, {x=1, y=0, z=1})
 			elseif not obj.driver then
-			object_attach(entity, placer, {x=0, y=0, z=0}, false, {x=0, y=2, z=0})
+			object_attach(entity, placer, {x=0, y=0, z=0}, true, {x=0, y=2, z=0})
 			end
 			item:take_item()
 			return item
@@ -2462,4 +2670,4 @@ minetest.register_node("vehicles:tyres", {
 })
 end
 
-
+end

@@ -1,1 +1,2 @@
-a mod that adds cars, planes, and other vehicles
+A mod that adds an api for cars, planes, and other vehicles.
+Several vehicles are included in the mod.
