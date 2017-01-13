@@ -1768,7 +1768,7 @@ minetest.register_entity("vehicles:jet", {
 		object_drive(self, dtime, {
 			speed = 14, 
 			decell = 0.95,
-			shoot = true,
+			shoots = true,
 			arrow = "vehicles:missile_2",
 			reload_time = 1,
 			moving_anim = {x=10, y=10},

@@ -183,7 +183,7 @@ function object_drive(entity, dtime, def)
 	local vec_forward_jump = {x=dir.x*speed/4*math.atan(0.5*timer-2)+8*dir.x,y=jump_speed,z=dir.z*speed/4*math.atan(0.5*timer-2)+8*dir.z}
 	local vec_forward = {x=dir.x*(speed*0.2)*math.log(timer+0.5)+4*dir.x,y=velo.y-0.5,z=dir.z*(speed*0.2)*math.log(timer+0.5)+4*dir.z}
 	local boat_forward = {x=dir.x*(speed*0.2)*math.log(timer+0.5)+4*dir.x,y=0,z=dir.z*(speed*0.2)*math.log(timer+0.5)+4*dir.z}
-	local vec_forward_fly = {x=dir.x*(speed*0.2)*math.log(timer+0.5)+4*dir.x,y=dir.y*(speed*0.2)*math.log(timer+0.5)+4*dir.y,z=dir.z*(speed*0.2)*math.log(timer+0.5)+4*dir.z}
+	local vec_forward_fly = {x=dir.x*(speed*0.2)*math.log(timer+0.5)+4*dir.x,y=dir.y*(speed*0.2)*math.log(timer+0.5)+4*dir.y+1,z=dir.z*(speed*0.2)*math.log(timer+0.5)+4*dir.z}
 	local vec_boost = {x=dir.x*(speed*0.2)*math.log(timer+0.5)+8*dir.x,y=velo.y-0.5,z=dir.z*(speed*0.2)*math.log(timer+0.5)+8*dir.z}
 	local vec_backward = {x=-dir.x*(speed/4)*accell,y=velo.y-0.5,z=-dir.z*(speed/4)*accell}
 	local boat_backward = {x=-dir.x*(speed/4)*accell,y=0,z=-dir.z*(speed/4)*accell}
