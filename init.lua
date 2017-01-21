@@ -1917,7 +1917,10 @@ minetest.register_entity("vehicles:wing_glider", {
 		self.object:setyaw(yaw+math.pi/2)
 		self.object:setvelocity(vec)
 		self.driver:set_animation({x=162, y=167}, 0, 0)
-		self.object:set_animation({x=25, y=45}, 0, 0)
+		if not self.anim then
+		self.object:set_animation({x=25, y=45}, 10, 0)
+		self.anim = true
+		end
 		return false
 		else
 		self.object:remove()
