@@ -1904,64 +1904,86 @@ minetest.register_entity("vehicles:wing_glider", {
 	velocity = 15,
 	acceleration = -5,
 	hp_max = 2,
-	physical = true,
+	armor = 0,
+	physical = false,
 	collisionbox = {-0.5, -0.1, -0.5, 0.5, 0.1, 0.5},
 	on_step = function(self, dtime)
 	if self.driver then
 		local dir = self.driver:get_look_dir();
 		local velo = self.object:getvelocity();
-		local vec = {x=dir.x*5,y=(-dir.y*2*velo.y/4-2.5)+dir.y*3,z=dir.z*5}
+		local speed = math.sqrt(math.pow(velo.x, 2)+math.pow(velo.z, 2))
+		local vec = {x=dir.x*16,y=dir.y*16+1,z=dir.z*16}
 		local yaw = self.driver:get_look_yaw();
 		self.object:setyaw(yaw+math.pi/2)
 		self.object:setvelocity(vec)
 		self.driver:set_animation({x=162, y=167}, 0, 0)
+		self.object:set_animation({x=25, y=45}, 0, 0)
 		return false
+		else
+		self.object:remove()
 		end
 		return true
 	end,
+	on_punch = function(self, puncher)
+		if not self.driver then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
+		end
+		if self.object:get_hp() == 0 then
+		if self.driver then
+		object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		self.object:remove()
+		end
+	end,
 })
 
--- minetest.register_tool("vehicles:wings", {
-	-- description = "Wings",
-	-- inventory_image = "vehicles_backpack.png",
-	-- wield_scale = {x = 1.5, y = 1.5, z = 1},
-	-- tool_capabilities = {
-		-- full_punch_interval = 0.7,
-		-- max_drop_level=1,
-		-- groupcaps={
-			-- snappy={times={[1]=2.0, [2]=1.00, [3]=0.35}, uses=30, maxlevel=3},
-		-- },
-		-- damage_groups = {fleshy=1},
-	-- },
-	-- on_use = function(item, placer, pointed_thing)
-			-- local dir = placer:get_look_dir();
-			-- local playerpos = placer:getpos();
-			-- local objs = minetest.get_objects_inside_radius({x=playerpos.x,y=playerpos.y,z=playerpos.z}, 2)	
-			-- for k, obj2 in pairs(objs) do
-				-- if obj2:get_luaentity() ~= nil then
-					-- if obj2:get_luaentity().name == "vehicles:wings" then
-					-- local wings = false
-					-- end
-					-- end
-					-- end
-			-- if wings then
-			-- object_detach(obj2:get_luaentity(), placer, {x=1, y=0, z=1})
-			-- placer:set_properties({
-			-- visual_size = {x=1, y=1},
-			-- })
-			-- else
-			-- local obj = minetest.env:add_entity({x=playerpos.x+0+dir.x,y=playerpos.y+1+dir.y,z=playerpos.z+0+dir.z}, "vehicles:wing_glider")
-			-- local entity = obj:get_luaentity()
-			-- placer:set_attach(entity.object, "", {x=0,y=-5,z=0}, {x=0,y=0,z=0})
-			-- entity.driver = placer
-			-- placer:set_properties({
-			-- visual_size = {x=1, y=-1},
-			-- })
-			-- end
-			-- item:add_wear(500)
-			-- return item
-	-- end,
--- })
+minetest.register_tool("vehicles:wings", {
+	description = "Wings",
+	inventory_image = "vehicles_backpack.png",
+	wield_scale = {x = 1.5, y = 1.5, z = 1},
+	tool_capabilities = {
+		full_punch_interval = 0.7,
+		max_drop_level=1,
+		groupcaps={
+			snappy={times={[1]=2.0, [2]=1.00, [3]=0.35}, uses=30, maxlevel=3},
+		},
+		damage_groups = {fleshy=1},
+	},
+	on_use = function(item, placer, pointed_thing)
+			local wings_ready = true
+			local dir = placer:get_look_dir();
+			local playerpos = placer:getpos();
+			local objs = minetest.get_objects_inside_radius({x=playerpos.x,y=playerpos.y,z=playerpos.z}, 2)	
+			for k, obj2 in pairs(objs) do
+				if obj2:get_luaentity() ~= nil and obj2:get_luaentity().name == "vehicles:wing_glider" then
+					local wing = obj2:get_luaentity()
+					wing.driver = nil
+					obj2:remove()
+					object_detach(obj2:get_luaentity(), placer, {x=1, y=0, z=1})
+					placer:set_properties({
+					visual_size = {x=1, y=1},
+					})
+					wings_ready = false
+				end
+			end
+			
+			if wings_ready then
+			local obj = minetest.env:add_entity({x=playerpos.x+0+dir.x,y=playerpos.y+1+dir.y,z=playerpos.z+0+dir.z}, "vehicles:wing_glider")
+					local entity = obj:get_luaentity()
+					placer:set_attach(entity.object, "", {x=0,y=-5,z=0}, {x=0,y=-3,z=0})
+					entity.driver = placer
+					local dir = placer:get_look_dir()
+					placer:set_properties({
+					visual_size = {x=1, y=-1},
+					})
+					item:add_wear(500)
+					return item
+			end
+	end,
+})
 
 minetest.register_tool("vehicles:rc", {
 	description = "Rc (use with missiles)",

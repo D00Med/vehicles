@@ -134,6 +134,7 @@ function object_drive(entity, dtime, def)
 	local swims = def.swims or false
 	local driving_sound = def.driving_sound or nil
 	local sound_duration = def.sound_duration or 5
+	local extra_yaw = def.extra_yaw or 0
 	
 	local moving_anim = def.moving_anim
 	local stand_anim = def.stand_anim
@@ -211,7 +212,7 @@ function object_drive(entity, dtime, def)
 		entity.object:setvelocity({x=velo.x*0.9, y=-1, z=velo.z*0.9})
 	--boost
 	elseif ctrl.up and not shoots2 and ctrl.aux1 and entity.boost then
-		entity.object:setyaw(yaw+math.pi+math.pi/2)
+		entity.object:setyaw(yaw+math.pi+math.pi/2+extra_yaw)
 		entity.object:setvelocity(vec_boost)
 		if boost_effect ~= nil then
 			minetest.add_particlespawner(
@@ -241,7 +242,7 @@ function object_drive(entity, dtime, def)
 	end
 	--rise
 	elseif ctrl.jump and fly and fly_mode == "rise" then
-		entity.object:setyaw(yaw+math.pi+math.pi/2)
+		entity.object:setyaw(yaw+math.pi+math.pi/2+extra_yaw)
 		entity.object:setvelocity(vec_rise)
 		--lib_mount animation
 	if moving_anim ~= nil and not entity.moving then
@@ -253,7 +254,7 @@ function object_drive(entity, dtime, def)
 		entity.object:setvelocity({x=dir.x*speed, y=0, z=dir.z*speed})
 	--move forward
 	elseif ctrl.up and not fixed then
-		entity.object:setyaw(yaw+math.pi+math.pi/2)
+		entity.object:setyaw(yaw+math.pi+math.pi/2+extra_yaw)
 		if not fly and not is_watercraft then
 		entity.object:setvelocity(vec_forward)
 		elseif not fly then
@@ -268,7 +269,7 @@ function object_drive(entity, dtime, def)
 	end
 	--move backward
 	elseif ctrl.down and not fixed then
-		entity.object:setyaw(yaw+math.pi+math.pi/2)
+		entity.object:setyaw(yaw+math.pi+math.pi/2+extra_yaw)
 		if not is_watercraft then
 		entity.object:setvelocity(vec_backward)
 		else
@@ -281,7 +282,7 @@ function object_drive(entity, dtime, def)
 	end
 	--stop
 	elseif not ctrl.down or ctrl.up then
-		entity.object:setyaw(yaw+math.pi+math.pi/2)
+		entity.object:setyaw(yaw+math.pi+math.pi/2+extra_yaw)
 		entity.object:setvelocity(vec_stop)
 	--animation
 	if moving_anim ~= nil and entity.moving and not hovering then
@@ -296,7 +297,7 @@ function object_drive(entity, dtime, def)
 			entity.loaded = false
 			local obj = minetest.env:add_entity({x=pos.x+0+dir.x*2,y=pos.y+shoot_y+dir.y,z=pos.z+0+dir.z*2}, arrow)
 			local vec = {x=dir.x*14,y=dir.y*14+shoot_angle,z=dir.z*14}
-			obj:setyaw(yaw+math.pi/2)
+			obj:setyaw(yaw+math.pi/2+extra_yaw)
 			obj:setvelocity(vec)
 			local object = obj:get_luaentity()
 			object.launcher = entity.driver
@@ -319,7 +320,7 @@ function object_drive(entity, dtime, def)
 			entity.loaded2 = false
 			local obj = minetest.env:add_entity({x=pos.x+0+dir.x*2,y=pos.y+shoot_y2+dir.y,z=pos.z+0+dir.z*2}, arrow2)
 			local vec = {x=dir.x*14,y=dir.y*14+shoot_angle,z=dir.z*14}
-			obj:setyaw(yaw+math.pi/2)
+			obj:setyaw(yaw+math.pi/2+extra_yaw)
 			obj:setvelocity(vec)
 			local object = obj:get_luaentity()
 			object.launcher = entity.driver
