@@ -199,14 +199,16 @@ function vehicles.object_drive(entity, dtime, def)
 	
 	--respond to controls
 	--check for water
-	if node == "default:river_water_source" or node == "default:water_source" or node == "default:river_water_flowing" or node == "default:water_flowing" then
-	entity.on_water = true
-	else 
-	entity.on_water = false
+	local function is_water(node)
+		return node == "default:river_water_source" or node == "default:water_source" or node == "default:river_water_flowing" or node == "default:water_flowing"
 	end
+	entity.on_water = is_water(node)
+	entity.in_water = is_water(minetest.get_node({x=pos.x, y=pos.y+1, z=pos.z}).name) or is_water(minetest.get_node({x=pos.x, y=pos.y+2, z=pos.z}).name)
 
 	--apply water effects
-	if is_watercraft and entity.on_water == false then
+	if is_watercraft and entity.in_water then
+		entity.object:setvelocity({x=velo.x*0.9, y=velo.y+5, z=velo.z*0.9})
+	elseif is_watercraft and entity.on_water == false then
 		entity.object:setvelocity({x=velo.x*decell,y=velo.y-1,z=velo.z*decell})
 	elseif entity.on_water and not is_watercraft then
 		entity.object:setvelocity({x=velo.x*0.9, y=-1, z=velo.z*0.9})
