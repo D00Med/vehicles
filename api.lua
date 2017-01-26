@@ -60,7 +60,7 @@ function vehicles.object_attach(entity, player, attach_at, visible, eye_offset)
 	entity.object:setyaw(player:get_look_yaw() - math.pi / 2)
 end
 
-function object_detach(entity, player, offset)
+function vehicles.object_detach(entity, player, offset)
 	entity.driver = nil
 	entity.object:setvelocity({x=0, y=0, z=0})
 	player:set_detach()
@@ -197,6 +197,14 @@ function vehicles.object_drive(entity, dtime, def)
 		end)
 	end
 	
+	if node == "default:lava_source" or node == "default:lava_flowing" then
+		if entity.driver then
+			vehicles.object_detach(entity, entity.driver, {x=1, y=0, z=1})
+		end
+		vehicles.explodinate(entity, 5)
+		entity.object:remove()
+		return
+	end
 	--respond to controls
 	--check for water
 	local function is_water(node)
@@ -541,6 +549,14 @@ function vehicles.object_no_drive(entity, dtime, def)
 	--timer dependant variables
 	local vec_stop = {x=velo.x*decell,y=velo.y-gravity,z=velo.z*decell}
 
+	if node == "default:lava_source" or node == "default:lava_flowing" then
+		if entity.driver then
+			vehicles.object_detach(entity, entity.driver, {x=1, y=0, z=1})
+		end
+		vehicles.explodinate(entity, 5)
+		entity.object:remove()
+		return
+	end
 	--respond to controls
 	--check for water
 	local function is_water(node)
