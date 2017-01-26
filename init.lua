@@ -290,7 +290,7 @@ minetest.register_entity("vehicles:tank", {
 	collisionbox = {-1, -0.6, -0.9, 1, 0.9, 0.9},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		end
@@ -323,7 +323,7 @@ minetest.register_entity("vehicles:turret", {
 	collisionbox = {-0.6, 0, -0.6, 0.6, 0.9, 0.6},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, true, {x=0, y=2, z=4})
 		end
@@ -361,7 +361,7 @@ minetest.register_entity("vehicles:assaultsuit", {
 	collisionbox = {-0.8, 0, -0.8, 0.8, 3, 0.8},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=20, z=8})
 		end
@@ -410,7 +410,7 @@ minetest.register_entity("vehicles:firetruck", {
 	collisionbox = {-1.1, 0, -1.1, 1.1, 1.9, 1.1},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=5}, false, {x=0, y=2, z=5})
 		end
@@ -444,7 +444,7 @@ minetest.register_entity("vehicles:geep", {
 	collisionbox = {-1.1, 0, -1.1, 1.1, 1, 1.1},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif self.driver and clicker ~= self.driver and not self.rider then
 		clicker:set_attach(self.object, "", {x=0, y=5, z=-5}, false, {x=0, y=0, z=-2})
 		self.rider = true
@@ -511,7 +511,7 @@ minetest.register_entity("vehicles:ambulance", {
 	collisionbox = {-1.4, 0, -1.4, 1.4, 2, 1.4},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif self.driver and clicker ~= self.driver and not self.rider then
 		clicker:set_attach(self.object, clicker, {x=0, y=5, z=4}, false, {x=0, y=7, z=10})
 		self.rider = true
@@ -569,7 +569,7 @@ minetest.register_entity("vehicles:ute", {
 	collisionbox = {-1.4, 0, -1.4, 1.4, 1, 1.4},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif self.driver and clicker ~= self.driver and not self.rider then
 		clicker:set_attach(self.object, clicker, {x=0, y=5, z=-5}, false, {x=0, y=0, z=-2})
 		self.rider = true
@@ -636,7 +636,7 @@ minetest.register_entity("vehicles:ute2", {
 	collisionbox = {-1.4, 0, -1.4, 1.4, 1, 1.4},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif self.driver and clicker ~= self.driver and not self.rider then
 		clicker:set_attach(self.object, clicker, {x=0, y=5, z=-5}, {x=0, y=0, z=0})
 		self.rider = true
@@ -684,7 +684,7 @@ minetest.register_entity("vehicles:astonmaaton", {
 	collisionbox = {-1, 0, -1, 1.3, 1, 1},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
@@ -726,7 +726,7 @@ minetest.register_entity("vehicles:nizzan", {
 	collisionbox = {-1, 0, -1, 1.3, 1, 1},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
@@ -787,7 +787,7 @@ minetest.register_entity("vehicles:nizzan2", {
 	collisionbox = {-1, 0, -1, 1.3, 1, 1},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
@@ -848,7 +848,7 @@ minetest.register_entity("vehicles:lambogoni", {
 	collisionbox = {-1, 0, -1, 1.3, 1, 1},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
@@ -890,7 +890,7 @@ minetest.register_entity("vehicles:lambogoni2", {
 	collisionbox = {-1, 0, -1, 1.3, 1, 1},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
@@ -932,7 +932,7 @@ minetest.register_entity("vehicles:masda", {
 	collisionbox = {-1, 0, -1, 1.3, 1, 1},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
@@ -974,7 +974,7 @@ minetest.register_entity("vehicles:masda2", {
 	collisionbox = {-1, 0, -1, 1.3, 1, 1},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
@@ -1016,7 +1016,7 @@ minetest.register_entity("vehicles:policecar", {
 	collisionbox = {-1, 0, -1, 1.3, 1, 1},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
@@ -1058,7 +1058,7 @@ minetest.register_entity("vehicles:musting", {
 	collisionbox = {-1, 0, -1, 1.3, 1, 1},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
@@ -1100,7 +1100,7 @@ minetest.register_entity("vehicles:musting2", {
 	collisionbox = {-1, 0, -1, 1.3, 1, 1},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
@@ -1152,7 +1152,7 @@ minetest.register_entity("vehicles:fewawi", {
 		end
 		else
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
@@ -1205,7 +1205,7 @@ minetest.register_entity("vehicles:fewawi2", {
 		end
 		else
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
@@ -1248,7 +1248,7 @@ minetest.register_entity("vehicles:pooshe", {
 	collisionbox = {-1, 0, -1, 1.3, 1, 1},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
@@ -1290,7 +1290,7 @@ minetest.register_entity("vehicles:pooshe2", {
 	collisionbox = {-1, 0, -1, 1.3, 1, 1},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
@@ -1332,7 +1332,7 @@ minetest.register_entity("vehicles:boat", {
 	collisionbox = {-1, 0.2, -1, 1.3, 1, 1},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		end
@@ -1366,7 +1366,7 @@ minetest.register_entity("vehicles:jet", {
 	collisionbox = {-1, -0.9, -0.9, 1, 0.9, 0.9},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=4, z=3}, false, {x=0, y=4, z=3})
 		end
@@ -1401,7 +1401,7 @@ minetest.register_entity("vehicles:plane", {
 	collisionbox = {-1.1, 0, -1, 1, 1.9, 1.1},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=8, z=3}, false, {x=0, y=9, z=0})
 		end
@@ -1442,7 +1442,7 @@ minetest.register_entity("vehicles:parachute", {
 	collisionbox = {-0.5, -1, -0.5, 0.5, 1, 0.5},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=0, z=-1.5}, false, {x=0, y=-4, z=0})
 		end
@@ -1475,7 +1475,7 @@ minetest.register_tool("vehicles:backpack", {
 			local obj = minetest.env:add_entity({x=playerpos.x+0+dir.x,y=playerpos.y+1+dir.y,z=playerpos.z+0+dir.z}, "vehicles:parachute")
 			local entity = obj:get_luaentity()
 			if obj.driver and placer == obj.driver then
-			object_detach(entity, placer, {x=1, y=0, z=1})
+			vehicles.object_detach(entity, placer, {x=1, y=0, z=1})
 			elseif not obj.driver then
 			vehicles.object_attach(entity, placer, {x=0, y=0, z=0}, true, {x=0, y=2, z=0})
 			end
@@ -1526,7 +1526,7 @@ minetest.register_entity("vehicles:wing_glider", {
 		end
 		if self.object:get_hp() == 0 then
 		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
+		vehicles.object_detach(self, self.driver, {x=1, y=0, z=1})
 		end
 		self.object:remove()
 		end
@@ -1555,7 +1555,7 @@ minetest.register_tool("vehicles:wings", {
 					local wing = obj2:get_luaentity()
 					wing.driver = nil
 					obj2:remove()
-					object_detach(obj2:get_luaentity(), placer, {x=1, y=0, z=1})
+					vehicles.object_detach(obj2:get_luaentity(), placer, {x=1, y=0, z=1})
 					placer:set_properties({
 					visual_size = {x=1, y=1},
 					})
