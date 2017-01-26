@@ -295,20 +295,7 @@ minetest.register_entity("vehicles:tank", {
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		end
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 	if self.driver then
 		vehicles.object_drive(self, dtime, {
@@ -345,20 +332,7 @@ minetest.register_entity("vehicles:turret", {
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, true, {x=0, y=2, z=4})
 		end
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 	self.object:setvelocity({x=0, y=-1, z=0})
 	if self.driver then
@@ -396,20 +370,7 @@ minetest.register_entity("vehicles:assaultsuit", {
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=20, z=8})
 		end
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 	if self.driver then
 		vehicles.object_drive(self, dtime, {
@@ -461,20 +422,7 @@ minetest.register_entity("vehicles:firetruck", {
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=5}, false, {x=0, y=2, z=5})
 		end
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 	if self.driver then
 		vehicles.object_drive(self, dtime, {
@@ -524,20 +472,7 @@ minetest.register_entity("vehicles:geep", {
 		end)
 		end
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_activate = function(self)
 	self.nitro = true
 	end,
@@ -607,20 +542,7 @@ minetest.register_entity("vehicles:ambulance", {
 		end)
 		end
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_activate = function(self)
 	self.nitro = true
 	end,
@@ -679,20 +601,7 @@ minetest.register_entity("vehicles:ute", {
 		end)
 		end
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_activate = function(self)
 	self.nitro = true
 	end,
@@ -761,20 +670,7 @@ minetest.register_entity("vehicles:ute2", {
 		end)
 		end
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_activate = function(self)
 	self.nitro = true
 	end,
@@ -820,20 +716,7 @@ minetest.register_entity("vehicles:astonmaaton", {
 		end)
 		end
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_activate = function(self)
 	self.nitro = true
 	end,
@@ -879,20 +762,7 @@ minetest.register_entity("vehicles:nizzan", {
 		end)
 		end
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_activate = function(self)
 	self.nitro = true
 	end,
@@ -958,20 +828,7 @@ minetest.register_entity("vehicles:nizzan2", {
 	on_activate = function(self)
 	self.nitro = true
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 	if self.driver then
 		vehicles.object_drive(self, dtime, {
@@ -1031,20 +888,7 @@ minetest.register_entity("vehicles:lambogoni", {
 		end)
 		end
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_activate = function(self)
 	self.nitro = true
 	end,
@@ -1090,20 +934,7 @@ minetest.register_entity("vehicles:lambogoni2", {
 		end)
 		end
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_activate = function(self)
 	self.nitro = true
 	end,
@@ -1149,20 +980,7 @@ minetest.register_entity("vehicles:masda", {
 		end)
 		end
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_activate = function(self)
 	self.nitro = true
 	end,
@@ -1211,20 +1029,7 @@ minetest.register_entity("vehicles:policecar", {
 	on_activate = function(self)
 	self.nitro = true
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 	if self.driver then
 		vehicles.object_drive(self, dtime, {
@@ -1270,20 +1075,7 @@ minetest.register_entity("vehicles:musting", {
 	on_activate = function(self)
 	self.nitro = true
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 	if self.driver then
 		vehicles.object_drive(self, dtime, {
@@ -1326,20 +1118,7 @@ minetest.register_entity("vehicles:musting2", {
 		end)
 		end
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_activate = function(self)
 	self.nitro = true
 	end,
@@ -1396,20 +1175,7 @@ minetest.register_entity("vehicles:fewawi", {
 		end
 		end
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_activate = function(self)
 	self.nitro = true
 	end,
@@ -1466,20 +1232,7 @@ minetest.register_entity("vehicles:fewawi2", {
 		end
 		end
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_activate = function(self)
 	self.nitro = true
 	end,
@@ -1528,20 +1281,7 @@ minetest.register_entity("vehicles:pooshe", {
 	on_activate = function(self)
 	self.nitro = true
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 	if self.driver then
 		vehicles.object_drive(self, dtime, {
@@ -1584,20 +1324,7 @@ minetest.register_entity("vehicles:pooshe2", {
 		end)
 		end
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_activate = function(self)
 	self.nitro = true
 	end,
@@ -1646,20 +1373,7 @@ minetest.register_entity("vehicles:masda2", {
 	on_activate = function(self)
 	self.nitro = true
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 	if self.driver then
 		vehicles.object_drive(self, dtime, {
@@ -1696,20 +1410,7 @@ minetest.register_entity("vehicles:boat", {
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		end
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 	if self.driver then
 		vehicles.object_drive(self, dtime, {
@@ -1749,20 +1450,7 @@ minetest.register_entity("vehicles:jet", {
 		vehicles.object_attach(self, clicker, {x=0, y=4, z=3}, false, {x=0, y=4, z=3})
 		end
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 	if self.driver then
 		vehicles.object_drive(self, dtime, {
@@ -1802,20 +1490,7 @@ minetest.register_entity("vehicles:plane", {
 		vehicles.object_attach(self, clicker, {x=0, y=8, z=3}, false, {x=0, y=9, z=0})
 		end
 	end,
-	on_punch = function(self, puncher)
-		if not self.driver then
-		local name = self.object:get_luaentity().name
-		local pos = self.object:getpos()
-		minetest.env:add_item(pos, name.."_spawner")
-		self.object:remove()
-		end
-		if self.object:get_hp() == 0 then
-		if self.driver then
-		object_detach(self, self.driver, {x=1, y=0, z=1})
-		end
-		vehicles.explodinate(self, 5)
-		end
-	end,
+	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 	if self.anim and not self.driver then 
 	self.object:set_animation({x=1, y=1}, 5, 0)
