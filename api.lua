@@ -218,7 +218,7 @@ function vehicles.object_drive(entity, dtime, def)
 		entity.object:setvelocity({x=velo.x*0.9, y=velo.y+5, z=velo.z*0.9})
 	elseif is_watercraft and entity.on_water == false then
 		entity.object:setvelocity({x=velo.x*decell,y=velo.y-1,z=velo.z*decell})
-	elseif entity.on_water and not is_watercraft then
+	elseif (entity.on_water or entity.in_water) and not is_watercraft then
 		entity.object:setvelocity({x=velo.x*0.9, y=-1, z=velo.z*0.9})
 	--boost
 	elseif ctrl.up and not shoots2 and ctrl.aux1 and entity.boost then
