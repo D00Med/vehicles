@@ -2,3 +2,4 @@ default
 tnt
 dye
 stairs?
+intllib?

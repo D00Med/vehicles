@@ -1,3 +1,7 @@
+-- Load support for intllib.
+local MP = minetest.get_modpath(minetest.get_current_modname())
+local S, NS = dofile(MP.."/intllib.lua")
+
 vehicles = {}
 
 dofile(minetest.get_modpath("vehicles").."/api.lua")
@@ -97,12 +101,12 @@ minetest.register_entity("vehicles:missile", {
 
 
 minetest.register_craftitem("vehicles:missile_2_item", {
-	description = "Missile",
+	description = S("Missile"),
 	inventory_image = "vehicles_missile_inv.png"
 })
 
 minetest.register_craftitem("vehicles:bullet_item", {
-	description = "Bullet",
+	description = S("Bullet"),
 	inventory_image = "vehicles_bullet_inv.png"
 })
 
@@ -345,8 +349,8 @@ minetest.register_entity("vehicles:turret", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:tank", "Tank", "vehicles_tank_inv.png")
-vehicles.register_spawner("vehicles:turret", "Gun turret", "vehicles_turret_inv.png")
+vehicles.register_spawner("vehicles:tank", S("Tank"), "vehicles_tank_inv.png")
+vehicles.register_spawner("vehicles:turret", S("Gun turret"), "vehicles_turret_inv.png")
 
 minetest.register_entity("vehicles:assaultsuit", {
 	visual = "mesh",
@@ -430,7 +434,7 @@ minetest.register_entity("vehicles:firetruck", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:firetruck", "Fire truck", "vehicles_firetruck_inv.png")
+vehicles.register_spawner("vehicles:firetruck", S("Fire truck"), "vehicles_firetruck_inv.png")
 
 minetest.register_entity("vehicles:geep", {
 	visual = "mesh",
@@ -497,7 +501,7 @@ minetest.register_entity("vehicles:geep", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:geep", "Geep", "vehicles_geep_inv.png")
+vehicles.register_spawner("vehicles:geep", S("Geep"), "vehicles_geep_inv.png")
 
 minetest.register_entity("vehicles:ambulance", {
 	visual = "mesh",
@@ -555,7 +559,7 @@ minetest.register_entity("vehicles:ambulance", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:ambulance", "Ambulance", "vehicles_ambulance_inv.png")
+vehicles.register_spawner("vehicles:ambulance", S("Ambulance"), "vehicles_ambulance_inv.png")
 
 minetest.register_entity("vehicles:ute", {
 	visual = "mesh",
@@ -622,7 +626,7 @@ minetest.register_entity("vehicles:ute", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:ute", "Ute (dirty)", "vehicles_ute_inv.png")
+vehicles.register_spawner("vehicles:ute", S("Ute (dirty)"), "vehicles_ute_inv.png")
 
 minetest.register_entity("vehicles:ute2", {
 	visual = "mesh",
@@ -670,7 +674,7 @@ minetest.register_entity("vehicles:ute2", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:ute2", "Ute (clean)", "vehicles_ute_inv.png")
+vehicles.register_spawner("vehicles:ute2", S("Ute (clean)"), "vehicles_ute_inv.png")
 
 minetest.register_entity("vehicles:astonmaaton", {
 	visual = "mesh",
@@ -712,7 +716,7 @@ minetest.register_entity("vehicles:astonmaaton", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:astonmaaton", "Aston Maaton (white)", "vehicles_astonmaaton_inv.png")
+vehicles.register_spawner("vehicles:astonmaaton", S("Aston Maaton (white)"), "vehicles_astonmaaton_inv.png")
 
 minetest.register_entity("vehicles:nizzan", {
 	visual = "mesh",
@@ -773,7 +777,7 @@ minetest.register_entity("vehicles:nizzan", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:nizzan", "Nizzan (brown)", "vehicles_nizzan_inv.png")
+vehicles.register_spawner("vehicles:nizzan", S("Nizzan (brown)"), "vehicles_nizzan_inv.png")
 
 minetest.register_entity("vehicles:nizzan2", {
 	visual = "mesh",
@@ -834,7 +838,7 @@ minetest.register_entity("vehicles:nizzan2", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:nizzan2", "Nizzan (green)", "vehicles_nizzan_inv2.png")
+vehicles.register_spawner("vehicles:nizzan2", S("Nizzan (green)"), "vehicles_nizzan_inv2.png")
 
 minetest.register_entity("vehicles:lambogoni", {
 	visual = "mesh",
@@ -876,7 +880,7 @@ minetest.register_entity("vehicles:lambogoni", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:lambogoni", "Lambogoni (grey)", "vehicles_lambogoni_inv.png")
+vehicles.register_spawner("vehicles:lambogoni", S("Lambogoni (grey)"), "vehicles_lambogoni_inv.png")
 
 minetest.register_entity("vehicles:lambogoni2", {
 	visual = "mesh",
@@ -918,7 +922,7 @@ minetest.register_entity("vehicles:lambogoni2", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:lambogoni2", "Lambogoni (yellow)", "vehicles_lambogoni2_inv.png")
+vehicles.register_spawner("vehicles:lambogoni2", S("Lambogoni (yellow)"), "vehicles_lambogoni2_inv.png")
 
 minetest.register_entity("vehicles:masda", {
 	visual = "mesh",
@@ -960,7 +964,7 @@ minetest.register_entity("vehicles:masda", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:masda", "Masda (pink)", "vehicles_masda_inv.png")
+vehicles.register_spawner("vehicles:masda", S("Masda (pink)"), "vehicles_masda_inv.png")
 
 minetest.register_entity("vehicles:masda2", {
 	visual = "mesh",
@@ -1002,7 +1006,7 @@ minetest.register_entity("vehicles:masda2", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:masda2", "Masda (orange)", "vehicles_masda_inv2.png")
+vehicles.register_spawner("vehicles:masda2", S("Masda (orange)"), "vehicles_masda_inv2.png")
 
 minetest.register_entity("vehicles:policecar", {
 	visual = "mesh",
@@ -1044,7 +1048,7 @@ minetest.register_entity("vehicles:policecar", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:policecar", "Police Car (US)", "vehicles_policecar_inv.png")
+vehicles.register_spawner("vehicles:policecar", S("Police Car (US)"), "vehicles_policecar_inv.png")
 
 minetest.register_entity("vehicles:musting", {
 	visual = "mesh",
@@ -1086,7 +1090,7 @@ minetest.register_entity("vehicles:musting", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:musting", "Musting (purple)", "vehicles_musting_inv2.png")
+vehicles.register_spawner("vehicles:musting", S("Musting (purple)"), "vehicles_musting_inv2.png")
 
 minetest.register_entity("vehicles:musting2", {
 	visual = "mesh",
@@ -1128,7 +1132,7 @@ minetest.register_entity("vehicles:musting2", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:musting2", "Musting (white)", "vehicles_musting_inv.png")
+vehicles.register_spawner("vehicles:musting2", S("Musting (white)"), "vehicles_musting_inv.png")
 
 minetest.register_entity("vehicles:fewawi", {
 	visual = "mesh",
@@ -1181,7 +1185,7 @@ minetest.register_entity("vehicles:fewawi", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:fewawi", "Fewawi (red)", "vehicles_fewawi_inv.png")
+vehicles.register_spawner("vehicles:fewawi", S("Fewawi (red)"), "vehicles_fewawi_inv.png")
 
 minetest.register_entity("vehicles:fewawi2", {
 	visual = "mesh",
@@ -1234,7 +1238,7 @@ minetest.register_entity("vehicles:fewawi2", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:fewawi2", "Fewawi (blue)", "vehicles_fewawi_inv2.png")
+vehicles.register_spawner("vehicles:fewawi2", S("Fewawi (blue)"), "vehicles_fewawi_inv2.png")
 
 minetest.register_entity("vehicles:pooshe", {
 	visual = "mesh",
@@ -1276,7 +1280,7 @@ minetest.register_entity("vehicles:pooshe", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:pooshe", "Pooshe (red)", "vehicles_pooshe_inv.png")
+vehicles.register_spawner("vehicles:pooshe", S("Pooshe (red)"), "vehicles_pooshe_inv.png")
 
 minetest.register_entity("vehicles:pooshe2", {
 	visual = "mesh",
@@ -1318,7 +1322,7 @@ minetest.register_entity("vehicles:pooshe2", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:pooshe2", "Pooshe (yellow)", "vehicles_pooshe_inv2.png")
+vehicles.register_spawner("vehicles:pooshe2", S("Pooshe (yellow)"), "vehicles_pooshe_inv2.png")
 
 minetest.register_entity("vehicles:boat", {
 	visual = "mesh",
@@ -1348,7 +1352,7 @@ minetest.register_entity("vehicles:boat", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:boat", "Speedboat", "vehicles_boat_inv.png", true)
+vehicles.register_spawner("vehicles:boat", S("Speedboat"), "vehicles_boat_inv.png", true)
 
 minetest.register_entity("vehicles:jet", {
 	visual = "mesh",
@@ -1387,7 +1391,7 @@ minetest.register_entity("vehicles:jet", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:jet", "Jet", "vehicles_jet_inv.png")
+vehicles.register_spawner("vehicles:jet", S("Jet"), "vehicles_jet_inv.png")
 
 minetest.register_entity("vehicles:plane", {
 	visual = "mesh",
@@ -1429,7 +1433,7 @@ minetest.register_entity("vehicles:plane", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:plane", "Plane", "vehicles_plane_inv.png")
+vehicles.register_spawner("vehicles:plane", S("Plane"), "vehicles_plane_inv.png")
 
 minetest.register_entity("vehicles:parachute", {
 	visual = "mesh",
@@ -1457,7 +1461,7 @@ minetest.register_entity("vehicles:parachute", {
 })
 
 minetest.register_tool("vehicles:backpack", {
-	description = "Parachute",
+	description = S("Parachute"),
 	inventory_image = "vehicles_backpack.png",
 	wield_scale = {x = 1.5, y = 1.5, z = 1},
 	tool_capabilities = {
@@ -1534,7 +1538,7 @@ minetest.register_entity("vehicles:wing_glider", {
 })
 
 minetest.register_tool("vehicles:wings", {
-	description = "Wings",
+	description = S("Wings"),
 	inventory_image = "vehicles_backpack.png",
 	wield_scale = {x = 1.5, y = 1.5, z = 1},
 	tool_capabilities = {
@@ -1579,7 +1583,7 @@ minetest.register_tool("vehicles:wings", {
 })
 
 minetest.register_tool("vehicles:rc", {
-	description = "Rc (use with missiles)",
+	description = S("Rc (use with missiles)"),
 	inventory_image = "vehicles_rc.png",
 	wield_scale = {x = 1.5, y = 1.5, z = 1},
 	tool_capabilities = {
@@ -1608,37 +1612,37 @@ minetest.register_tool("vehicles:rc", {
 --crafting recipes and materials
 
 minetest.register_craftitem("vehicles:wheel", {
-	description = "Wheel",
+	description = S("Wheel"),
 	inventory_image = "vehicles_wheel.png",
 })
 
 minetest.register_craftitem("vehicles:engine", {
-	description = "Engine",
+	description = S("Engine"),
 	inventory_image = "vehicles_engine.png",
 })
 
 minetest.register_craftitem("vehicles:body", {
-	description = "Car Body",
+	description = S("Car Body"),
 	inventory_image = "vehicles_car_body.png",
 })
 
 minetest.register_craftitem("vehicles:armor", {
-	description = "Armor plating",
+	description = S("Armor plating"),
 	inventory_image = "vehicles_armor.png",
 })
 
 minetest.register_craftitem("vehicles:gun", {
-	description = "Vehicle Gun",
+	description = S("Vehicle Gun"),
 	inventory_image = "vehicles_gun.png",
 })
 
 minetest.register_craftitem("vehicles:propeller", {
-	description = "Propeller",
+	description = S("Propeller"),
 	inventory_image = "vehicles_propeller.png",
 })
 
 minetest.register_craftitem("vehicles:jet_engine", {
-	description = "Jet Engine",
+	description = S("Jet Engine"),
 	inventory_image = "vehicles_jet_engine.png",
 })
 
@@ -1977,20 +1981,20 @@ minetest.register_node("vehicles:"..name, {
 })
 end--function vehicles.register_simplenode(name, desc, texture, light)
 
-vehicles.register_simplenode("road", "Road surface", "vehicles_road.png", 0)
-vehicles.register_simplenode("concrete", "Concrete", "vehicles_concrete.png", 0)
-vehicles.register_simplenode("arrows", "Turning Arrows(left)", "vehicles_arrows.png", 10)
-vehicles.register_simplenode("arrows_flp", "Turning Arrows(right)", "vehicles_arrows_flp.png", 10)
-vehicles.register_simplenode("checker", "Checkered surface", "vehicles_checker.png", 0)
-vehicles.register_simplenode("stripe", "Road surface (stripe)", "vehicles_road_stripe.png", 0)
-vehicles.register_simplenode("stripe2", "Road surface (double stripe)", "vehicles_road_stripe2.png", 0)
-vehicles.register_simplenode("stripe3", "Road surface (white stripes)", "vehicles_road_stripes3.png", 0)
-vehicles.register_simplenode("stripe4", "Road surface (yellow stripes)", "vehicles_road_stripe4.png", 0)
-vehicles.register_simplenode("window", "Building glass", "vehicles_window.png", 0)
-vehicles.register_simplenode("stripes", "Hazard stipes", "vehicles_stripes.png", 10)
+vehicles.register_simplenode("road", S("Road surface"), "vehicles_road.png", 0)
+vehicles.register_simplenode("concrete", S("Concrete"), "vehicles_concrete.png", 0)
+vehicles.register_simplenode("arrows", S("Turning Arrows(left)"), "vehicles_arrows.png", 10)
+vehicles.register_simplenode("arrows_flp", S("Turning Arrows(right)"), "vehicles_arrows_flp.png", 10)
+vehicles.register_simplenode("checker", S("Checkered surface"), "vehicles_checker.png", 0)
+vehicles.register_simplenode("stripe", S("Road surface (stripe)"), "vehicles_road_stripe.png", 0)
+vehicles.register_simplenode("stripe2", S("Road surface (double stripe)"), "vehicles_road_stripe2.png", 0)
+vehicles.register_simplenode("stripe3", S("Road surface (white stripes)"), "vehicles_road_stripes3.png", 0)
+vehicles.register_simplenode("stripe4", S("Road surface (yellow stripes)"), "vehicles_road_stripe4.png", 0)
+vehicles.register_simplenode("window", S("Building glass"), "vehicles_window.png", 0)
+vehicles.register_simplenode("stripes", S("Hazard stipes"), "vehicles_stripes.png", 10)
 
 minetest.register_node("vehicles:lights", {
-	description = "Tunnel Lights",
+	description = S("Tunnel Lights"),
 	tiles = {"vehicles_lights_top.png", "vehicles_lights_top.png", "vehicles_lights.png", "vehicles_lights.png", "vehicles_lights.png", "vehicles_lights.png"},
 	groups = {cracky=1},
 	paramtype2 = "facedir",
@@ -2001,13 +2005,13 @@ if minetest.get_modpath("stairs") then
 stairs.register_stair_and_slab("road_surface", "vehicles:road",
 		{cracky = 1},
 		{"vehicles_road.png"},
-		"Road Surface Stair",
-		"Road Surface Slab",
+		S("Road Surface Stair"),
+		S("Road Surface Slab"),
 		default.node_sound_stone_defaults())
 end
 
 minetest.register_node("vehicles:neon_arrow", {
-	description = "neon arrows (left)",
+	description = S("neon arrows (left)"),
 	drawtype = "signlike",
 	visual_scale = 2.0,
 	tiles = {{
@@ -2031,7 +2035,7 @@ minetest.register_node("vehicles:neon_arrow", {
 })
 
 minetest.register_node("vehicles:neon_arrow_flp", {
-	description = "neon arrows (right)",
+	description = S("neon arrows (right)"),
 	drawtype = "signlike",
 	visual_scale = 2.0,
 	tiles = {{
@@ -2055,7 +2059,7 @@ minetest.register_node("vehicles:neon_arrow_flp", {
 })
 
 minetest.register_node("vehicles:add_arrow", {
-	description = "arrows(left)",
+	description = S("arrows(left)"),
 	drawtype = "signlike",
 	visual_scale = 2.0,
 	tiles = {"vehicles_arrows.png"},
@@ -2075,7 +2079,7 @@ minetest.register_node("vehicles:add_arrow", {
 })
 
 minetest.register_node("vehicles:add_arrow_flp", {
-	description = "arrows(right)",
+	description = S("arrows(right)"),
 	drawtype = "signlike",
 	visual_scale = 2.0,
 	tiles = {"vehicles_arrows_flp.png"},
@@ -2095,7 +2099,7 @@ minetest.register_node("vehicles:add_arrow_flp", {
 })
 
 minetest.register_node("vehicles:scifi_ad", {
-	description = "scifi_nodes sign",
+	description = S("scifi_nodes sign"),
 	drawtype = "signlike",
 	visual_scale = 3.0,
 	tiles = {{
@@ -2119,7 +2123,7 @@ minetest.register_node("vehicles:scifi_ad", {
 })
 
 minetest.register_node("vehicles:mt_sign", {
-	description = "mt sign",
+	description = S("mt sign"),
 	drawtype = "signlike",
 	visual_scale = 3.0,
 	tiles = {"vehicles_neonmt.png",},
@@ -2139,7 +2143,7 @@ minetest.register_node("vehicles:mt_sign", {
 })
 
 minetest.register_node("vehicles:pacman_sign", {
-	description = "pacman sign",
+	description = S("pacman sign"),
 	drawtype = "signlike",
 	visual_scale = 2.0,
 	tiles = {"vehicles_pacman.png",},
@@ -2159,7 +2163,7 @@ minetest.register_node("vehicles:pacman_sign", {
 })
 
 minetest.register_node("vehicles:whee_sign", {
-	description = "whee sign",
+	description = S("whee sign"),
 	drawtype = "signlike",
 	visual_scale = 3.0,
 	tiles = {"vehicles_whee.png",},
@@ -2179,7 +2183,7 @@ minetest.register_node("vehicles:whee_sign", {
 })
 
 minetest.register_node("vehicles:checker_sign", {
-	description = "Checkered sign",
+	description = S("Checkered sign"),
 	drawtype = "signlike",
 	visual_scale = 3.0,
 	tiles = {"vehicles_checker2.png",},
@@ -2199,7 +2203,7 @@ minetest.register_node("vehicles:checker_sign", {
 })
 
 minetest.register_node("vehicles:car_sign", {
-	description = "Car sign",
+	description = S("Car sign"),
 	drawtype = "signlike",
 	visual_scale = 3.0,
 	tiles = {"vehicles_sign1.png",},
@@ -2219,7 +2223,7 @@ minetest.register_node("vehicles:car_sign", {
 })
 
 minetest.register_node("vehicles:nyan_sign", {
-	description = "Nyancat sign",
+	description = S("Nyancat sign"),
 	drawtype = "signlike",
 	visual_scale = 2.0,
 	tiles = {"vehicles_sign2.png",},
@@ -2239,7 +2243,7 @@ minetest.register_node("vehicles:nyan_sign", {
 })
 
 minetest.register_node("vehicles:flag", {
-	description = "Flag",
+	description = S("Flag"),
 	drawtype = "torchlike",
 	visual_scale = 3.0,
 	tiles = {"vehicles_flag.png",},
@@ -2260,7 +2264,7 @@ minetest.register_node("vehicles:flag", {
 
 
 minetest.register_node("vehicles:tyres", {
-	description = "tyre stack",
+	description = S("tyre stack"),
 	tiles = {
 		"vehicles_tyre.png",
 		"vehicles_tyre.png",
