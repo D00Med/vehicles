@@ -297,8 +297,7 @@ minetest.register_entity("vehicles:tank", {
 	end,
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		return vehicles.on_step(self, dtime, {
 		speed = 6,
 		decell = 0.5, 
 		shoots = true, 
@@ -308,9 +307,6 @@ minetest.register_entity("vehicles:tank", {
 		stand_anim = {x=1, y=1},
 		shoot_anim = {x=1, y=1},
 		})
-		return false
-		end
-		return true
 	end,
 })
 
@@ -372,8 +368,7 @@ minetest.register_entity("vehicles:assaultsuit", {
 	end,
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		return vehicles.on_step(self, dtime, {
 		speed = 6,
 		decell = 0.5, 
 		shoots = true,
@@ -390,16 +385,14 @@ minetest.register_entity("vehicles:assaultsuit", {
 		shoot_anim2 = {x=40, y=51},
 		shoot_y = 3.5,
 		shoot_y2 = 4,
-		})
-		self.standing = false
-		return false
-	else
-	if not standing then
-		self.object:set_animation({x=1, y=1}, 20, 0)
-		self.standing = true
-	end
-		end
-		return true
+		},
+		function() self.standing = false end,
+		function()
+			if not self.standing then
+				self.object:set_animation({x=1, y=1}, 20, 0)
+				self.standing = true
+			end
+		end)
 	end,
 })
 
@@ -424,8 +417,7 @@ minetest.register_entity("vehicles:firetruck", {
 	end,
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		return vehicles.on_step(self, dtime, {
 			speed = 7,
 			decell = 0.5,
 			shoots = true,
@@ -435,9 +427,6 @@ minetest.register_entity("vehicles:firetruck", {
 			driving_sound = "engine",
 			sound_duration = 11,
 		})
-		return false
-		end
-		return true
 	end,
 })
 
@@ -474,11 +463,10 @@ minetest.register_entity("vehicles:geep", {
 	end,
 	on_punch = vehicles.on_punch,
 	on_activate = function(self)
-	self.nitro = true
+		self.nitro = true
 	end,
 	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		return vehicles.on_step(self, dtime, {
 			speed = 14, 
 			decell = 0.6,
 			boost = true,
@@ -486,9 +474,10 @@ minetest.register_entity("vehicles:geep", {
 			boost_effect = "vehicles_nitro.png",
 			sound_duration = 11,
 			driving_sound = "engine"
-		})
+		},
+		function()
 		local pos = self.object:getpos()
-			minetest.add_particlespawner(
+		minetest.add_particlespawner(
 			15, --amount
 			1, --time
 			{x=pos.x, y=pos.y, z=pos.z}, --minpos
@@ -504,9 +493,7 @@ minetest.register_entity("vehicles:geep", {
 			false, --collisiondetection
 			"vehicles_dust.png" --texture
 		)
-		return false
-		end
-		return true
+		end)
 	end,
 })
 
@@ -544,29 +531,27 @@ minetest.register_entity("vehicles:ambulance", {
 	end,
 	on_punch = vehicles.on_punch,
 	on_activate = function(self)
-	self.nitro = true
+		self.nitro = true
 	end,
 	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		return vehicles.on_step(self, dtime, {
 			speed = 13, 
 			decell = 0.6,
 			moving_anim = {x=1, y=3},
 			stand_anim = {x=1, y=1},
 			driving_sound = "engine",
 			sound_duration = 11,
-		})
-		if not self.siren_ready then
-		minetest.sound_play("ambulance", 
-		{gain = 0.1, max_hear_distance = 3, loop = false})
-		self.siren_ready = true
-		minetest.after(4, function()
-		self.siren_ready = false
+		},
+		function()
+			if not self.siren_ready then
+				minetest.sound_play("ambulance", 
+				{gain = 0.1, max_hear_distance = 3, loop = false})
+				self.siren_ready = true
+				minetest.after(4, function()
+					self.siren_ready = false
+				end)
+			end
 		end)
-		end
-		return false
-		end
-		return true
 	end,
 })
 
@@ -603,11 +588,10 @@ minetest.register_entity("vehicles:ute", {
 	end,
 	on_punch = vehicles.on_punch,
 	on_activate = function(self)
-	self.nitro = true
+		self.nitro = true
 	end,
 	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		return vehicles.on_step(self, dtime, {
 			speed = 14, 
 			decell = 0.6,
 			boost = true,
@@ -615,27 +599,26 @@ minetest.register_entity("vehicles:ute", {
 			boost_effect = "vehicles_nitro.png",
 			driving_sound = "engine",
 			sound_duration = 11,
-		})
-		local pos = self.object:getpos()
+		},
+		function()
+			local pos = self.object:getpos()
 			minetest.add_particlespawner(
-			15, --amount
-			1, --time
-			{x=pos.x, y=pos.y, z=pos.z}, --minpos
-			{x=pos.x, y=pos.y, z=pos.z}, --maxpos
-			{x=0, y=0, z=0}, --minvel
-			{x=0, y=0, z=0}, --maxvel
-			{x=-0,y=-0,z=-0}, --minacc
-			{x=0,y=0,z=0}, --maxacc
-			0.5, --minexptime
-			1, --maxexptime
-			10, --minsize
-			15, --maxsize
-			false, --collisiondetection
-			"vehicles_dust.png" --texture
-		)
-		return false
-		end
-		return true
+				15, --amount
+				1, --time
+				{x=pos.x, y=pos.y, z=pos.z}, --minpos
+				{x=pos.x, y=pos.y, z=pos.z}, --maxpos
+				{x=0, y=0, z=0}, --minvel
+				{x=0, y=0, z=0}, --maxvel
+				{x=-0,y=-0,z=-0}, --minacc
+				{x=0,y=0,z=0}, --maxacc
+				0.5, --minexptime
+				1, --maxexptime
+				10, --minsize
+				15, --maxsize
+				false, --collisiondetection
+				"vehicles_dust.png" --texture
+			)
+		end)
 	end,
 })
 
@@ -675,8 +658,7 @@ minetest.register_entity("vehicles:ute2", {
 	self.nitro = true
 	end,
 	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		return vehicles.on_step(self, dtime, {
 			speed = 14, 
 			decell = 0.6,
 			boost = true,
@@ -685,9 +667,6 @@ minetest.register_entity("vehicles:ute2", {
 			driving_sound = "engine",
 			sound_duration = 11,
 		})
-		return false
-		end
-		return true
 	end,
 })
 
@@ -721,8 +700,7 @@ minetest.register_entity("vehicles:astonmaaton", {
 	self.nitro = true
 	end,
 	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		return vehicles.on_step(self, dtime, {
 			speed = 14, 
 			decell = 0.8,
 			boost = true,
@@ -731,9 +709,6 @@ minetest.register_entity("vehicles:astonmaaton", {
 			driving_sound = "engine",
 			sound_duration = 11,
 		})
-		return false
-		end
-		return true
 	end,
 })
 
@@ -764,11 +739,10 @@ minetest.register_entity("vehicles:nizzan", {
 	end,
 	on_punch = vehicles.on_punch,
 	on_activate = function(self)
-	self.nitro = true
+		self.nitro = true
 	end,
 	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		return vehicles.on_step(self, dtime, {
 			speed = 14, 
 			decell = 0.8,
 			boost = true,
@@ -776,27 +750,26 @@ minetest.register_entity("vehicles:nizzan", {
 			boost_effect = "vehicles_nitro.png",
 			driving_sound = "engine",
 			sound_duration = 11,
-		})
-		local pos = self.object:getpos()
+		},
+		function()
+			local pos = self.object:getpos()
 			minetest.add_particlespawner(
-			15, --amount
-			1, --time
-			{x=pos.x, y=pos.y, z=pos.z}, --minpos
-			{x=pos.x, y=pos.y, z=pos.z}, --maxpos
-			{x=0, y=0, z=0}, --minvel
-			{x=0, y=0, z=0}, --maxvel
-			{x=-0,y=-0,z=-0}, --minacc
-			{x=0,y=0,z=0}, --maxacc
-			0.5, --minexptime
-			1, --maxexptime
-			10, --minsize
-			15, --maxsize
-			false, --collisiondetection
-			"vehicles_dust.png" --texture
-		)
-		return false
-		end
-		return true
+				15, --amount
+				1, --time
+				{x=pos.x, y=pos.y, z=pos.z}, --minpos
+				{x=pos.x, y=pos.y, z=pos.z}, --maxpos
+				{x=0, y=0, z=0}, --minvel
+				{x=0, y=0, z=0}, --maxvel
+				{x=-0,y=-0,z=-0}, --minacc
+				{x=0,y=0,z=0}, --maxacc
+				0.5, --minexptime
+				1, --maxexptime
+				10, --minsize
+				15, --maxsize
+				false, --collisiondetection
+				"vehicles_dust.png" --texture
+			)
+		end)
 	end,
 })
 
@@ -826,12 +799,11 @@ minetest.register_entity("vehicles:nizzan2", {
 		end
 	end,
 	on_activate = function(self)
-	self.nitro = true
+		self.nitro = true
 	end,
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		return vehicles.on_step(self, dtime, {
 			speed = 14, 
 			decell = 0.8,
 			boost = true,
@@ -839,27 +811,26 @@ minetest.register_entity("vehicles:nizzan2", {
 			boost_effect = "vehicles_nitro.png",
 			driving_sound = "engine",
 			sound_duration = 11,
-		})
-		local pos = self.object:getpos()
+		},
+		function()
+			local pos = self.object:getpos()
 			minetest.add_particlespawner(
-			15, --amount
-			1, --time
-			{x=pos.x, y=pos.y, z=pos.z}, --minpos
-			{x=pos.x, y=pos.y, z=pos.z}, --maxpos
-			{x=0, y=0, z=0}, --minvel
-			{x=0, y=0, z=0}, --maxvel
-			{x=-0,y=-0,z=-0}, --minacc
-			{x=0,y=0,z=0}, --maxacc
-			0.2, --minexptime
-			0.5, --maxexptime
-			20, --minsize
-			25, --maxsize
-			false, --collisiondetection
-			"vehicles_dust.png" --texture
-		)
-		return false
-		end
-		return true
+				15, --amount
+				1, --time
+				{x=pos.x, y=pos.y, z=pos.z}, --minpos
+				{x=pos.x, y=pos.y, z=pos.z}, --maxpos
+				{x=0, y=0, z=0}, --minvel
+				{x=0, y=0, z=0}, --maxvel
+				{x=-0,y=-0,z=-0}, --minacc
+				{x=0,y=0,z=0}, --maxacc
+				0.2, --minexptime
+				0.5, --maxexptime
+				20, --minsize
+				25, --maxsize
+				false, --collisiondetection
+				"vehicles_dust.png" --texture
+			)
+		end)
 	end,
 })
 
@@ -890,11 +861,10 @@ minetest.register_entity("vehicles:lambogoni", {
 	end,
 	on_punch = vehicles.on_punch,
 	on_activate = function(self)
-	self.nitro = true
+		self.nitro = true
 	end,
 	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		return vehicles.on_step(self, dtime, {
 			speed = 15, 
 			decell = 0.8,
 			boost = true,
@@ -903,9 +873,6 @@ minetest.register_entity("vehicles:lambogoni", {
 			driving_sound = "engine",
 			sound_duration = 11,
 		})
-		return false
-		end
-		return true
 	end,
 })
 
@@ -936,11 +903,10 @@ minetest.register_entity("vehicles:lambogoni2", {
 	end,
 	on_punch = vehicles.on_punch,
 	on_activate = function(self)
-	self.nitro = true
+		self.nitro = true
 	end,
 	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		return vehicles.on_step(self, dtime, {
 			speed = 15, 
 			decell = 0.8,
 			boost = true,
@@ -949,9 +915,6 @@ minetest.register_entity("vehicles:lambogoni2", {
 			driving_sound = "engine",
 			sound_duration = 11,
 		})
-		return false
-		end
-		return true
 	end,
 })
 
@@ -982,11 +945,10 @@ minetest.register_entity("vehicles:masda", {
 	end,
 	on_punch = vehicles.on_punch,
 	on_activate = function(self)
-	self.nitro = true
+		self.nitro = true
 	end,
 	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		return vehicles.on_step(self, dtime, {
 			speed = 15, 
 			decell = 0.95,
 			boost = true,
@@ -995,13 +957,52 @@ minetest.register_entity("vehicles:masda", {
 			driving_sound = "engine",
 			sound_duration = 11,
 		})
-		return false
-		end
-		return true
 	end,
 })
 
 vehicles.register_spawner("vehicles:masda", "Masda (pink)", "vehicles_masda_inv.png")
+
+minetest.register_entity("vehicles:masda2", {
+	visual = "mesh",
+	mesh = "masda.b3d",
+	textures = {"vehicles_masda2.png"},
+	velocity = 15,
+	acceleration = -5,
+	stepheight = step,
+	hp_max = 200,
+	physical = true,
+	collisionbox = {-1, 0, -1, 1.3, 1, 1},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif not self.driver then
+		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		minetest.sound_play("engine_start", 
+		{gain = 4, max_hear_distance = 3, loop = false})
+		self.sound_ready = false
+		minetest.after(14, function()
+		self.sound_ready = true
+		end)
+		end
+	end,
+	on_activate = function(self)
+		self.nitro = true
+	end,
+	on_punch = vehicles.on_punch,
+	on_step = function(self, dtime)
+		return vehicles.on_step(self, dtime, {
+			speed = 15, 
+			decell = 0.85,
+			boost = true,
+			boost_duration = 4,
+			boost_effect = "vehicles_nitro.png",
+			driving_sound = "engine",
+			sound_duration = 11,
+		})
+	end,
+})
+
+vehicles.register_spawner("vehicles:masda2", "Masda (orange)", "vehicles_masda_inv2.png")
 
 minetest.register_entity("vehicles:policecar", {
 	visual = "mesh",
@@ -1027,12 +1028,11 @@ minetest.register_entity("vehicles:policecar", {
 		end
 	end,
 	on_activate = function(self)
-	self.nitro = true
+		self.nitro = true
 	end,
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		return vehicles.on_step(self, dtime, {
 			speed = 16, 
 			decell = 0.95,
 			boost = true,
@@ -1041,9 +1041,6 @@ minetest.register_entity("vehicles:policecar", {
 			driving_sound = "engine",
 			sound_duration = 11,
 		})
-		return false
-		end
-		return true
 	end,
 })
 
@@ -1073,12 +1070,11 @@ minetest.register_entity("vehicles:musting", {
 		end
 	end,
 	on_activate = function(self)
-	self.nitro = true
+		self.nitro = true
 	end,
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		return vehicles.on_step(self, dtime, {
 			speed = 15, 
 			decell = 0.85,
 			boost = true,
@@ -1087,9 +1083,6 @@ minetest.register_entity("vehicles:musting", {
 			driving_sound = "engine",
 			sound_duration = 11,
 		})
-		return false
-		end
-		return true
 	end,
 })
 
@@ -1120,11 +1113,10 @@ minetest.register_entity("vehicles:musting2", {
 	end,
 	on_punch = vehicles.on_punch,
 	on_activate = function(self)
-	self.nitro = true
+		self.nitro = true
 	end,
 	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		return vehicles.on_step(self, dtime, {
 			speed = 15, 
 			decell = 0.85,
 			boost = true,
@@ -1133,9 +1125,6 @@ minetest.register_entity("vehicles:musting2", {
 			driving_sound = "engine",
 			sound_duration = 11,
 		})
-		return false
-		end
-		return true
 	end,
 })
 
@@ -1177,11 +1166,10 @@ minetest.register_entity("vehicles:fewawi", {
 	end,
 	on_punch = vehicles.on_punch,
 	on_activate = function(self)
-	self.nitro = true
+		self.nitro = true
 	end,
 	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		return vehicles.on_step(self, dtime, {
 			speed = 15, 
 			decell = 0.95,
 			boost = true,
@@ -1190,9 +1178,6 @@ minetest.register_entity("vehicles:fewawi", {
 			driving_sound = "engine",
 			sound_duration = 11,
 		})
-		return false
-		end
-		return true
 	end,
 })
 
@@ -1234,11 +1219,10 @@ minetest.register_entity("vehicles:fewawi2", {
 	end,
 	on_punch = vehicles.on_punch,
 	on_activate = function(self)
-	self.nitro = true
+		self.nitro = true
 	end,
 	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		return vehicles.on_step(self, dtime, {
 			speed = 15, 
 			decell = 0.95,
 			boost = true,
@@ -1247,9 +1231,6 @@ minetest.register_entity("vehicles:fewawi2", {
 			driving_sound = "engine",
 			sound_duration = 11,
 		})
-		return false
-		end
-		return true
 	end,
 })
 
@@ -1279,12 +1260,11 @@ minetest.register_entity("vehicles:pooshe", {
 		end
 	end,
 	on_activate = function(self)
-	self.nitro = true
+		self.nitro = true
 	end,
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		return vehicles.on_step(self, dtime, {
 			speed = 15, 
 			decell = 0.95,
 			boost = true,
@@ -1293,9 +1273,6 @@ minetest.register_entity("vehicles:pooshe", {
 			driving_sound = "engine",
 			sound_duration = 11,
 		})
-		return false
-		end
-		return true
 	end,
 })
 
@@ -1326,11 +1303,10 @@ minetest.register_entity("vehicles:pooshe2", {
 	end,
 	on_punch = vehicles.on_punch,
 	on_activate = function(self)
-	self.nitro = true
+		self.nitro = true
 	end,
 	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		return vehicles.on_step(self, dtime, {
 			speed = 15, 
 			decell = 0.95,
 			boost = true,
@@ -1339,59 +1315,10 @@ minetest.register_entity("vehicles:pooshe2", {
 			driving_sound = "engine",
 			sound_duration = 11,
 		})
-		return false
-		end
-		return true
 	end,
 })
 
 vehicles.register_spawner("vehicles:pooshe2", "Pooshe (yellow)", "vehicles_pooshe_inv2.png")
-
-minetest.register_entity("vehicles:masda2", {
-	visual = "mesh",
-	mesh = "masda.b3d",
-	textures = {"vehicles_masda2.png"},
-	velocity = 15,
-	acceleration = -5,
-	stepheight = step,
-	hp_max = 200,
-	physical = true,
-	collisionbox = {-1, 0, -1, 1.3, 1, 1},
-	on_rightclick = function(self, clicker)
-		if self.driver and clicker == self.driver then
-		object_detach(self, clicker, {x=1, y=0, z=1})
-		elseif not self.driver then
-		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
-		minetest.sound_play("engine_start", 
-		{gain = 4, max_hear_distance = 3, loop = false})
-		self.sound_ready = false
-		minetest.after(14, function()
-		self.sound_ready = true
-		end)
-		end
-	end,
-	on_activate = function(self)
-	self.nitro = true
-	end,
-	on_punch = vehicles.on_punch,
-	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
-			speed = 15, 
-			decell = 0.85,
-			boost = true,
-			boost_duration = 4,
-			boost_effect = "vehicles_nitro.png",
-			driving_sound = "engine",
-			sound_duration = 11,
-		})
-		return false
-		end
-		return true
-	end,
-})
-
-vehicles.register_spawner("vehicles:masda2", "Masda (orange)", "vehicles_masda_inv2.png")
 
 minetest.register_entity("vehicles:boat", {
 	visual = "mesh",
@@ -1412,18 +1339,12 @@ minetest.register_entity("vehicles:boat", {
 	end,
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		return vehicles.on_step(self, dtime, {
 			speed = 10, 
 			decell = 0.85,
 			is_watercraft = true,
 			gravity = 0,
 		})
-		return false
-		else
-		self.object:setvelocity({x=0, y=0, z=0})
-		end
-		return true
 	end,
 })
 
@@ -1452,8 +1373,7 @@ minetest.register_entity("vehicles:jet", {
 	end,
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		return vehicles.on_step(self, dtime, {
 			speed = 14, 
 			decell = 0.95,
 			shoots = true,
@@ -1464,10 +1384,6 @@ minetest.register_entity("vehicles:jet", {
 			fly = true,
 			fly_mode = "rise",
 		})
-		return false
-		end
-		self.object:setvelocity({x=0, y=-1, z=0})
-		return true
 	end,
 })
 
@@ -1492,25 +1408,24 @@ minetest.register_entity("vehicles:plane", {
 	end,
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
-	if self.anim and not self.driver then 
-	self.object:set_animation({x=1, y=1}, 5, 0)
-	end
-	if self.driver then
-		vehicles.object_drive(self, dtime, {
+		if self.anim and not self.driver then 
+			self.object:set_animation({x=1, y=1}, 5, 0)
+		end
+		return vehicles.on_step(self, dtime, {
 			speed = 10, 
 			decell = 0.95,
 			fly = true,
 			fly_mode = "hold",
-		})
-		if not self.anim then
-		self.object:set_animation({x=1, y=9}, 20, 0)
-		self.anim = true
-		end
-		return false
-		else
-		self.anim = false
-		end
-		return true
+		},
+		function()
+			if not self.anim then
+				self.object:set_animation({x=1, y=9}, 20, 0)
+				self.anim = true
+			end
+		end,
+		function()
+			self.anim = false
+		end)
 	end,
 })
 
