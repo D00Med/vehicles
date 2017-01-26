@@ -31,61 +31,60 @@ vehicles.object_drive(<实体>, dtime, {……})
 在上述情况下，<实体>用于代替实体或对象。如果函数是用于在一个实体的on_step = function(self, dtime),<实体>是self
 表（table,{……}）应包含以下列出的变量。这些都是可选的。
 
-speed: This defines the speed of the vehicle, if unset it will be '10'
+speed: 车辆的速度，默认是10。
 
-fixed: Setting this to 'true' will disable movement from the vehicle
+fixed: 如果是真（true）将禁止从载具移动。
 
-decell: This defines the decelleration of the vehicle. The default is 0
+decell: 载具的减速，越小减速越快，在0和1之间，不可以是1，默认是0（马上停下）。
 
-shoots: If true then the vehicle can shoot with 'sneak'(arrow must be defined, default is false)
+shoots: 如果是真（true）按‘潜行’可以射击，必须定义arrow，默认是假（false）。
 
-arrow: This should be the entity name for the weapon fired (default is nil) (requires an item with the name arrow_name.."_item" to be in the drivers inventory)
+arrow: 这必须是武器的实体名称，默认是空（nil）(会消耗一个物品栏里的叫做arrow_name.."_item"的物品)。
 
-reload_time: how long it takes before the weapon can be fired again (default is 1)
+reload_time: 需要多长时间才能再次发射武器，默认是1。
 
-shoot_y: y offset of the weapon, default is 1.5
+shoot_y: 武器的y轴偏移量，默认是1.5。
 
-shoot_angle: This will make the weapon shoot at a differrent vertical angle (default is 0)
+shoot_angle: 这将在不同的垂直角度进行武器射击，默认是0。
 
-infinite_arrow: if this is set then the vehicle won't need an arrow item to be in the inventory
+infinite_arrow: 如果设定这个，射击时不消耗物品栏里的物品。
 
-arrow2/reload_time2/shoots2/shoot_y2/infinite_arrow2: same as above but fired with 'use/aux1'
+arrow2/reload_time2/shoots2/shoot_y2/infinite_arrow2: 同上，但用'use/aux1'键。
 
-jump: can be either 'hover' or 'jump' (default is nil). Hover lasts longer than jump.
+jump: 可以是'hover'或'jump'（默认为空，nil）。悬停持续时间比跳跃长。
 
-fly: if true then the vehicle will fly (default is false)
+fly: 如果为真（true）这个载具能飞，默认为假（false）。
 
-fly_mode: can be either 'hold' or 'rise' (default is 'hold'). hold will keep the vehicle in place when 'jump' is pressed, and 'rise' will cause the vehicle to rise when the same key is pressed.
+fly_mode: 可以是'hold'或'rise'（默认为'hold'）。 'hold'将保持载具在一个地方直到按下跳跃键，'rise'按下跳跃键时会上升。 
 
-rise_speed: dependant on fly_mode being set to 'rise'. Defines the speed at which the vehicle will rise. (default is 0.1)
+rise_speed: 当fly_mode是'rise'时有效，定义车辆将上升的速度，默认为0.1。
 
-gravity: the gravity acting on the vehicle. This should be positive. (default is 1)
+gravity: 作用于车辆的重力，大于等于0，为0时没有重力，默认为1。
 
-boost: if set to 'true' then the vehicle can boost with 'use/aux1' (default is false)
+boost: 如果为真（true），按'use/aux1'键时可以加速，默认为假（false）。
 
-boost_duration: dependant on 'boost'. Determines how long a boost will last (default is 5).
+boost_duration: 当'boost'为真（true）时有效，加速的时间，默认为5。
 
-boost_charge: dependant on 'boost'. Determines how long it takes before boost can be used again (default is 4)
+boost_charge: 当'boost'为真（true）时有效，需要多长时间才能再次使用加速，默认为4。
 
-boost_effect: particle texture that will fly out from behind the vehicle whilst boosting (default is nil)
+boost_effect: 加速时载具后面的粒子效果，默认为空（nil）。
 
-hover_speed: the speed at which the vehicle will hover if 'jump' is set to 'hover' (default is 1.5)
+hover_speed: 当jump为'hover'时有效，载具悬停时的速度，默认为1.5。
 
-jump_speed: the speed at which the vehicle will jump if 'jump' is set to 'jump' (default is 5)
+jump_speed: 当jump为'jump'时有效，载具跳跃时的速度，默认为5。
 
-simple_vehicle: removes all functionality except basic movement, use to reduce lag. (not implemented yet), default is false
+simple_vehicle: 如果为真（true），移除除基本运动以外的所有功能（尚未实现），默认为假（false）。
 
-is_watercraft: if set to true then the vehicle won't be stopped by water.
-it will act like a boat unless swims is true. (default is false)
+is_watercraft: 如果为真（true），载具会浮在水面上，在水面上能开，它将像一条船，除非swims为真（true），默认为假（false）。
 
-swims: will allow the vehicle to move underwater (not yet implemented) (default is false)
+swims: 如果为真（true），将允许载具在水下移动（尚未实现），默认为假（false）。
 
-driving_sound: name of the sound file that will play when the vehicle is driving (default is nil)
+driving_sound: 载具行驶时将播放的声音文件的名称，默认为空（nil）。
 
-sound_duration: !VERY IMPORTANT! if there is a driving sound then this should match it's duration. If this is not set then the sound could overlap and increase in volume (default is 5)
+sound_duration: ！非常重要！非常重要！非常重要！如果有一个行驶时的声音，那么这必须是持续时间。如果不设置，那么声音可以重叠和音量增大，默认为5。
 
-extra_yaw: use this if the model has incorrect rotation. It will rotate the model so it faces the right way whilst being driven (default is 0)
+extra_yaw: 如果模型有不正确的旋转设置这个。它将旋转模型面对着正确的方式被驱动，默认为0。
 
-moving_anim/stand_anim/jump_anim/shoot_anim/shoot_anim2: animations for actions. Can be set individually. (default is nil)
+moving_anim/stand_anim/jump_anim/shoot_anim/shoot_anim2: 动作动画。可以单独设置，默认为空（nil）。
 
 
