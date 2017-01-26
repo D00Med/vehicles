@@ -40,7 +40,7 @@ local function force_detach(player)
 	player:set_properties({visual_size = {x=1, y=1}})
 end
 
-function object_attach(entity, player, attach_at, visible, eye_offset)
+function vehicles.object_attach(entity, player, attach_at, visible, eye_offset)
 	force_detach(player)
 	entity.driver = player
 	entity.loaded = true
@@ -60,7 +60,7 @@ function object_attach(entity, player, attach_at, visible, eye_offset)
 	entity.object:setyaw(player:get_look_yaw() - math.pi / 2)
 end
 
-function object_detach(entity, player, offset)
+function vehicles.object_detach(entity, player, offset)
 	entity.driver = nil
 	entity.object:setvelocity({x=0, y=0, z=0})
 	player:set_detach()
@@ -102,7 +102,7 @@ timer = 0
 
 --New vehicle function, combines all of the others
 
-function object_drive(entity, dtime, def)
+function vehicles.object_drive(entity, dtime, def)
 	--definition
 	local speed = def.speed or 10
 	local fixed = def.fixed or false
@@ -197,17 +197,27 @@ function object_drive(entity, dtime, def)
 		end)
 	end
 	
+	if node == "default:lava_source" or node == "default:lava_flowing" then
+		if entity.driver then
+			vehicles.object_detach(entity, entity.driver, {x=1, y=0, z=1})
+		end
+		vehicles.explodinate(entity, 5)
+		entity.object:remove()
+		return
+	end
 	--respond to controls
 	--check for water
-	if node == "default:river_water_source" or node == "default:water_source" or node == "default:river_water_flowing" or node == "default:water_flowing" then
-	entity.on_water = true
-	else 
-	entity.on_water = false
+	local function is_water(node)
+		return node == "default:river_water_source" or node == "default:water_source" or node == "default:river_water_flowing" or node == "default:water_flowing"
 	end
+	entity.on_water = is_water(node)
+	entity.in_water = is_water(minetest.get_node({x=pos.x, y=pos.y+1, z=pos.z}).name) or is_water(minetest.get_node({x=pos.x, y=pos.y+2, z=pos.z}).name)
 
 	--apply water effects
-	if is_watercraft and entity.on_water == false then
-		entity.object:setvelocity({x=0, y=0, z=0})
+	if is_watercraft and entity.in_water then
+		entity.object:setvelocity({x=velo.x*0.9, y=velo.y+5, z=velo.z*0.9})
+	elseif is_watercraft and entity.on_water == false then
+		entity.object:setvelocity({x=velo.x*decell,y=velo.y-1,z=velo.z*decell})
 	elseif entity.on_water and not is_watercraft then
 		entity.object:setvelocity({x=velo.x*0.9, y=-1, z=velo.z*0.9})
 	--boost
@@ -391,7 +401,7 @@ end
 
 --simplified in an attempt to reduce lag
 
-function object_drive_simple(entity, dtime, speed, decell)
+function vehicles.object_drive_simple(entity, dtime, speed, decell)
 	local ctrl = entity.driver:get_player_control()
 	local velo = entity.object:getvelocity()
 	local dir = entity.driver:get_look_dir();
@@ -409,7 +419,7 @@ function object_drive_simple(entity, dtime, speed, decell)
 	end
 end
 
-function object_glide(entity, dtime, speed, decell, gravity, moving_anim, stand_anim)
+function vehicles.object_glide(entity, dtime, speed, decell, gravity, moving_anim, stand_anim)
 	local ctrl = entity.driver:get_player_control()
 	local dir = entity.driver:get_look_dir();
 	local velo = entity.object:getvelocity();
@@ -445,9 +455,7 @@ function object_glide(entity, dtime, speed, decell, gravity, moving_anim, stand_
 	 end
 end
 
---spawner
-
-function register_vehicle_spawner(vehicle, desc, texture, is_boat)
+function vehicles.register_spawner(vehicle, desc, texture, is_boat)
 minetest.register_craftitem(vehicle.."_spawner", {
 	description = desc,
 	inventory_image = texture,
@@ -474,9 +482,7 @@ minetest.register_craftitem(vehicle.."_spawner", {
 })
 end
 
---explodinate
-
-function explode(ent, radius)
+function vehicles.explodinate(ent, radius)
 	local pos = ent.object:getpos()
 	minetest.add_particlespawner({
 			amount = 90,
@@ -512,4 +518,77 @@ function explode(ent, radius)
 			texture = "vehicles_explosion.png"
 		})
 		end)
+end
+
+function vehicles.on_punch(self, puncher)
+	if self.object:get_hp() == 0 then
+		if self.driver then
+			vehicles.object_detach(self, self.driver, {x=1, y=0, z=1})
+		end
+		vehicles.explodinate(self, 5)
+	end
+end
+
+function vehicles.object_no_drive(entity, dtime, def)
+	--definition
+	local decell = def.decell or 0
+	local gravity = def.gravity or 1
+	local is_watercraft = def.is_watercraft or false
+	local stand_anim = def.stand_anim
+
+	--variables
+	local velo = entity.object:getvelocity()
+	local pos = entity.object:getpos()
+	local node = minetest.get_node(pos).name
+
+	--timer dependant variables
+	local vec_stop = {x=velo.x*decell,y=velo.y-gravity,z=velo.z*decell}
+
+	if node == "default:lava_source" or node == "default:lava_flowing" then
+		if entity.driver then
+			vehicles.object_detach(entity, entity.driver, {x=1, y=0, z=1})
+		end
+		vehicles.explodinate(entity, 5)
+		entity.object:remove()
+		return
+	end
+	--respond to controls
+	--check for water
+	local function is_water(node)
+		return node == "default:river_water_source" or node == "default:water_source" or node == "default:river_water_flowing" or node == "default:water_flowing"
+	end
+	entity.on_water = is_water(node)
+	entity.in_water = is_water(minetest.get_node({x=pos.x, y=pos.y+1, z=pos.z}).name) or is_water(minetest.get_node({x=pos.x, y=pos.y+2, z=pos.z}).name)
+
+	--apply water effects
+	if is_watercraft and entity.in_water then
+		entity.object:setvelocity({x=velo.x*0.9, y=velo.y+5, z=velo.z*0.9})
+	elseif is_watercraft and entity.on_water == false then
+		entity.object:setvelocity({x=velo.x*decell,y=velo.y-1,z=velo.z*decell})
+	elseif entity.on_water and not is_watercraft then
+		entity.object:setvelocity({x=velo.x*0.9, y=-1, z=velo.z*0.9})
+	else
+	--stop
+		entity.object:setvelocity(vec_stop)
+		--animation
+		if moving_anim ~= nil and entity.moving and not hovering then
+			entity.object:set_animation(stand_anim, 20, 0)
+			entity.moving = false
+		end
+	end
+end
+
+function vehicles.on_step(self, dtime, def, have, no)
+	if self.driver then
+		vehicles.object_drive(self, dtime, def)
+		if have ~= nil then
+			have()
+		end
+	else
+		vehicles.object_no_drive(self, dtime, def)
+		if no ~= nil then
+			no()
+		end
+	end
+	return false
 end
