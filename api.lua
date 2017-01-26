@@ -523,7 +523,7 @@ end
 function vehicles.on_punch(self, puncher)
 	if self.object:get_hp() == 0 then
 		if self.driver then
-			object_detach(self, self.driver, {x=1, y=0, z=1})
+			vehicles.object_detach(self, self.driver, {x=1, y=0, z=1})
 		end
 		vehicles.explodinate(self, 5)
 	end
