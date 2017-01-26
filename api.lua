@@ -207,7 +207,7 @@ function vehicles.object_drive(entity, dtime, def)
 
 	--apply water effects
 	if is_watercraft and entity.on_water == false then
-		entity.object:setvelocity({x=0, y=0, z=0})
+		entity.object:setvelocity({x=velo.x*decell,y=velo.y-1,z=velo.z*decell})
 	elseif entity.on_water and not is_watercraft then
 		entity.object:setvelocity({x=velo.x*0.9, y=-1, z=velo.z*0.9})
 	--boost
