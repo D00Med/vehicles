@@ -523,9 +523,15 @@ end
 function vehicles.on_punch(self, puncher)
 	if self.object:get_hp() == 0 then
 		if self.driver then
-			vehicles.object_detach(self, self.driver, {x=1, y=0, z=1})
+		vehicles.object_detach(self, self.driver, {x=1, y=0, z=1})
 		end
 		vehicles.explodinate(self, 5)
+	end
+	if self.driver == puncher then
+		local name = self.object:get_luaentity().name
+		local pos = self.object:getpos()
+		minetest.env:add_item(pos, name.."_spawner")
+		self.object:remove()
 	end
 end
 
