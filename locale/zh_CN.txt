@@ -10,9 +10,8 @@ Checkered sign = 网格
 Checkered surface = 网格方块
 Concrete = 混凝土
 Engine = 引擎
-#应该是Ferrari
-Fewawi (blue) = 法拉利(蓝色)
-Fewawi (red) = 法拉利(红色)
+Fewawi (blue) = 法哇力(蓝色)
+Fewawi (red) = 法哇力(红色)
 Fire truck = 消防车
 Flag = 国旗
 Geep = 山绵羊
