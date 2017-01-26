@@ -2060,7 +2060,7 @@ minetest.register_node("vehicles:"..name, {
 	light_source = light,
 	sound = default.node_sound_stone_defaults(),
 })
-end
+end--function vehicles.register_simplenode(name, desc, texture, light)
 
 vehicles.register_simplenode("road", "Road surface", "vehicles_road.png", 0)
 vehicles.register_simplenode("concrete", "Concrete", "vehicles_concrete.png", 0)
@@ -2368,6 +2368,6 @@ minetest.register_node("vehicles:tyres", {
 	},
 	groups = {cracky=1, falling_node=1},
 })
-end
+end--if minetest.setting_get("vehicles_nodes") then
 
-end
+end--if enable_built_in then

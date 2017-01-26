@@ -445,8 +445,6 @@ function vehicles.object_glide(entity, dtime, speed, decell, gravity, moving_ani
 	 end
 end
 
---spawner
-
 function vehicles.register_spawner(vehicle, desc, texture, is_boat)
 minetest.register_craftitem(vehicle.."_spawner", {
 	description = desc,
@@ -473,8 +471,6 @@ minetest.register_craftitem(vehicle.."_spawner", {
 	end,
 })
 end
-
---explodinate
 
 function vehicles.explodinate(ent, radius)
 	local pos = ent.object:getpos()
