@@ -126,7 +126,7 @@ function vehicles.object_drive(entity, dtime, def)
 	local boost = def.boost or false
 	local boost_duration = def.boost_duration or 5
 	local boost_charge = def.boost_charge or 4
-	local boost_effect = def.boost_effect
+	local boost_effect = def.boost_effect or nil
 	local hover_speed = def.hover_speed or 1.5
 	local jump_speed = def.jump_speed or 5
 	local simple_vehicle = def.simple_vehicle or false
