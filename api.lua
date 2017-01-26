@@ -40,7 +40,7 @@ local function force_detach(player)
 	player:set_properties({visual_size = {x=1, y=1}})
 end
 
-function object_attach(entity, player, attach_at, visible, eye_offset)
+function vehicles.object_attach(entity, player, attach_at, visible, eye_offset)
 	force_detach(player)
 	entity.driver = player
 	entity.loaded = true
@@ -102,7 +102,7 @@ timer = 0
 
 --New vehicle function, combines all of the others
 
-function object_drive(entity, dtime, def)
+function vehicles.object_drive(entity, dtime, def)
 	--definition
 	local speed = def.speed or 10
 	local fixed = def.fixed or false
@@ -391,7 +391,7 @@ end
 
 --simplified in an attempt to reduce lag
 
-function object_drive_simple(entity, dtime, speed, decell)
+function vehicles.object_drive_simple(entity, dtime, speed, decell)
 	local ctrl = entity.driver:get_player_control()
 	local velo = entity.object:getvelocity()
 	local dir = entity.driver:get_look_dir();
@@ -409,7 +409,7 @@ function object_drive_simple(entity, dtime, speed, decell)
 	end
 end
 
-function object_glide(entity, dtime, speed, decell, gravity, moving_anim, stand_anim)
+function vehicles.object_glide(entity, dtime, speed, decell, gravity, moving_anim, stand_anim)
 	local ctrl = entity.driver:get_player_control()
 	local dir = entity.driver:get_look_dir();
 	local velo = entity.object:getvelocity();
@@ -447,7 +447,7 @@ end
 
 --spawner
 
-function register_vehicle_spawner(vehicle, desc, texture, is_boat)
+function vehicles.register_spawner(vehicle, desc, texture, is_boat)
 minetest.register_craftitem(vehicle.."_spawner", {
 	description = desc,
 	inventory_image = texture,
@@ -476,7 +476,7 @@ end
 
 --explodinate
 
-function explode(ent, radius)
+function vehicles.explodinate(ent, radius)
 	local pos = ent.object:getpos()
 	minetest.add_particlespawner({
 			amount = 90,
