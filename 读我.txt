@@ -2,34 +2,34 @@
 
 基本操作：
 所有载具都是通过移动鼠标来控制。
+右键载具可以坐上去或下来。
 你可以使用向前（就像走路）来移动车辆，但只有一些能够后退。例如，汽车可以后退，但飞机不能。
 
 加速：
 一些载具可以有短时间的加速，用'use/aux1'键。
 
 武器：
-载具也可以使用武器，例如，喷气式飞机和坦克，按'潜行'发射导弹时。需要一个物品栏里的导弹。它可能有一个第二武器（按'use/aux1'使用），但目前只适合做突击。它可以使用子弹和导弹。炮塔使用子弹。 
+载具也可以使用武器，例如，喷气式飞机和坦克，按'潜行'发射导弹时需要一个物品栏里的导弹。载具可能有一个第二武器（按'use/aux1'使用），但目前只适合做突击。载具可以使用子弹和导弹。炮塔使用子弹。 
 
-Flight/Jumping/Hovering:
-Some vehicles can fly, for example the jet. The jet will move upward when the driver looks up, or when the driver presses 'jump'. Using the jump key does not work very well at the moment. The plane is a bit differrent; It will hold it's height when 'jump' is pressed.
-It is also possible for vehicles to jump or hover for a small amount of time. Currently only the Assault suit does this.
+飞行/跳跃/悬停：
+有些载具可以飞，例如喷气式飞机。当驾驶员抬头或按下“跳跃”时，飞机将向上移动。使用跳跃键不工作得很好。飞机有点不同，它将悬停，当按下“跳跃”时。
+载具也有可能在很短的时间内跳或悬停。目前只有Assault能这样做。
 
-Boats and watercraft:
-The speed boat can be used on water, but if it is driven onto land it will stop completely. If you are lucky you can move back into water, but be careful because this does not always work.
+船：
+快艇可以用在水上，但如果它被推进陆地，它将完全停止。如果你幸运，它可以回到水中，但要小心，因为这并不总是能工作。
 
-Other things:
-Vehicles will explode if they touch lava, so be careful.
-Don't drive cars or planes etc. into water! they will sink.
-If you do get a vehicle in a tricky spot, you can punch it whilst driving and it will be dropped.
+其他的事情：
+载具接触熔岩会爆炸，所以要小心。
+不要驾驶汽车或飞机等进入水中！他们将下沉。
+如果你想拿起一辆车，你可以坐上去，左键点击它。 
 
-The API:
-vehicles.object_drive is the function used for the movement of vehicles.
-It should be used in this format:
-vehicles.object_drive(entity, dtime, {
-})
+应用程序接口：
+vehicles.object_drive是一个用来移动载具的Lua函数。
+它应该使用这种格式：
+vehicles.object_drive(<实体>, dtime, {……})
 
-In the above case, entity is used in place of an entity or object. If the function was to be used inside on_step for an entity, 'entity' would be replaced with 'self.object'
-The table should contain the relevant variables listed below. The function is written so that these are all somewhat optional.
+在上述情况下，<实体>用于代替实体或对象。如果函数是用于在一个实体的on_step = function(self, dtime),<实体>是self
+表（table,{……}）应包含以下列出的变量。这些都是可选的。
 
 speed: This defines the speed of the vehicle, if unset it will be '10'
 
