@@ -1,4 +1,4 @@
---vehicles/mounts api by D00Med, based on lib_mount(see below)
+--vehicles/mounts api by D00Med and zaoqi, based on lib_mount(see below)
 
 --License of lib_mount:
 -- Minetest mod: lib_mount
@@ -527,10 +527,11 @@ function vehicles.on_punch(self, puncher)
 		end
 		vehicles.explodinate(self, 5)
 	end
-	if self.driver == puncher then
+	if self.driver == puncher and (self.object:get_hp() == self.hp_max-1 or self.object:get_hp() == self.hp_max or minetest.setting_getbool("creative_mode")) then
 		local name = self.object:get_luaentity().name
 		local pos = self.object:getpos()
 		minetest.env:add_item(pos, name.."_spawner")
+		vehicles.object_detach(self, self.driver, {x=1, y=0, z=1})
 		self.object:remove()
 	end
 end
