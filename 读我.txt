@@ -57,9 +57,9 @@ fly: 如果为真（true）这个载具能飞，默认为假（false）。
 
 fly_mode: 可以是'hold'或'rise'（默认为'hold'）。 'hold'将保持载具在一个地方直到按下跳跃键，'rise'按下跳跃键时会上升。 
 
-rise_speed: 当fly_mode是'rise'时有效，定义车辆将上升的速度，默认为0.1。
+rise_speed: 当fly_mode是'rise'时有效，定义载具将上升的速度，默认为0.1。
 
-gravity: 作用于车辆的重力，大于等于0，为0时没有重力，默认为1。
+gravity: 作用于载具的重力，大于等于0，为0时没有重力，默认为1。
 
 boost: 如果为真（true），按'use/aux1'键时可以加速，默认为假（false）。
 
