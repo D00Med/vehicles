@@ -531,6 +531,7 @@ function vehicles.on_punch(self, puncher)
 		local name = self.object:get_luaentity().name
 		local pos = self.object:getpos()
 		minetest.env:add_item(pos, name.."_spawner")
+		vehicles.object_detach(self, self.driver, {x=1, y=0, z=1})
 		self.object:remove()
 	end
 end
