@@ -1348,7 +1348,7 @@ minetest.register_entity("vehicles:lightcycle", {
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 22, 
+			speed = 16, 
 			decell = 0.85,
 			boost = true,
 			boost_duration = 4,
@@ -1386,7 +1386,7 @@ minetest.register_entity("vehicles:lightcycle2", {
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 22, 
+			speed = 16, 
 			decell = 0.85,
 			boost = true,
 			boost_duration = 4,
