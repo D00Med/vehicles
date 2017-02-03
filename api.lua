@@ -228,6 +228,13 @@ function vehicles.object_drive(entity, dtime, def)
 			minetest.remove_node(pos)
 	end
 	
+	--face the right way
+	local target_yaw = yaw+math.pi+math.pi/2+extra_yaw
+	local entity_yaw = entity.object:getyaw()
+	if entity_yaw ~= target_yaw then
+		entity.object:setyaw(entity_yaw+(target_yaw-entity_yaw)/3)
+	end
+	
 	--lava explode
 	if node == "default:lava_source" or node == "default:lava_flowing" then
 		if entity.driver then
@@ -254,7 +261,6 @@ function vehicles.object_drive(entity, dtime, def)
 		entity.object:setvelocity({x=velo.x*0.9, y=-1, z=velo.z*0.9})
 	--boost
 	elseif ctrl.up and not shoots2 and ctrl.aux1 and entity.boost then
-		entity.object:setyaw(yaw+math.pi+math.pi/2+extra_yaw)
 		entity.object:setvelocity(vec_boost)
 		if boost_effect ~= nil then
 			minetest.add_particlespawner(
@@ -284,7 +290,6 @@ function vehicles.object_drive(entity, dtime, def)
 	end
 	--rise
 	elseif ctrl.jump and fly and fly_mode == "rise" then
-		entity.object:setyaw(yaw+math.pi+math.pi/2+extra_yaw)
 		entity.object:setvelocity(vec_rise)
 		--lib_mount animation
 	if moving_anim ~= nil and not entity.moving then
@@ -296,7 +301,6 @@ function vehicles.object_drive(entity, dtime, def)
 		entity.object:setvelocity({x=dir.x*speed, y=0, z=dir.z*speed})
 	--move forward
 	elseif ctrl.up and not fixed then
-		entity.object:setyaw(yaw+math.pi+math.pi/2+extra_yaw)
 		if not fly and not is_watercraft then
 		entity.object:setvelocity(vec_forward)
 		elseif not fly then
@@ -311,7 +315,6 @@ function vehicles.object_drive(entity, dtime, def)
 	end
 	--move backward
 	elseif ctrl.down and not fixed then
-		entity.object:setyaw(yaw+math.pi+math.pi/2+extra_yaw)
 		if not is_watercraft then
 		entity.object:setvelocity(vec_backward)
 		else
@@ -324,7 +327,6 @@ function vehicles.object_drive(entity, dtime, def)
 	end
 	--stop
 	elseif not ctrl.down or ctrl.up then
-		entity.object:setyaw(yaw+math.pi+math.pi/2+extra_yaw)
 		entity.object:setvelocity(vec_stop)
 	--animation
 	if moving_anim ~= nil and entity.moving and not hovering then

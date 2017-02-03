@@ -2364,6 +2364,15 @@ minetest.register_node("vehicles:tyres", {
 	groups = {cracky=1, falling_node=1},
 })
 
+--nodeboxes from xpanes 
+--[[
+(MIT)
+Copyright (C) 2014-2016 xyz
+Copyright (C) 2014-2016 BlockMen
+Copyright (C) 2016 Auke Kok <sofar@foo-projects.org>
+Copyright (C) 2014-2016 Various Minetest developers
+]]
+
 minetest.register_node("vehicles:light_barrier", {
 	description = S("Light Barrier"),
 	tiles = {
@@ -2376,11 +2385,14 @@ minetest.register_node("vehicles:light_barrier", {
 	paramtype = "light",
 	paramtype2 = "facedir",
 	node_box = {
-		type = "fixed",
-		fixed = {
-			{-0.0625, -0.5, -0.5, 0.0625, 0.5, 0.5},
-		}
+			type = "connected",
+			fixed = {{-1/32, -1/2, -1/32, 1/32, 1/2, 1/32}},
+			connect_front = {{-1/32, -1/2, -1/2, 1/32, 1/2, -1/32}},
+			connect_left = {{-1/2, -1/2, -1/32, -1/32, 1/2, 1/32}},
+			connect_back = {{-1/32, -1/2, 1/32, 1/32, 1/2, 1/2}},
+			connect_right = {{1/32, -1/2, -1/32, 1/2, 1/2, 1/32}},
 	},
+	connects_to = {"vehicles:light_barrier",},
 	sunlight_propagates = true,
 	walkable = false,
 	light_source = 9,
@@ -2406,11 +2418,14 @@ minetest.register_node("vehicles:light_barrier2", {
 	paramtype = "light",
 	paramtype2 = "facedir",
 	node_box = {
-		type = "fixed",
-		fixed = {
-			{-0.0625, -0.5, -0.5, 0.0625, 0.5, 0.5},
-		}
+			type = "connected",
+			fixed = {{-1/32, -1/2, -1/32, 1/32, 1/2, 1/32}},
+			connect_front = {{-1/32, -1/2, -1/2, 1/32, 1/2, -1/32}},
+			connect_left = {{-1/2, -1/2, -1/32, -1/32, 1/2, 1/32}},
+			connect_back = {{-1/32, -1/2, 1/32, 1/32, 1/2, 1/2}},
+			connect_right = {{1/32, -1/2, -1/32, 1/2, 1/2, 1/32}},
 	},
+	connects_to = {"vehicles:light_barrier2",},
 	sunlight_propagates = true,
 	walkable = false,
 	light_source = 9,
