@@ -135,6 +135,11 @@ function vehicles.object_drive(entity, dtime, def)
 	local driving_sound = def.driving_sound or nil
 	local sound_duration = def.sound_duration or 5
 	local extra_yaw = def.extra_yaw or 0
+	local death_node = def.death_node or nil
+	local destroy_node = def.destroy_node or nil
+	local place_node = def.place_node or nil
+	local place_chance = def.place_chance or 1
+	local place_trigger = def.place_trigger or nil
 	
 	local moving_anim = def.moving_anim
 	local stand_anim = def.stand_anim
@@ -197,6 +202,32 @@ function vehicles.object_drive(entity, dtime, def)
 		end)
 	end
 	
+	--death_node
+	if death_node ~= nil and node == death_node then
+		if entity.driver then
+			vehicles.object_detach(entity, entity.driver, {x=1, y=0, z=1})
+		end
+		vehicles.explodinate(entity, 5)
+		entity.object:remove()
+		return
+	end
+	
+	--place node
+	if place_node ~= nil and node == "air" or place_node ~= nil and node == "default:snow" or place_node ~= nil and minetest.get_item_group(node, "flora") ~= 0 then
+		if place_trigger == nil and math.random(1, place_chance) == 1 then
+			minetest.set_node(pos, {name=place_node})
+		end
+		if place_trigger ~= nil and ctrl.sneak then
+			minetest.set_node(pos, {name=place_node})
+		end
+	end
+	
+	--destroy node
+	if destroy_node ~= nil and node == destroy_node then
+			minetest.remove_node(pos)
+	end
+	
+	--lava explode
 	if node == "default:lava_source" or node == "default:lava_flowing" then
 		if entity.driver then
 			vehicles.object_detach(entity, entity.driver, {x=1, y=0, z=1})

@@ -17,6 +17,9 @@ It is also possible for vehicles to jump or hover for a small amount of time. Cu
 Boats and watercraft:
 The speed boat can be used on water, but if it is driven onto land it will stop completely. If you are lucky you can move back into water, but be careful because this does not always work.
 
+The Lightcycles:
+The Lightcycles can place light barriers when 'sneak' is pressed. If the barrier from one type hits the other type, the vehicle will explode
+
 Other things:
 Vehicles will explode if they touch lava, so be careful.
 Don't drive cars or planes etc. into water! they will sink.
@@ -87,5 +90,15 @@ sound_duration: !VERY IMPORTANT! if there is a driving sound then this should ma
 extra_yaw: use this if the model has incorrect rotation. It will rotate the model so it faces the right way whilst being driven (default is 0)
 
 moving_anim/stand_anim/jump_anim/shoot_anim/shoot_anim2: animations for actions. Can be set individually. (default is nil)
+
+place_node: name of the node that is placed by the vehicle (default is nil)
+
+place_chance: nodes are placed when a random number between place_chance and 1 is equal to 1 (default is 1)
+
+place_trigger: if true the vehicle will place the node defined by place_node when 'sneak' is pressed. (default is false)
+
+death_node: name of the node that will make the vehicle explode, default is nil
+
+destroy_node: name of the node that is destroyed if it toughes the vehicle, default is nil
 
 

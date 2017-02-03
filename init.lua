@@ -1324,6 +1324,82 @@ minetest.register_entity("vehicles:pooshe2", {
 
 vehicles.register_spawner("vehicles:pooshe2", S("Pooshe (yellow)"), "vehicles_pooshe_inv2.png")
 
+minetest.register_entity("vehicles:lightcycle", {
+	visual = "mesh",
+	mesh = "lightcycle.b3d",
+	textures = {"vehicles_lightcycle.png"},
+	velocity = 15,
+	acceleration = -5,
+	stepheight = step,
+	hp_max = 200,
+	physical = true,
+	collisionbox = {-1, 0, -1, 1.3, 1, 1},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif not self.driver then
+		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		self.sound_ready = true
+		end
+	end,
+	on_activate = function(self)
+		self.nitro = true
+	end,
+	on_punch = vehicles.on_punch,
+	on_step = function(self, dtime)
+		return vehicles.on_step(self, dtime, {
+			speed = 22, 
+			decell = 0.85,
+			boost = true,
+			boost_duration = 4,
+			boost_effect = "vehicles_nitro.png",
+			place_node = "vehicles:light_barrier",
+			place_trigger = true,
+			death_node = "vehicles:light_barrier2",
+		})
+	end,
+})
+
+vehicles.register_spawner("vehicles:lightcycle", S("Lightcycle"), "vehicles_lightcycle_inv.png")
+
+minetest.register_entity("vehicles:lightcycle2", {
+	visual = "mesh",
+	mesh = "lightcycle.b3d",
+	textures = {"vehicles_lightcycle2.png"},
+	velocity = 15,
+	acceleration = -5,
+	stepheight = step,
+	hp_max = 200,
+	physical = true,
+	collisionbox = {-1, 0, -1, 1.3, 1, 1},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif not self.driver then
+		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		self.sound_ready = true
+		end
+	end,
+	on_activate = function(self)
+		self.nitro = true
+	end,
+	on_punch = vehicles.on_punch,
+	on_step = function(self, dtime)
+		return vehicles.on_step(self, dtime, {
+			speed = 22, 
+			decell = 0.85,
+			boost = true,
+			boost_duration = 4,
+			boost_effect = "vehicles_nitro.png",
+			place_node = "vehicles:light_barrier2",
+			place_trigger = true,
+			death_node = "vehicles:light_barrier",
+		})
+	end,
+})
+
+vehicles.register_spawner("vehicles:lightcycle2", S("Lightcycle 2"), "vehicles_lightcycle_inv2.png")
+
 minetest.register_entity("vehicles:boat", {
 	visual = "mesh",
 	mesh = "boat.b3d",
@@ -2287,6 +2363,56 @@ minetest.register_node("vehicles:tyres", {
 	},
 	groups = {cracky=1, falling_node=1},
 })
+
+minetest.register_node("vehicles:light_barrier", {
+	description = S("Light Barrier"),
+	tiles = {"vehicles_lightblock.png",},
+	use_texture_alpha = true,
+	paramtype = "light",
+	paramtype2 = "facedir",
+	sunlight_propagates = true,
+	walkable = false,
+	light_source = 9,
+	is_ground_content = true,
+	groups = {cracky=3,dig_immediate=3,not_in_creative_inventory=1},
+	on_construct = function(pos, node)
+		minetest.after(4, function()
+			if pos ~= nil then
+			minetest:remove_node(pos)
+			end
+		end)		
+	end,
+})
+
+minetest.register_node("vehicles:light_barrier2", {
+	description = S("Light Barrier 2"),
+	tiles = {"vehicles_lightblock2.png",},
+	use_texture_alpha = true,
+	paramtype = "light",
+	paramtype2 = "facedir",
+	sunlight_propagates = true,
+	walkable = false,
+	light_source = 9,
+	is_ground_content = true,
+	groups = {cracky=3,dig_immediate=3,not_in_creative_inventory=1},
+	on_construct = function(pos, node)
+		minetest.after(4, function()
+			if pos ~= nil then
+			minetest:remove_node(pos)
+			end
+		end)		
+	end,
+})
+
+minetest.register_abm({
+	nodenames = {"vehicles:light_barrier", "vehicles:light_barrier2"},
+	interval = 4,
+	chance = 1,
+	action = function(pos, node)
+		minetest.remove_node(pos)
+	end
+})
+
 end--if minetest.setting_get("vehicles_nodes") then
 
 end--if enable_built_in then
