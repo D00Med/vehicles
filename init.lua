@@ -2368,6 +2368,7 @@ minetest.register_node("vehicles:light_barrier", {
 	description = S("Light Barrier"),
 	tiles = {"vehicles_lightblock.png",},
 	use_texture_alpha = true,
+	drawtype = "allfaces",
 	paramtype = "light",
 	paramtype2 = "facedir",
 	sunlight_propagates = true,
@@ -2376,11 +2377,10 @@ minetest.register_node("vehicles:light_barrier", {
 	is_ground_content = true,
 	groups = {cracky=3,dig_immediate=3,not_in_creative_inventory=1},
 	on_construct = function(pos, node)
-		minetest.after(4, function()
-			if pos ~= nil then
-			minetest:remove_node(pos)
-			end
-		end)		
+			minetest.get_node_timer(pos):start(4)
+	end,
+	on_timer = function(pos, elapsed)
+		minetest.remove_node(pos)
 	end,
 })
 
@@ -2388,6 +2388,7 @@ minetest.register_node("vehicles:light_barrier2", {
 	description = S("Light Barrier 2"),
 	tiles = {"vehicles_lightblock2.png",},
 	use_texture_alpha = true,
+	drawtype = "allfaces",
 	paramtype = "light",
 	paramtype2 = "facedir",
 	sunlight_propagates = true,
@@ -2396,22 +2397,13 @@ minetest.register_node("vehicles:light_barrier2", {
 	is_ground_content = true,
 	groups = {cracky=3,dig_immediate=3,not_in_creative_inventory=1},
 	on_construct = function(pos, node)
-		minetest.after(4, function()
-			if pos ~= nil then
-			minetest:remove_node(pos)
-			end
-		end)		
+			minetest.get_node_timer(pos):start(4)
+	end,
+	on_timer = function(pos, elapsed)
+		minetest.remove_node(pos)
 	end,
 })
 
-minetest.register_abm({
-	nodenames = {"vehicles:light_barrier", "vehicles:light_barrier2"},
-	interval = 4,
-	chance = 1,
-	action = function(pos, node)
-		minetest.remove_node(pos)
-	end
-})
 
 end--if minetest.setting_get("vehicles_nodes") then
 
