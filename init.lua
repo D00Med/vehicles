@@ -2366,18 +2366,28 @@ minetest.register_node("vehicles:tyres", {
 
 minetest.register_node("vehicles:light_barrier", {
 	description = S("Light Barrier"),
-	tiles = {"vehicles_lightblock.png",},
+	tiles = {
+	"vehicles_lightblock.png^[transformR90",
+	"vehicles_lightblock.png^[transformR90",
+	"vehicles_lightblock.png",
+	},
 	use_texture_alpha = true,
-	drawtype = "allfaces",
+	drawtype = "nodebox",
 	paramtype = "light",
 	paramtype2 = "facedir",
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{-0.0625, -0.5, -0.5, 0.0625, 0.5, 0.5},
+		}
+	},
 	sunlight_propagates = true,
 	walkable = false,
 	light_source = 9,
-	is_ground_content = true,
 	groups = {cracky=3,dig_immediate=3,not_in_creative_inventory=1},
 	on_construct = function(pos, node)
 			minetest.get_node_timer(pos):start(4)
+		return
 	end,
 	on_timer = function(pos, elapsed)
 		minetest.remove_node(pos)
@@ -2386,18 +2396,28 @@ minetest.register_node("vehicles:light_barrier", {
 
 minetest.register_node("vehicles:light_barrier2", {
 	description = S("Light Barrier 2"),
-	tiles = {"vehicles_lightblock2.png",},
+	tiles = {
+	"vehicles_lightblock2.png^[transformR90",
+	"vehicles_lightblock2.png^[transformR90",
+	"vehicles_lightblock2.png",
+	},
 	use_texture_alpha = true,
-	drawtype = "allfaces",
+	drawtype = "nodebox",
 	paramtype = "light",
 	paramtype2 = "facedir",
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{-0.0625, -0.5, -0.5, 0.0625, 0.5, 0.5},
+		}
+	},
 	sunlight_propagates = true,
 	walkable = false,
 	light_source = 9,
-	is_ground_content = true,
 	groups = {cracky=3,dig_immediate=3,not_in_creative_inventory=1},
 	on_construct = function(pos, node)
 			minetest.get_node_timer(pos):start(4)
+		return
 	end,
 	on_timer = function(pos, elapsed)
 		minetest.remove_node(pos)

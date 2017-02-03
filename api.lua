@@ -218,7 +218,8 @@ function vehicles.object_drive(entity, dtime, def)
 			minetest.set_node(pos, {name=place_node})
 		end
 		if place_trigger ~= nil and ctrl.sneak then
-			minetest.set_node(pos, {name=place_node})
+			local facedir = minetest.dir_to_facedir(dir)
+			minetest.set_node(pos, {name=place_node, param2=facedir})
 		end
 	end
 	
