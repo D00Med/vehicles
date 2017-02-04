@@ -141,6 +141,7 @@ function vehicles.object_drive(entity, dtime, def)
 	local place_chance = def.place_chance or 1
 	local place_trigger = def.place_trigger or nil
 	local animation_speed = def.animation_speed or 20
+	local uses_arrow_keys = def.uses_arrow_keys or false
 	
 	local moving_anim = def.moving_anim
 	local stand_anim = def.stand_anim
@@ -222,13 +223,23 @@ function vehicles.object_drive(entity, dtime, def)
 	--face the right way
 	local target_yaw = yaw+math.pi+math.pi/2+extra_yaw
 	local entity_yaw = entity.object:getyaw()
-	if entity_yaw ~= target_yaw then
-		--minetest.chat_send_all(target_yaw)
+	if entity_yaw ~= target_yaw and not uses_arrow_keys then
 		if target_yaw <= 6.2 and target_yaw >= 0.2 then
 		entity.object:setyaw(entity_yaw+(target_yaw-entity_yaw)/4)
 		else
 		entity.object:setyaw(target_yaw)
 		end
+	else
+		--minetest.chat_send_all("yaw:"..entity_yaw)
+		--minetest.chat_send_all("dirx: "..dir.x.." dirz:"..dir.z)
+		if ctrl.left then
+			entity.object:setyaw(entity_yaw+(math.pi/360)*absolute_speed/2)
+		end
+		if ctrl.right then
+			entity.object:setyaw(entity_yaw-(math.pi/360)*absolute_speed/2)
+		end
+		dir.x = -math.sin(entity_yaw)
+		dir.z = math.cos(entity_yaw)
 	end
 	
 	--lava explode
