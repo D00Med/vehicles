@@ -456,7 +456,7 @@ minetest.register_entity("vehicles:geep", {
 		clicker:set_detach()
 		self.rider = false
 		elseif not self.driver then
-		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		vehicles.object_attach(self, clicker, {x=-2, y=15, z=-1}, true, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
 		{gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
@@ -1478,12 +1478,12 @@ minetest.register_entity("vehicles:apache", {
 	hp_max = 200,
 	animation_speed = 5,
 	physical = true,
-	collisionbox = {-1, 0, -1, 1, 1.9, 1},
+	collisionbox = {-1.7, 0, -1.7, 1.7, 2.1, 1.7},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
 		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
-		vehicles.object_attach(self, clicker, {x=0, y=13, z=14}, true, {x=0, y=4, z=12})
+		vehicles.object_attach(self, clicker, {x=0, y=20, z=17}, true, {x=0, y=10, z=14})
 		end
 	end,
 	on_punch = vehicles.on_punch,
@@ -1495,6 +1495,8 @@ minetest.register_entity("vehicles:apache", {
 			arrow = "vehicles:missile_2",
 			reload_time = 1,
 			shoots2 = true,
+			shoot_y = 3, 
+			shoot_y2 = 1.5,
 			arrow2 = "vehicles:bullet",
 			reload_time2 = 0.1,
 			moving_anim = {x=2, y=18},

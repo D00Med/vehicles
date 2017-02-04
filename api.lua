@@ -360,7 +360,7 @@ function vehicles.object_drive(entity, dtime, def)
 			local remov = inv:remove_item("main", arrow2.."_item")
 			entity.loaded2 = false
 			local obj = minetest.env:add_entity({x=pos.x+0+dir.x*2,y=pos.y+shoot_y2+dir.y,z=pos.z+0+dir.z*2}, arrow2)
-			local vec = {x=dir.x*14,y=dir.y*14+shoot_angle,z=dir.z*14}
+			local vec = {x=dir.x*20,y=dir.y*20+shoot_angle,z=dir.z*20}
 			obj:setyaw(yaw+math.pi/2+extra_yaw)
 			obj:setvelocity(vec)
 			local object = obj:get_luaentity()
