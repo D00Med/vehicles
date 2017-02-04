@@ -225,7 +225,7 @@ function vehicles.object_drive(entity, dtime, def)
 	if entity_yaw ~= target_yaw then
 		minetest.chat_send_all(target_yaw)
 		if target_yaw <= 6.2 and target_yaw >= 0.2 then
-		entity.object:setyaw(entity_yaw+(target_yaw-entity_yaw)/3)
+		entity.object:setyaw(entity_yaw+(target_yaw-entity_yaw)/4)
 		else
 		entity.object:setyaw(target_yaw)
 		end
