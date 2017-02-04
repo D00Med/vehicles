@@ -140,6 +140,7 @@ function vehicles.object_drive(entity, dtime, def)
 	local place_node = def.place_node or nil
 	local place_chance = def.place_chance or 1
 	local place_trigger = def.place_trigger or nil
+	local animation_speed = def.animation_speed or 20
 	
 	local moving_anim = def.moving_anim
 	local stand_anim = def.stand_anim
@@ -177,6 +178,7 @@ function vehicles.object_drive(entity, dtime, def)
 	
 	--timer
 	local absolute_speed = math.sqrt(math.pow(velo.x, 2)+math.pow(velo.z, 2))
+	local anim_speed = (math.floor(absolute_speed*1.5)/1)+animation_speed
 	if absolute_speed <= speed and ctrl.up then
 	timer = timer + 1*dtime
 	end
@@ -285,7 +287,7 @@ function vehicles.object_drive(entity, dtime, def)
 			end)
 	--animation
 	if moving_anim ~= nil and not entity.moving and not hovering then
-		entity.object:set_animation(move_anim, 20, 0)
+		entity.object:set_animation(move_anim, anim_speed, 0)
 		entity.moving = true
 	end
 	--rise
@@ -293,7 +295,7 @@ function vehicles.object_drive(entity, dtime, def)
 		entity.object:setvelocity(vec_rise)
 		--lib_mount animation
 	if moving_anim ~= nil and not entity.moving then
-		entity.object:set_animation(moving_anim, 20, 0)
+		entity.object:set_animation(moving_anim, anim_speed, 0)
 		entity.moving = true
 	end
 	--hover in place
@@ -310,7 +312,7 @@ function vehicles.object_drive(entity, dtime, def)
 		end
 	--animation
 	if moving_anim ~= nil and not entity.moving and not hovering then
-		entity.object:set_animation(moving_anim, 20, 0)
+		entity.object:set_animation(moving_anim, anim_speed, 0)
 		entity.moving = true
 	end
 	--move backward
@@ -322,7 +324,7 @@ function vehicles.object_drive(entity, dtime, def)
 		end
 	--animation
 	if moving_anim ~= nil and not entity.moving and not hovering then
-		entity.object:set_animation(moving_anim, 20, 0)
+		entity.object:set_animation(moving_anim, anim_speed, 0)
 		entity.moving = true
 	end
 	--stop
@@ -330,7 +332,7 @@ function vehicles.object_drive(entity, dtime, def)
 		entity.object:setvelocity(vec_stop)
 	--animation
 	if moving_anim ~= nil and entity.moving and not hovering then
-		entity.object:set_animation(stand_anim, 20, 0)
+		entity.object:set_animation(stand_anim, anim_speed, 0)
 		entity.moving = false
 	end
 	end
@@ -347,12 +349,12 @@ function vehicles.object_drive(entity, dtime, def)
 			object.launcher = entity.driver
 			--lib_mount animation
 			if shoot_anim ~= nil and entity.object:get_animation().range ~= shoot_anim then
-			entity.object:set_animation(shoot_anim, 20, 0)
+			entity.object:set_animation(shoot_anim, anim_speed, 0)
 			end
 			minetest.after(reload_time, function()
 			entity.loaded = true
 			if stand_anim ~= nil and shoot_anim ~= nil then
-			entity.object:set_animation(stand_anim, 20, 0)
+			entity.object:set_animation(stand_anim, anim_speed, 0)
 			end
 			end)
 			end
@@ -370,12 +372,12 @@ function vehicles.object_drive(entity, dtime, def)
 			object.launcher = entity.driver
 			--lib_mount animation
 			if shoot_anim2 ~= nil and entity.object:get_animation().range ~= shoot_anim2 then
-			entity.object:set_animation(shoot_anim2, 20, 0)
+			entity.object:set_animation(shoot_anim2, anim_speed, 0)
 			end
 			minetest.after(reload_time2, function()
 			entity.loaded2 = true
 			if stand_anim ~= nil and shoot_anim2 ~= nil then
-			entity.object:set_animation(stand_anim, 20, 0)
+			entity.object:set_animation(stand_anim, anim_speed, 0)
 			end
 			end)
 			end
@@ -390,7 +392,7 @@ function vehicles.object_drive(entity, dtime, def)
 		end
 		hovering = true
 		if jump_anim ~= nil and entity.object:get_animation().range ~= jump_anim and hovering then
-			entity.object:set_animation(jump_anim, 20, 0)
+			entity.object:set_animation(jump_anim, anim_speed, 0)
 		end
 		minetest.after(5, function()
 		entity.jumpcharge =  true
@@ -410,7 +412,7 @@ function vehicles.object_drive(entity, dtime, def)
 		end
 		hovering = true
 		if jump_anim ~= nil and entity.object:get_animation().range ~= jump_anim and hovering then
-			entity.object:set_animation(jump_anim, 20, 0)
+			entity.object:set_animation(jump_anim, anim_speed, 0)
 		end
 		minetest.after(0.5, function()
 		entity.jumpcharge =  true

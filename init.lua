@@ -383,7 +383,7 @@ minetest.register_entity("vehicles:assaultsuit", {
 		reload_time2 = 1,
 		moving_anim = {x=120, y=140},
 		stand_anim = {x=1, y=1},
-		jump = "hover",
+		jump_type = "hover",
 		jump_anim = {x=60, y=70},
 		shoot_anim = {x=40, y=51},
 		shoot_anim2 = {x=40, y=51},
@@ -1469,6 +1469,46 @@ minetest.register_entity("vehicles:jet", {
 
 vehicles.register_spawner("vehicles:jet", S("Jet"), "vehicles_jet_inv.png")
 
+minetest.register_entity("vehicles:apache", {
+	visual = "mesh",
+	mesh = "apache.b3d",
+	textures = {"vehicles_helicopter2.png"},
+	velocity = 15,
+	acceleration = -5,
+	hp_max = 200,
+	animation_speed = 5,
+	physical = true,
+	collisionbox = {-1, 0, -1, 1, 1.9, 1},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif not self.driver then
+		vehicles.object_attach(self, clicker, {x=0, y=13, z=14}, true, {x=0, y=4, z=12})
+		end
+	end,
+	on_punch = vehicles.on_punch,
+	on_step = function(self, dtime)
+		return vehicles.on_step(self, dtime, {
+			speed = 14, 
+			decell = 0.95,
+			shoots = true,
+			arrow = "vehicles:missile_2",
+			reload_time = 1,
+			shoots2 = true,
+			arrow2 = "vehicles:bullet",
+			reload_time2 = 0.1,
+			moving_anim = {x=2, y=18},
+			stand_anim = {x=25, y=25},
+			fly = true,
+			fly_mode = "rise",
+			gravity = 0.2,
+			animation_speed = 40,
+		})
+	end,
+})
+
+vehicles.register_spawner("vehicles:apache", S("Apache Helicopter"), "vehicles_helicopter2_inv.png")
+
 minetest.register_entity("vehicles:helicopter", {
 	visual = "mesh",
 	mesh = "helicopter.b3d",
@@ -1482,7 +1522,7 @@ minetest.register_entity("vehicles:helicopter", {
       gear = {x=1, y=1},
       nogear = {x=10, y=10},
 	},
-	collisionbox = {-1, 0, -0.9, 1, 2, 0.9},
+	collisionbox = {-1.1, 0, -1, 1.1, 2, 1},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
 		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
@@ -1499,6 +1539,7 @@ minetest.register_entity("vehicles:helicopter", {
 			stand_anim = {x=1, y=1},
 			fly = true,
 			fly_mode = "rise",
+			animation_speed = 35,
 		})
 	end,
 })
