@@ -186,17 +186,6 @@ function vehicles.object_drive(entity, dtime, def)
 	timer = 0
 	end
 	
-	--timer dependant variables
-	local vec_forward_hover = {x=dir.x*(speed*0.2)*math.log(timer+0.5)+4*dir.x,y=hover_speed,z=dir.z*(speed*0.2)*math.log(timer+0.5)+4*dir.z}
-	local vec_forward_jump = {x=dir.x*speed/4*math.atan(0.5*timer-2)+8*dir.x,y=jump_speed,z=dir.z*speed/4*math.atan(0.5*timer-2)+8*dir.z}
-	local vec_forward = {x=dir.x*(speed*0.2)*math.log(timer+0.5)+4*dir.x,y=velo.y-0.5,z=dir.z*(speed*0.2)*math.log(timer+0.5)+4*dir.z}
-	local boat_forward = {x=dir.x*(speed*0.2)*math.log(timer+0.5)+4*dir.x,y=0,z=dir.z*(speed*0.2)*math.log(timer+0.5)+4*dir.z}
-	local vec_forward_fly = {x=dir.x*(speed*0.2)*math.log(timer+0.5)+4*dir.x,y=dir.y*(speed*0.2)*math.log(timer+0.5)+4*dir.y+1,z=dir.z*(speed*0.2)*math.log(timer+0.5)+4*dir.z}
-	local vec_boost = {x=dir.x*(speed*0.2)*math.log(timer+0.5)+8*dir.x,y=velo.y-0.5,z=dir.z*(speed*0.2)*math.log(timer+0.5)+8*dir.z}
-	local vec_backward = {x=-dir.x*(speed/4)*accell,y=velo.y-0.5,z=-dir.z*(speed/4)*accell}
-	local boat_backward = {x=-dir.x*(speed/4)*accell,y=0,z=-dir.z*(speed/4)*accell}
-	local vec_stop = {x=velo.x*decell,y=velo.y-gravity,z=velo.z*decell}
-	
 	--boost reset
 	if boost and not entity.boost then
 		minetest.after(boost_charge, function()
@@ -263,7 +252,7 @@ function vehicles.object_drive(entity, dtime, def)
 		entity.object:setvelocity({x=velo.x*0.9, y=-1, z=velo.z*0.9})
 	--boost
 	elseif ctrl.up and not shoots2 and ctrl.aux1 and entity.boost then
-		entity.object:setvelocity(vec_boost)
+		entity.object:setvelocity({x=dir.x*(speed*0.2)*math.log(timer+0.5)+8*dir.x,y=velo.y-0.5,z=dir.z*(speed*0.2)*math.log(timer+0.5)+8*dir.z})
 		if boost_effect ~= nil then
 			minetest.add_particlespawner(
 			5, --amount
@@ -304,11 +293,11 @@ function vehicles.object_drive(entity, dtime, def)
 	--move forward
 	elseif ctrl.up and not fixed then
 		if not fly and not is_watercraft then
-		entity.object:setvelocity(vec_forward)
+		entity.object:setvelocity({x=dir.x*(speed*0.2)*math.log(timer+0.5)+4*dir.x,y=velo.y-0.5,z=dir.z*(speed*0.2)*math.log(timer+0.5)+4*dir.z})
 		elseif not fly then
-		entity.object:setvelocity(boat_forward)
+		entity.object:setvelocity({x=dir.x*(speed*0.2)*math.log(timer+0.5)+4*dir.x,y=0,z=dir.z*(speed*0.2)*math.log(timer+0.5)+4*dir.z})
 		else
-		entity.object:setvelocity(vec_forward_fly)
+		entity.object:setvelocity({x=dir.x*(speed*0.2)*math.log(timer+0.5)+4*dir.x,y=dir.y*(speed*0.2)*math.log(timer+0.5)+4*dir.y+1,z=dir.z*(speed*0.2)*math.log(timer+0.5)+4*dir.z})
 		end
 	--animation
 	if moving_anim ~= nil and not entity.moving and not hovering then
@@ -318,9 +307,9 @@ function vehicles.object_drive(entity, dtime, def)
 	--move backward
 	elseif ctrl.down and not fixed then
 		if not is_watercraft then
-		entity.object:setvelocity(vec_backward)
+		entity.object:setvelocity({x=-dir.x*(speed/4)*accell,y=velo.y-0.5,z=-dir.z*(speed/4)*accell})
 		else
-		entity.object:setvelocity(boat_backward)
+		entity.object:setvelocity({x=-dir.x*(speed/4)*accell,y=0,z=-dir.z*(speed/4)*accell})
 		end
 	--animation
 	if moving_anim ~= nil and not entity.moving and not hovering then
@@ -329,7 +318,7 @@ function vehicles.object_drive(entity, dtime, def)
 	end
 	--stop
 	elseif not ctrl.down or ctrl.up then
-		entity.object:setvelocity(vec_stop)
+		entity.object:setvelocity({x=velo.x*decell,y=velo.y-gravity,z=velo.z*decell})
 	--animation
 	if moving_anim ~= nil and entity.moving and not hovering then
 		entity.object:set_animation(stand_anim, anim_speed, 0)
@@ -347,6 +336,7 @@ function vehicles.object_drive(entity, dtime, def)
 			obj:setvelocity(vec)
 			local object = obj:get_luaentity()
 			object.launcher = entity.driver
+			object.vehicle = entity.object
 			--lib_mount animation
 			if shoot_anim ~= nil and entity.object:get_animation().range ~= shoot_anim then
 			entity.object:set_animation(shoot_anim, anim_speed, 0)
@@ -370,6 +360,7 @@ function vehicles.object_drive(entity, dtime, def)
 			obj:setvelocity(vec)
 			local object = obj:get_luaentity()
 			object.launcher = entity.driver
+			object.vehicle = entity.object
 			--lib_mount animation
 			if shoot_anim2 ~= nil and entity.object:get_animation().range ~= shoot_anim2 then
 			entity.object:set_animation(shoot_anim2, anim_speed, 0)
@@ -388,7 +379,7 @@ function vehicles.object_drive(entity, dtime, def)
 		local vec_hover = {x=velo.x+0,y=hover_speed,z=velo.z+0}
 		entity.object:setvelocity(vec_hover)
 		else
-		entity.object:setvelocity(vec_forward_hover)
+		entity.object:setvelocity({x=dir.x*(speed*0.2)*math.log(timer+0.5)+4*dir.x,y=hover_speed,z=dir.z*(speed*0.2)*math.log(timer+0.5)+4*dir.z})
 		end
 		hovering = true
 		if jump_anim ~= nil and entity.object:get_animation().range ~= jump_anim and hovering then
@@ -408,7 +399,7 @@ function vehicles.object_drive(entity, dtime, def)
 		local vec_jump = {x=velo.x+0,y=jump_speed,z=velo.z+0}
 		entity.object:setvelocity(vec_jump)
 		else
-		entity.object:setvelocity(vec_forward_hover)
+		entity.object:setvelocity({x=dir.x*speed/4*math.atan(0.5*timer-2)+8*dir.x,y=jump_speed,z=dir.z*speed/4*math.atan(0.5*timer-2)+8*dir.z})
 		end
 		hovering = true
 		if jump_anim ~= nil and entity.object:get_animation().range ~= jump_anim and hovering then

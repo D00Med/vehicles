@@ -69,7 +69,7 @@ minetest.register_entity("vehicles:missile", {
 		local objs = minetest.get_objects_inside_radius({x=pos.x,y=pos.y,z=pos.z}, 2)	
 			for k, obj in pairs(objs) do
 				if obj:get_luaentity() ~= nil then
-					if obj:get_luaentity().name ~= "vehicles:missile" and n ~= "vehicles:jet" and obj:get_luaentity().name ~= "__builtin:item" then
+					if obj:get_luaentity().name ~= "vehicles:missile" and obj ~= self.vehicle and obj:get_luaentity().name ~= "__builtin:item" then
 						obj:punch(self.object, 1.0, {
 							full_punch_interval=1.0,
 							damage_groups={fleshy=1},
@@ -151,7 +151,7 @@ minetest.register_entity("vehicles:missile_2", {
 		local objs = minetest.get_objects_inside_radius({x=pos.x,y=pos.y,z=pos.z}, 2)	
 			for k, obj in pairs(objs) do
 				if obj:get_luaentity() ~= nil then
-					if obj:get_luaentity().name ~= "vehicles:missile_2" and n ~= "vehicles:tank" and n ~= "vehicles:jet" and obj:get_luaentity().name ~= "__builtin:item" then
+					if obj:get_luaentity().name ~= "vehicles:missile_2" and obj ~= self.vehicle and obj:get_luaentity().name ~= "__builtin:item" then
 						obj:punch(self.launcher, 1.0, {
 							full_punch_interval=1.0,
 							damage_groups={fleshy=1},
@@ -255,7 +255,7 @@ minetest.register_entity("vehicles:bullet", {
 		local objs = minetest.get_objects_inside_radius({x=pos.x,y=pos.y,z=pos.z}, 2)	
 			for k, obj in pairs(objs) do
 				if obj:get_luaentity() ~= nil then
-					if obj:get_luaentity().name ~= "vehicles:bullet" and n ~= "vehicles:turret" and obj:get_luaentity().name ~= "__builtin:item" then
+					if obj:get_luaentity().name ~= "vehicles:bullet" and obj ~= self.vehicle and obj:get_luaentity().name ~= "__builtin:item" then
 						obj:punch(self.launcher, 1.0, {
 							full_punch_interval=1.0,
 							damage_groups={fleshy=1},
