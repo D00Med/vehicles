@@ -223,7 +223,12 @@ function vehicles.object_drive(entity, dtime, def)
 	local target_yaw = yaw+math.pi+math.pi/2+extra_yaw
 	local entity_yaw = entity.object:getyaw()
 	if entity_yaw ~= target_yaw then
+		minetest.chat_send_all(target_yaw)
+		if target_yaw <= 6.2 and target_yaw >= 0.2 then
 		entity.object:setyaw(entity_yaw+(target_yaw-entity_yaw)/3)
+		else
+		entity.object:setyaw(target_yaw)
+		end
 	end
 	
 	--lava explode

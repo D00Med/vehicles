@@ -2058,6 +2058,40 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "vehicles:helicopter_spawner",
+	recipe = {
+		{"", "vehicles:propeller", ""},
+		{"vehicles:propeller", "vehicles:engine", "default:glass"},
+		{"", "default:steel_ingot", ""}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:apache_spawner",
+	recipe = {
+		{"", "vehicles:propeller", ""},
+		{"vehicles:propeller", "vehicles:engine", "default:glass"},
+		{"", "vehicles:armor", "default:steel_ingot"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:lightcycle_spawner",
+	recipe = {
+		{"default:steel_ingot", "vehicles:engine", "dye:cyan"},
+		{"vehicles:wheel", "default:steel_ingot", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:lightcycle2_spawner",
+	recipe = {
+		{"default:steel_ingot", "vehicles:engine", "dye:orange"},
+		{"vehicles:wheel", "default:steel_ingot", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
 	output = "vehicles:boat_spawner",
 	recipe = {
 		{"", "", ""},
