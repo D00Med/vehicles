@@ -229,6 +229,8 @@ function vehicles.object_drive(entity, dtime, def)
 		else
 		entity.object:setyaw(target_yaw)
 		end
+		dir.x = -math.sin(entity_yaw)
+		dir.z = math.cos(entity_yaw)
 	else
 		--minetest.chat_send_all("yaw:"..entity_yaw)
 		--minetest.chat_send_all("dirx: "..dir.x.." dirz:"..dir.z)
