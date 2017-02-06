@@ -291,12 +291,12 @@ minetest.register_entity("vehicles:tank", {
 	stepheight = 1.5,
 	hp_max = 200,
 	physical = true,
-	collisionbox = {-1, -0.6, -0.9, 1, 0.9, 0.9},
+	collisionbox = {-1, 0, -0.9, 1, 1.5, 0.9},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
 		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif not self.driver then
-		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		vehicles.object_attach(self, clicker, {x=0, y=25, z=-3}, true, {x=0, y=6, z=-2})
 		end
 	end,
 	on_punch = vehicles.on_punch,
@@ -307,12 +307,49 @@ minetest.register_entity("vehicles:tank", {
 		shoots = true, 
 		arrow = "vehicles:missile_2",
 		reload_time = 1,
-		moving_anim = {x=1, y=1},
+		shoot_y = 2,
+		moving_anim = {x=3, y=8},
 		stand_anim = {x=1, y=1},
-		shoot_anim = {x=1, y=1},
 		})
 	end,
 })
+
+vehicles.register_spawner("vehicles:tank", S("Tank"), "vehicles_tank_inv.png")
+
+minetest.register_entity("vehicles:tank2", {
+	visual = "mesh",
+	mesh = "tank.b3d",
+	textures = {"vehicles_tank2.png"},
+	velocity = 15,
+	acceleration = -5,
+	owner = "",
+	stepheight = 1.5,
+	hp_max = 200,
+	physical = true,
+	collisionbox = {-1, 0, -0.9, 1, 1.5, 0.9},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif not self.driver then
+		vehicles.object_attach(self, clicker, {x=0, y=25, z=-3}, true, {x=0, y=6, z=-2})
+		end
+	end,
+	on_punch = vehicles.on_punch,
+	on_step = function(self, dtime)
+		return vehicles.on_step(self, dtime, {
+		speed = 6,
+		decell = 0.5, 
+		shoots = true, 
+		arrow = "vehicles:missile_2",
+		reload_time = 1,
+		shoot_y = 2,
+		moving_anim = {x=3, y=8},
+		stand_anim = {x=1, y=1},
+		})
+	end,
+})
+
+vehicles.register_spawner("vehicles:tank2", S("Desert Tank"), "vehicles_tank2_inv.png")
 
 minetest.register_entity("vehicles:turret", {
 	visual = "mesh",
@@ -349,7 +386,6 @@ minetest.register_entity("vehicles:turret", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:tank", S("Tank"), "vehicles_tank_inv.png")
 vehicles.register_spawner("vehicles:turret", S("Gun turret"), "vehicles_turret_inv.png")
 
 minetest.register_entity("vehicles:assaultsuit", {
@@ -1133,6 +1169,47 @@ minetest.register_entity("vehicles:musting2", {
 })
 
 vehicles.register_spawner("vehicles:musting2", S("Musting (white)"), "vehicles_musting_inv.png")
+
+minetest.register_entity("vehicles:fourd", {
+	visual = "mesh",
+	mesh = "fourd.b3d",
+	textures = {"vehicles_fourd.png"},
+	velocity = 15,
+	acceleration = -5,
+	stepheight = step,
+	hp_max = 200,
+	physical = true,
+	collisionbox = {-1, 0, -1, 1.3, 1, 1},
+	on_rightclick = function(self, clicker)
+		if self.driver and clicker == self.driver then
+		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
+		elseif not self.driver then
+		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
+		minetest.sound_play("engine_start", 
+		{gain = 4, max_hear_distance = 3, loop = false})
+		self.sound_ready = false
+		minetest.after(14, function()
+		self.sound_ready = true
+		end)
+		end
+	end,
+	on_activate = function(self)
+		self.nitro = true
+	end,
+	on_punch = vehicles.on_punch,
+	on_step = function(self, dtime)
+		return vehicles.on_step(self, dtime, {
+			speed = 10, 
+			decell = 0.85,
+			driving_sound = "engine",
+			sound_duration = 11,
+			moving_anim = {x=3, y=18},
+			stand_anim = {x=1, y=1},
+		})
+	end,
+})
+
+vehicles.register_spawner("vehicles:fourd", S("Fourd"), "vehicles_fourd_inv.png")
 
 minetest.register_entity("vehicles:fewawi", {
 	visual = "mesh",
@@ -2028,6 +2105,15 @@ minetest.register_craft({
 	output = "vehicles:tank_spawner",
 	recipe = {
 		{"", "vehicles:gun", ""},
+		{"vehicles:armor", "vehicles:engine", "vehicles:armor"},
+		{"vehicles:wheel", "vehicles:wheel", "vehicles:wheel"}
+	}
+})
+
+minetest.register_craft({
+	output = "vehicles:tank2_spawner",
+	recipe = {
+		{"default:desert_sand", "vehicles:gun", ""},
 		{"vehicles:armor", "vehicles:engine", "vehicles:armor"},
 		{"vehicles:wheel", "vehicles:wheel", "vehicles:wheel"}
 	}
