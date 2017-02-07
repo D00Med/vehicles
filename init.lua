@@ -258,7 +258,7 @@ minetest.register_entity("vehicles:bullet", {
 					if obj:get_luaentity().name ~= "vehicles:bullet" and obj ~= self.vehicle and obj:get_luaentity().name ~= "__builtin:item" then
 						obj:punch(self.launcher, 1.0, {
 							full_punch_interval=1.0,
-							damage_groups={fleshy=7},
+							damage_groups={fleshy=5},
 						}, nil)
 						self.object:remove()
 					end
