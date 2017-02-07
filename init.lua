@@ -72,7 +72,7 @@ minetest.register_entity("vehicles:missile", {
 					if obj:get_luaentity().name ~= "vehicles:missile" and obj ~= self.vehicle and obj:get_luaentity().name ~= "__builtin:item" then
 						obj:punch(self.object, 1.0, {
 							full_punch_interval=1.0,
-							damage_groups={fleshy=1},
+							damage_groups={fleshy=12},
 						}, nil)
 						local pos = self.object:getpos()
 						tnt.boom(pos, {damage_radius=5,radius=5,ignore_protection=false})
@@ -154,7 +154,7 @@ minetest.register_entity("vehicles:missile_2", {
 					if obj:get_luaentity().name ~= "vehicles:missile_2" and obj ~= self.vehicle and obj:get_luaentity().name ~= "__builtin:item" then
 						obj:punch(self.launcher, 1.0, {
 							full_punch_interval=1.0,
-							damage_groups={fleshy=1},
+							damage_groups={fleshy=12},
 						}, nil)
 						self.object:remove()
 					end
@@ -258,7 +258,7 @@ minetest.register_entity("vehicles:bullet", {
 					if obj:get_luaentity().name ~= "vehicles:bullet" and obj ~= self.vehicle and obj:get_luaentity().name ~= "__builtin:item" then
 						obj:punch(self.launcher, 1.0, {
 							full_punch_interval=1.0,
-							damage_groups={fleshy=1},
+							damage_groups={fleshy=7},
 						}, nil)
 						self.object:remove()
 					end
@@ -409,7 +409,7 @@ minetest.register_entity("vehicles:assaultsuit", {
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-		speed = 6,
+		speed = 8,
 		decell = 0.5, 
 		shoots = true,
 		arrow = "vehicles:bullet",
@@ -458,7 +458,7 @@ minetest.register_entity("vehicles:firetruck", {
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 7,
+			speed = 10,
 			decell = 0.5,
 			shoots = true,
 			arrow = "vehicles:water",
@@ -601,7 +601,7 @@ minetest.register_entity("vehicles:ute", {
 	visual = "mesh",
 	mesh = "ute.b3d",
 	textures = {"vehicles_ute.png"},
-	velocity = 15,
+	velocity = 17,
 	acceleration = -5,
 	stepheight = 1.5,
 	hp_max = 200,
@@ -632,7 +632,7 @@ minetest.register_entity("vehicles:ute", {
 	end,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 14, 
+			speed = 17, 
 			decell = 0.6,
 			boost = true,
 			boost_duration = 6,
@@ -668,7 +668,7 @@ minetest.register_entity("vehicles:ute2", {
 	visual = "mesh",
 	mesh = "ute.b3d",
 	textures = {"vehicles_ute2.png"},
-	velocity = 15,
+	velocity = 17,
 	acceleration = -5,
 	stepheight = 1.5,
 	hp_max = 200,
@@ -699,7 +699,7 @@ minetest.register_entity("vehicles:ute2", {
 	end,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 14, 
+			speed = 17, 
 			decell = 0.6,
 			boost = true,
 			boost_duration = 6,
@@ -716,7 +716,7 @@ minetest.register_entity("vehicles:astonmaaton", {
 	visual = "mesh",
 	mesh = "astonmaaton.b3d",
 	textures = {"vehicles_astonmaaton.png"},
-	velocity = 15,
+	velocity = 19,
 	acceleration = -5,
 	stepheight = step,
 	hp_max = 200,
@@ -741,7 +741,7 @@ minetest.register_entity("vehicles:astonmaaton", {
 	end,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 14, 
+			speed = 19, 
 			decell = 0.8,
 			boost = true,
 			boost_duration = 5,
@@ -758,7 +758,7 @@ minetest.register_entity("vehicles:nizzan", {
 	visual = "mesh",
 	mesh = "nizzan.b3d",
 	textures = {"vehicles_nizzan.png"},
-	velocity = 15,
+	velocity = 20,
 	acceleration = -5,
 	stepheight = step,
 	hp_max = 200,
@@ -783,7 +783,7 @@ minetest.register_entity("vehicles:nizzan", {
 	end,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 14, 
+			speed = 18, 
 			decell = 0.8,
 			boost = true,
 			boost_duration = 5,
@@ -819,7 +819,7 @@ minetest.register_entity("vehicles:nizzan2", {
 	visual = "mesh",
 	mesh = "nizzan.b3d",
 	textures = {"vehicles_nizzan2.png"},
-	velocity = 15,
+	velocity = 20,
 	acceleration = -5,
 	stepheight = step,
 	hp_max = 200,
@@ -844,7 +844,7 @@ minetest.register_entity("vehicles:nizzan2", {
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 14, 
+			speed = 18, 
 			decell = 0.8,
 			boost = true,
 			boost_duration = 5,
@@ -880,7 +880,7 @@ minetest.register_entity("vehicles:lambogoni", {
 	visual = "mesh",
 	mesh = "lambogoni.b3d",
 	textures = {"vehicles_lambogoni.png"},
-	velocity = 15,
+	velocity = 19,
 	acceleration = -5,
 	stepheight = step,
 	hp_max = 200,
@@ -905,7 +905,7 @@ minetest.register_entity("vehicles:lambogoni", {
 	end,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 15, 
+			speed = 19, 
 			decell = 0.8,
 			boost = true,
 			boost_duration = 4,
@@ -922,7 +922,7 @@ minetest.register_entity("vehicles:lambogoni2", {
 	visual = "mesh",
 	mesh = "lambogoni.b3d",
 	textures = {"vehicles_lambogoni2.png"},
-	velocity = 15,
+	velocity = 19,
 	acceleration = -5,
 	stepheight = step,
 	hp_max = 200,
@@ -947,7 +947,7 @@ minetest.register_entity("vehicles:lambogoni2", {
 	end,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 15, 
+			speed = 19, 
 			decell = 0.8,
 			boost = true,
 			boost_duration = 4,
@@ -964,7 +964,7 @@ minetest.register_entity("vehicles:masda", {
 	visual = "mesh",
 	mesh = "masda.b3d",
 	textures = {"vehicles_masda.png"},
-	velocity = 15,
+	velocity = 21,
 	acceleration = -5,
 	stepheight = step,
 	hp_max = 200,
@@ -989,7 +989,7 @@ minetest.register_entity("vehicles:masda", {
 	end,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 15, 
+			speed = 21, 
 			decell = 0.95,
 			boost = true,
 			boost_duration = 4,
@@ -1031,7 +1031,7 @@ minetest.register_entity("vehicles:masda2", {
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 15, 
+			speed = 21, 
 			decell = 0.85,
 			boost = true,
 			boost_duration = 4,
@@ -1073,7 +1073,7 @@ minetest.register_entity("vehicles:policecar", {
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 16, 
+			speed = 20, 
 			decell = 0.95,
 			boost = true,
 			boost_duration = 8,
@@ -1115,7 +1115,7 @@ minetest.register_entity("vehicles:musting", {
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 15, 
+			speed = 17, 
 			decell = 0.85,
 			boost = true,
 			boost_duration = 4,
@@ -1157,7 +1157,7 @@ minetest.register_entity("vehicles:musting2", {
 	end,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 15, 
+			speed = 17, 
 			decell = 0.85,
 			boost = true,
 			boost_duration = 4,
@@ -1199,7 +1199,7 @@ minetest.register_entity("vehicles:fourd", {
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 10, 
+			speed = 15, 
 			decell = 0.85,
 			driving_sound = "engine",
 			sound_duration = 11,
@@ -1251,7 +1251,7 @@ minetest.register_entity("vehicles:fewawi", {
 	end,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 15, 
+			speed = 20, 
 			decell = 0.95,
 			boost = true,
 			boost_duration = 4,
@@ -1304,7 +1304,7 @@ minetest.register_entity("vehicles:fewawi2", {
 	end,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 15, 
+			speed = 20, 
 			decell = 0.95,
 			boost = true,
 			boost_duration = 4,
@@ -1388,7 +1388,7 @@ minetest.register_entity("vehicles:pooshe2", {
 	end,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 15, 
+			speed = 20, 
 			decell = 0.95,
 			boost = true,
 			boost_duration = 4,
@@ -1425,7 +1425,7 @@ minetest.register_entity("vehicles:lightcycle", {
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 16, 
+			speed = 20, 
 			decell = 0.85,
 			boost = true,
 			boost_duration = 4,
@@ -1463,7 +1463,7 @@ minetest.register_entity("vehicles:lightcycle2", {
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 16, 
+			speed = 20, 
 			decell = 0.85,
 			boost = true,
 			boost_duration = 4,
@@ -1531,7 +1531,7 @@ minetest.register_entity("vehicles:jet", {
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 14, 
+			speed = 20, 
 			decell = 0.95,
 			shoots = true,
 			arrow = "vehicles:missile_2",
@@ -1566,7 +1566,7 @@ minetest.register_entity("vehicles:apache", {
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
-			speed = 14, 
+			speed = 16, 
 			decell = 0.95,
 			shoots = true,
 			arrow = "vehicles:missile_2",
@@ -1601,7 +1601,7 @@ minetest.register_entity("vehicles:helicopter", {
       gear = {x=1, y=1},
       nogear = {x=10, y=10},
 	},
-	collisionbox = {-1.1, 0, -1, 1.1, 2, 1},
+	collisionbox = {-1.2, 0, -1.2, 1.2, 2, 1.2},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
 		vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
@@ -1648,7 +1648,7 @@ minetest.register_entity("vehicles:plane", {
 			self.object:set_animation({x=1, y=1}, 5, 0)
 		end
 		return vehicles.on_step(self, dtime, {
-			speed = 10, 
+			speed = 14, 
 			decell = 0.95,
 			fly = true,
 			fly_mode = "hold",
