@@ -566,13 +566,15 @@ function vehicles.explodinate(ent, radius)
 end
 
 function vehicles.on_punch(self, puncher)
-	if self.object:get_hp() == 0 then
+	local hp = self.object:get_hp()
+	if hp == 0 then
 		if self.driver then
 		vehicles.object_detach(self, self.driver, {x=1, y=0, z=1})
 		end
 		vehicles.explodinate(self, 5)
 	end
-	if self.driver == puncher and (self.object:get_hp() == self.hp_max-1 or self.object:get_hp() == self.hp_max or creative.is_enabled_for(self.driver:get_player_name())) then
+	local creative_mode = creative and creative.is_enabled_for and creative.is_enabled_for(self.driver:get_player_name())
+	if self.driver == puncher and (hp == self.hp_max-1 or hp == self.hp_max or creative_mode) then
 		local name = self.object:get_luaentity().name
 		local pos = self.object:getpos()
 		minetest.env:add_item(pos, name.."_spawner")
