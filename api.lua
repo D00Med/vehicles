@@ -442,7 +442,7 @@ function vehicles.object_drive(entity, dtime, def)
 	--play sound
 	if entity.sound_ready then
 	minetest.sound_play(driving_sound, 
-		{gain = 4, max_hear_distance = 3, loop = false})
+		{to_player=entity.driver:get_player_name(), gain = 4, max_hear_distance = 3, loop = false})
 	entity.sound_ready = false
 	minetest.after(sound_duration, function()
 	entity.sound_ready = true

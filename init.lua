@@ -245,7 +245,7 @@ minetest.register_entity("vehicles:bullet", {
 	on_activate = function(self)
 		local pos = self.object:getpos()
 		minetest.sound_play("shot", 
-		{gain = 0.4, max_hear_distance = 3, loop = false})
+		{to_player=self.driver:get_player_name(), gain = 0.4, max_hear_distance = 3, loop = false})
 	end,
 	on_step = function(self, obj, pos)
 		minetest.after(10, function()
@@ -525,7 +525,7 @@ minetest.register_entity("vehicles:geep", {
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=-2, y=15, z=-1}, true, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 4, max_hear_distance = 3, loop = false})
+		{to_player=self.driver:get_player_name(), gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -593,7 +593,7 @@ minetest.register_entity("vehicles:ambulance", {
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=7, z=14})
 		minetest.sound_play("engine_start", 
-		{gain = 4, max_hear_distance = 3, loop = false})
+		{to_player=self.driver:get_player_name(), gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -616,7 +616,7 @@ minetest.register_entity("vehicles:ambulance", {
 		function()
 			if not self.siren_ready then
 				minetest.sound_play("ambulance", 
-				{gain = 0.1, max_hear_distance = 3, loop = false})
+				{pos=self.object:getpos(), gain = 0.1, max_hear_distance = 3, loop = false})
 				self.siren_ready = true
 				minetest.after(4, function()
 					self.siren_ready = false
@@ -650,7 +650,7 @@ minetest.register_entity("vehicles:ute", {
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 4, max_hear_distance = 3, loop = false})
+		{to_player=self.driver:get_player_name(), gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -717,7 +717,7 @@ minetest.register_entity("vehicles:ute2", {
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 4, max_hear_distance = 3, loop = false})
+		{to_player=self.driver:get_player_name(), gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -759,7 +759,7 @@ minetest.register_entity("vehicles:astonmaaton", {
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 4, max_hear_distance = 3, loop = false})
+		{to_player=self.driver:get_player_name(), gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -801,7 +801,7 @@ minetest.register_entity("vehicles:nizzan", {
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 4, max_hear_distance = 3, loop = false})
+		{to_player=self.driver:get_player_name(), gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -862,7 +862,7 @@ minetest.register_entity("vehicles:nizzan2", {
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 4, max_hear_distance = 3, loop = false})
+		{to_player=self.driver:get_player_name(), gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -923,7 +923,7 @@ minetest.register_entity("vehicles:lambogoni", {
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 4, max_hear_distance = 3, loop = false})
+		{to_player=self.driver:get_player_name(), gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -965,7 +965,7 @@ minetest.register_entity("vehicles:lambogoni2", {
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 4, max_hear_distance = 3, loop = false})
+		{to_player=self.driver:get_player_name(), gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -1007,7 +1007,7 @@ minetest.register_entity("vehicles:masda", {
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 4, max_hear_distance = 3, loop = false})
+		{to_player=self.driver:get_player_name(), gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -1049,7 +1049,7 @@ minetest.register_entity("vehicles:masda2", {
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 4, max_hear_distance = 3, loop = false})
+		{to_player=self.driver:get_player_name(), gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -1091,7 +1091,7 @@ minetest.register_entity("vehicles:policecar", {
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 4, max_hear_distance = 3, loop = false})
+		{to_player=self.driver:get_player_name(), gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -1133,7 +1133,7 @@ minetest.register_entity("vehicles:musting", {
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 4, max_hear_distance = 3, loop = false})
+		{to_player=self.driver:get_player_name(), gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -1175,7 +1175,7 @@ minetest.register_entity("vehicles:musting2", {
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 4, max_hear_distance = 3, loop = false})
+		{to_player=self.driver:get_player_name(), gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -1217,7 +1217,7 @@ minetest.register_entity("vehicles:fourd", {
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 4, max_hear_distance = 3, loop = false})
+		{to_player=self.driver:get_player_name(), gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -1268,7 +1268,7 @@ minetest.register_entity("vehicles:fewawi", {
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 4, max_hear_distance = 3, loop = false})
+		{to_player=self.driver:get_player_name(), gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -1321,7 +1321,7 @@ minetest.register_entity("vehicles:fewawi2", {
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 4, max_hear_distance = 3, loop = false})
+		{to_player=self.driver:get_player_name(), gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -1364,7 +1364,7 @@ minetest.register_entity("vehicles:pooshe", {
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 4, max_hear_distance = 3, loop = false})
+		{to_player=self.driver:get_player_name(), gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
@@ -1406,7 +1406,7 @@ minetest.register_entity("vehicles:pooshe2", {
 		elseif not self.driver then
 		vehicles.object_attach(self, clicker, {x=0, y=5, z=4}, false, {x=0, y=2, z=4})
 		minetest.sound_play("engine_start", 
-		{gain = 4, max_hear_distance = 3, loop = false})
+		{to_player=self.driver:get_player_name(), gain = 4, max_hear_distance = 3, loop = false})
 		self.sound_ready = false
 		minetest.after(14, function()
 		self.sound_ready = true
