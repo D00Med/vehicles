@@ -496,7 +496,7 @@ minetest.register_entity("vehicles:tractor", {
 			decell = 0.5,
 			driving_sound = "engine",
 			sound_duration = 11,
-			destroy_node = "farming:wheat_5",
+			destroy_node = "farming:wheat_8",
 		})
 	end,
 })
