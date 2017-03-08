@@ -2106,6 +2106,15 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "vehicles:tractor_spawner",
+	recipe = {
+		{"", "", ""},
+		{"vehicles:engine", "vehicles:body", ""},
+		{"vehicles:wheel", "vehicles:wheel", "farming:hoe_steel"}
+	}
+})
+
+minetest.register_craft({
 	output = "vehicles:musting_spawner",
 	recipe = {
 		{"", "dye:violet", ""},
