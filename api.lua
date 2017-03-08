@@ -217,7 +217,14 @@ function vehicles.object_drive(entity, dtime, def)
 	
 	--destroy node
 	if destroy_node ~= nil and node == destroy_node then
-			minetest.remove_node(pos)
+			minetest.dig_node(pos)
+			local item = minetest.get_node_drops(destroy_node)
+			if item[1] ~= nil then
+			minetest.add_item(pos, item[1])
+			end
+			if item[2] ~= nil then
+				minetest.add_item(pos, item[1])
+			end
 	end
 	
 	--face the right way
