@@ -106,7 +106,7 @@ function vehicles.object_drive(entity, dtime, def)
 	--definition
 	local speed = def.speed or 10
 	local fixed = def.fixed or false
-	local decell = def.decell or 0
+	local decell = def.decell or 0.5
 	local shoots = def.shoots or false
 	local arrow = def.arrow or nil
 	local reload_time = def.reload_time or 1
@@ -142,6 +142,7 @@ function vehicles.object_drive(entity, dtime, def)
 	local place_trigger = def.place_trigger or nil
 	local animation_speed = def.animation_speed or 20
 	local uses_arrow_keys = def.uses_arrow_keys or false
+	local brakes = def.brakes or false
 	
 	local moving_anim = def.moving_anim
 	local stand_anim = def.stand_anim
@@ -179,6 +180,7 @@ function vehicles.object_drive(entity, dtime, def)
 	
 	--timer
 	local absolute_speed = math.sqrt(math.pow(velo.x, 2)+math.pow(velo.z, 2))
+	--decell = (absolute_speed/100)+((def.decell)-(speed/100))
 	local anim_speed = (math.floor(absolute_speed*1.5)/1)+animation_speed
 	if absolute_speed <= speed and ctrl.up then
 	timer = timer + 1*dtime
@@ -193,6 +195,8 @@ function vehicles.object_drive(entity, dtime, def)
 		entity.boost = true
 		end)
 	end
+	
+	minetest.chat_send_all("decell:"..decell.." speed"..absolute_speed)
 	
 	--death_node
 	if death_node ~= nil and node == death_node then
@@ -230,12 +234,9 @@ function vehicles.object_drive(entity, dtime, def)
 	--face the right way
 	local target_yaw = yaw+math.pi+math.pi/2+extra_yaw
 	local entity_yaw = entity.object:getyaw()
+	local change_yaw = (((target_yaw-entity_yaw+math.pi)%(math.pi*2))-math.pi)/8
 	if entity_yaw ~= target_yaw and not uses_arrow_keys then
-		if target_yaw <= 6.2 and target_yaw >= 0.2 then
-		entity.object:setyaw(entity_yaw+(target_yaw-entity_yaw)/4)
-		else
-		entity.object:setyaw(target_yaw)
-		end
+		entity.object:setyaw(entity_yaw+change_yaw)
 		dir.x = -math.sin(entity_yaw)
 		dir.z = math.cos(entity_yaw)
 	else
@@ -275,23 +276,79 @@ function vehicles.object_drive(entity, dtime, def)
 		entity.object:setvelocity({x=velo.x*decell,y=velo.y-1,z=velo.z*decell})
 	elseif (entity.on_water or entity.in_water) and not is_watercraft then
 		entity.object:setvelocity({x=velo.x*0.9, y=-1, z=velo.z*0.9})
+	
+	--brakes
+	elseif ctrl.jump and brakes and not ctrl.up then
+		local velo2 = nil
+		if velo2 == nil then
+			velo2 = velo
+		end
+		local effect_pos = {x=pos.x-dir.x*2, y=pos.y, z=pos.z-dir.z*2}
+		entity.object:setvelocity({x=velo2.x*(0.95), y=velo.y, z=velo2.z*(0.95)})
+				minetest.add_particlespawner(
+			4, --amount
+			0.5, --time
+			{x=effect_pos.x, y=effect_pos.y, z=effect_pos.z}, --minpos
+			{x=effect_pos.x, y=effect_pos.y, z=effect_pos.z}, --maxpos
+			{x=0, y=0.1, z=0}, --minvel
+			{x=-velo2.x, y=0.4, z=-velo2.z}, --maxvel
+			{x=-0,y=-0,z=-0}, --minacc
+			{x=0,y=0,z=0}, --maxacc
+			0.5, --minexptime
+			1, --maxexptime
+			10, --minsize
+			15, --maxsize
+			false, --collisiondetection
+			"vehicles_dust.png" --texture
+		)
+		if timer >= 0.5 then
+		timer = timer-timer/10
+		end
+	elseif ctrl.jump and ctrl.up and brakes then
+		local velo3 = nil
+		if velo3 == nil then
+			velo3 = velo
+		end
+		local effect_pos = {x=pos.x-dir.x*2, y=pos.y, z=pos.z-dir.z*2}
+		entity.object:setvelocity({x=velo.x*(decell), y=velo.y, z=velo.z*(decell)})
+				minetest.add_particlespawner(
+			4, --amount
+			0.5, --time
+			{x=effect_pos.x, y=effect_pos.y, z=effect_pos.z}, --minpos
+			{x=effect_pos.x, y=effect_pos.y, z=effect_pos.z}, --maxpos
+			{x=0, y=0, z=0}, --minvel
+			{x=-velo3.x, y=0.4, z=-velo3.z}, --maxvel
+			{x=-0,y=-0,z=-0}, --minacc
+			{x=0,y=0,z=0}, --maxacc
+			0.5, --minexptime
+			1, --maxexptime
+			10, --minsize
+			15, --maxsize
+			false, --collisiondetection
+			"vehicles_dust.png" --texture
+		)
+		if timer >= 0.5 then
+		timer = timer-timer/20
+		end
+	
 	--boost
 	elseif ctrl.up and not shoots2 and ctrl.aux1 and entity.boost then
 		entity.object:setvelocity({x=dir.x*(speed*0.2)*math.log(timer+0.5)+8*dir.x,y=velo.y-0.5,z=dir.z*(speed*0.2)*math.log(timer+0.5)+8*dir.z})
 		if boost_effect ~= nil then
+		local effect_pos = {x=pos.x-dir.x*2, y=pos.y, z=pos.z-dir.z*2}
 			minetest.add_particlespawner(
-			5, --amount
-			1, --time
-			{x=pos.x-0.5, y=pos.y, z=pos.z-0.5}, --minpos
-			{x=pos.x+0.5, y=pos.y, z=pos.z+0.5}, --maxpos
+			10, --amount
+			0.25, --time
+			{x=effect_pos.x, y=effect_pos.y+0.2, z=effect_pos.z}, --minpos
+			{x=effect_pos.x, y=effect_pos.y+0.2, z=effect_pos.z}, --maxpos
 			{x=-velo.x, y=-velo.y, z=-velo.z}, --minvel
 			{x=-velo.x, y=-velo.y, z=-velo.z}, --maxvel
 			{x=-0,y=-0,z=-0}, --minacc
 			{x=0,y=1,z=0}, --maxacc
-			0.1, --minexptime
-			0.2, --maxexptime
-			5, --minsize
-			10, --maxsize
+			0.02, --minexptime
+			0.02, --maxexptime
+			20, --minsize
+			20, --maxsize
 			false, --collisiondetection
 			boost_effect --texture
 			)

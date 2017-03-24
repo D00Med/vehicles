@@ -544,12 +544,13 @@ minetest.register_entity("vehicles:geep", {
 			boost_duration = 6,
 			boost_effect = "vehicles_nitro.png",
 			sound_duration = 11,
-			driving_sound = "engine"
+			driving_sound = "engine",
+			brakes = true,
 		},
 		function()
 		local pos = self.object:getpos()
 		minetest.add_particlespawner(
-			15, --amount
+			4, --amount
 			1, --time
 			{x=pos.x, y=pos.y, z=pos.z}, --minpos
 			{x=pos.x, y=pos.y, z=pos.z}, --maxpos
@@ -612,6 +613,7 @@ minetest.register_entity("vehicles:ambulance", {
 			stand_anim = {x=1, y=1},
 			driving_sound = "engine",
 			sound_duration = 11,
+			brakes = true,
 		},
 		function()
 			if not self.siren_ready then
@@ -670,6 +672,7 @@ minetest.register_entity("vehicles:ute", {
 			boost_effect = "vehicles_nitro.png",
 			driving_sound = "engine",
 			sound_duration = 11,
+			brakes = true,
 		},
 		function()
 			local pos = self.object:getpos()
@@ -737,6 +740,7 @@ minetest.register_entity("vehicles:ute2", {
 			boost_effect = "vehicles_nitro.png",
 			driving_sound = "engine",
 			sound_duration = 11,
+			brakes = true,
 		})
 	end,
 })
@@ -779,6 +783,7 @@ minetest.register_entity("vehicles:astonmaaton", {
 			boost_effect = "vehicles_nitro.png",
 			driving_sound = "engine",
 			sound_duration = 11,
+			brakes = true,
 		})
 	end,
 })
@@ -821,6 +826,7 @@ minetest.register_entity("vehicles:nizzan", {
 			boost_effect = "vehicles_nitro.png",
 			driving_sound = "engine",
 			sound_duration = 11,
+			brakes = true,
 		},
 		function()
 			local pos = self.object:getpos()
@@ -882,6 +888,7 @@ minetest.register_entity("vehicles:nizzan2", {
 			boost_effect = "vehicles_nitro.png",
 			driving_sound = "engine",
 			sound_duration = 11,
+			brakes = true,
 		},
 		function()
 			local pos = self.object:getpos()
@@ -943,6 +950,7 @@ minetest.register_entity("vehicles:lambogoni", {
 			boost_effect = "vehicles_nitro.png",
 			driving_sound = "engine",
 			sound_duration = 11,
+			brakes = true,
 		})
 	end,
 })
@@ -985,6 +993,7 @@ minetest.register_entity("vehicles:lambogoni2", {
 			boost_effect = "vehicles_nitro.png",
 			driving_sound = "engine",
 			sound_duration = 11,
+			brakes = true,
 		})
 	end,
 })
@@ -1027,6 +1036,7 @@ minetest.register_entity("vehicles:masda", {
 			boost_effect = "vehicles_nitro.png",
 			driving_sound = "engine",
 			sound_duration = 11,
+			brakes = true,
 		})
 	end,
 })
@@ -1069,6 +1079,7 @@ minetest.register_entity("vehicles:masda2", {
 			boost_effect = "vehicles_nitro.png",
 			driving_sound = "engine",
 			sound_duration = 11,
+			brakes = true,
 		})
 	end,
 })
@@ -1111,6 +1122,7 @@ minetest.register_entity("vehicles:policecar", {
 			boost_effect = "vehicles_nitro.png",
 			driving_sound = "engine",
 			sound_duration = 11,
+			brakes = true,
 		})
 	end,
 })
@@ -1153,6 +1165,7 @@ minetest.register_entity("vehicles:musting", {
 			boost_effect = "vehicles_nitro.png",
 			driving_sound = "engine",
 			sound_duration = 11,
+			brakes = true,
 		})
 	end,
 })
@@ -1195,6 +1208,7 @@ minetest.register_entity("vehicles:musting2", {
 			boost_effect = "vehicles_nitro.png",
 			driving_sound = "engine",
 			sound_duration = 11,
+			brakes = true,
 		})
 	end,
 })
@@ -1236,6 +1250,7 @@ minetest.register_entity("vehicles:fourd", {
 			sound_duration = 11,
 			moving_anim = {x=3, y=18},
 			stand_anim = {x=1, y=1},
+			brakes = true,
 		})
 	end,
 })
@@ -1289,6 +1304,7 @@ minetest.register_entity("vehicles:fewawi", {
 			boost_effect = "vehicles_nitro.png",
 			driving_sound = "engine",
 			sound_duration = 11,
+			brakes = true,
 		})
 	end,
 })
@@ -1336,12 +1352,13 @@ minetest.register_entity("vehicles:fewawi2", {
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
 			speed = 20, 
-			decell = 0.95,
+			decell = 0.99,
 			boost = true,
 			boost_duration = 4,
 			boost_effect = "vehicles_nitro.png",
 			driving_sound = "engine",
 			sound_duration = 11,
+			brakes = true,
 		})
 	end,
 })
@@ -1384,6 +1401,7 @@ minetest.register_entity("vehicles:pooshe", {
 			boost_effect = "vehicles_nitro.png",
 			driving_sound = "engine",
 			sound_duration = 11,
+			brakes = true,
 		})
 	end,
 })
@@ -1426,6 +1444,7 @@ minetest.register_entity("vehicles:pooshe2", {
 			boost_effect = "vehicles_nitro.png",
 			driving_sound = "engine",
 			sound_duration = 11,
+			brakes = true,
 		})
 	end,
 })
