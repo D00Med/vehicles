@@ -666,7 +666,7 @@ minetest.register_entity("vehicles:ute", {
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
 			speed = 17, 
-			decell = 0.6,
+			decell = 0.95,
 			boost = true,
 			boost_duration = 6,
 			boost_effect = "vehicles_nitro.png",
@@ -734,7 +734,7 @@ minetest.register_entity("vehicles:ute2", {
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
 			speed = 17, 
-			decell = 0.6,
+			decell = 0.95,
 			boost = true,
 			boost_duration = 6,
 			boost_effect = "vehicles_nitro.png",
@@ -777,7 +777,7 @@ minetest.register_entity("vehicles:astonmaaton", {
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
 			speed = 19, 
-			decell = 0.8,
+			decell = 0.99,
 			boost = true,
 			boost_duration = 5,
 			boost_effect = "vehicles_nitro.png",
@@ -820,7 +820,7 @@ minetest.register_entity("vehicles:nizzan", {
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
 			speed = 18, 
-			decell = 0.8,
+			decell = 0.99,
 			boost = true,
 			boost_duration = 5,
 			boost_effect = "vehicles_nitro.png",
@@ -882,7 +882,7 @@ minetest.register_entity("vehicles:nizzan2", {
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
 			speed = 18, 
-			decell = 0.8,
+			decell = 0.99,
 			boost = true,
 			boost_duration = 5,
 			boost_effect = "vehicles_nitro.png",
@@ -944,7 +944,7 @@ minetest.register_entity("vehicles:lambogoni", {
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
 			speed = 19, 
-			decell = 0.8,
+			decell = 0.99,
 			boost = true,
 			boost_duration = 4,
 			boost_effect = "vehicles_nitro.png",
@@ -987,7 +987,7 @@ minetest.register_entity("vehicles:lambogoni2", {
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
 			speed = 19, 
-			decell = 0.8,
+			decell = 0.99,
 			boost = true,
 			boost_duration = 4,
 			boost_effect = "vehicles_nitro.png",
@@ -1030,7 +1030,7 @@ minetest.register_entity("vehicles:masda", {
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
 			speed = 21, 
-			decell = 0.95,
+			decell = 0.99,
 			boost = true,
 			boost_duration = 4,
 			boost_effect = "vehicles_nitro.png",
@@ -1073,7 +1073,7 @@ minetest.register_entity("vehicles:masda2", {
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
 			speed = 21, 
-			decell = 0.85,
+			decell = 0.99,
 			boost = true,
 			boost_duration = 4,
 			boost_effect = "vehicles_nitro.png",
@@ -1116,7 +1116,7 @@ minetest.register_entity("vehicles:policecar", {
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
 			speed = 20, 
-			decell = 0.95,
+			decell = 0.99,
 			boost = true,
 			boost_duration = 8,
 			boost_effect = "vehicles_nitro.png",
@@ -1159,7 +1159,7 @@ minetest.register_entity("vehicles:musting", {
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
 			speed = 17, 
-			decell = 0.85,
+			decell = 0.99,
 			boost = true,
 			boost_duration = 4,
 			boost_effect = "vehicles_nitro.png",
@@ -1202,7 +1202,7 @@ minetest.register_entity("vehicles:musting2", {
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
 			speed = 17, 
-			decell = 0.85,
+			decell = 0.99,
 			boost = true,
 			boost_duration = 4,
 			boost_effect = "vehicles_nitro.png",
@@ -1245,7 +1245,7 @@ minetest.register_entity("vehicles:fourd", {
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
 			speed = 15, 
-			decell = 0.85,
+			decell = 0.99,
 			driving_sound = "engine",
 			sound_duration = 11,
 			moving_anim = {x=3, y=18},
@@ -1298,7 +1298,7 @@ minetest.register_entity("vehicles:fewawi", {
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
 			speed = 20, 
-			decell = 0.95,
+			decell = 0.99,
 			boost = true,
 			boost_duration = 4,
 			boost_effect = "vehicles_nitro.png",
@@ -1395,7 +1395,7 @@ minetest.register_entity("vehicles:pooshe", {
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
 			speed = 15, 
-			decell = 0.95,
+			decell = 0.99,
 			boost = true,
 			boost_duration = 4,
 			boost_effect = "vehicles_nitro.png",
@@ -1438,7 +1438,7 @@ minetest.register_entity("vehicles:pooshe2", {
 	on_step = function(self, dtime)
 		return vehicles.on_step(self, dtime, {
 			speed = 20, 
-			decell = 0.95,
+			decell = 0.99,
 			boost = true,
 			boost_duration = 4,
 			boost_effect = "vehicles_nitro.png",

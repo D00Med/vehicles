@@ -102,6 +102,7 @@ timer = 0
 
 --New vehicle function, combines all of the others
 
+
 function vehicles.object_drive(entity, dtime, def)
 	--definition
 	local speed = def.speed or 10
@@ -196,7 +197,7 @@ function vehicles.object_drive(entity, dtime, def)
 		end)
 	end
 	
-	minetest.chat_send_all("decell:"..decell.." speed"..absolute_speed)
+	--minetest.chat_send_all("decell:"..decell.." speed"..absolute_speed)
 	
 	--death_node
 	if death_node ~= nil and node == death_node then
@@ -234,7 +235,7 @@ function vehicles.object_drive(entity, dtime, def)
 	--face the right way
 	local target_yaw = yaw+math.pi+math.pi/2+extra_yaw
 	local entity_yaw = entity.object:getyaw()
-	local change_yaw = (((target_yaw-entity_yaw+math.pi)%(math.pi*2))-math.pi)/8
+	local change_yaw = (((target_yaw-entity_yaw+math.pi)%(math.pi*2))-math.pi)/16
 	if entity_yaw ~= target_yaw and not uses_arrow_keys then
 		entity.object:setyaw(entity_yaw+change_yaw)
 		dir.x = -math.sin(entity_yaw)
