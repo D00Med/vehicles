@@ -466,6 +466,7 @@ minetest.register_entity("vehicles:firetruck", {
 			reload_time = 0.2,
 			driving_sound = "engine",
 			sound_duration = 11,
+			handling = {initial=1.3, braking=2},
 		})
 	end,
 })
@@ -497,6 +498,7 @@ minetest.register_entity("vehicles:tractor", {
 			driving_sound = "engine",
 			sound_duration = 11,
 			destroy_node = "farming:wheat_8",
+			handling = {initial=1.3, braking=2},
 		})
 	end,
 })
@@ -613,6 +615,7 @@ minetest.register_entity("vehicles:ambulance", {
 			stand_anim = {x=1, y=1},
 			driving_sound = "engine",
 			sound_duration = 11,
+			handling = {initial=1.3, braking=2},
 			brakes = true,
 		},
 		function()
@@ -1533,7 +1536,7 @@ minetest.register_entity("vehicles:boat", {
 	textures = {"vehicles_boat.png"},
 	velocity = 15,
 	acceleration = -5,
-	stepheight = 1,
+	stepheight = 0,
 	hp_max = 200,
 	physical = true,
 	collisionbox = {-1, 0.2, -1, 1.3, 1, 1},
@@ -1551,6 +1554,12 @@ minetest.register_entity("vehicles:boat", {
 			decell = 0.85,
 			is_watercraft = true,
 			gravity = 0,
+			boost = true,
+			boost_duration = 10,
+			boost_effect = "vehicles_splash.png",
+			brakes = true,
+			braking_effect = "vehicles_splash.png",
+			handling = {initial=1.8, braking=2.3}
 		})
 	end,
 })
@@ -1590,6 +1599,7 @@ minetest.register_entity("vehicles:jet", {
 			stand_anim = {x=1, y=1},
 			fly = true,
 			fly_mode = "rise",
+			braking_effect = "vehicles_trans.png",
 		})
 	end,
 })
