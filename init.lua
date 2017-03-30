@@ -745,7 +745,7 @@ minetest.register_entity("vehicles:ute2", {
 	end,
 })
 
-vehicles.register_spawner("vehicles:ute2", S("Ute (clean)"), "vehicles_ute_inv.png")
+vehicles.register_spawner("vehicles:ute2", S("Ute (clean)"), "vehicles_ute2_inv.png")
 
 minetest.register_entity("vehicles:astonmaaton", {
 	visual = "mesh",
