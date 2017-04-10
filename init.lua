@@ -245,7 +245,7 @@ minetest.register_entity("vehicles:bullet", {
 	on_activate = function(self)
 		local pos = self.object:getpos()
 		minetest.sound_play("shot", 
-		{to_player=self.driver:get_player_name(), gain = 0.4, max_hear_distance = 3, loop = false})
+		{gain = 0.4, max_hear_distance = 3, loop = false})
 	end,
 	on_step = function(self, obj, pos)
 		minetest.after(10, function()
@@ -466,6 +466,7 @@ minetest.register_entity("vehicles:firetruck", {
 			reload_time = 0.2,
 			driving_sound = "engine",
 			sound_duration = 11,
+			handling = {initial=1.3, braking=2},
 		})
 	end,
 })
@@ -497,6 +498,7 @@ minetest.register_entity("vehicles:tractor", {
 			driving_sound = "engine",
 			sound_duration = 11,
 			destroy_node = "farming:wheat_8",
+			handling = {initial=1.3, braking=2},
 		})
 	end,
 })
@@ -613,6 +615,7 @@ minetest.register_entity("vehicles:ambulance", {
 			stand_anim = {x=1, y=1},
 			driving_sound = "engine",
 			sound_duration = 11,
+			handling = {initial=1.3, braking=2},
 			brakes = true,
 		},
 		function()
@@ -1483,6 +1486,7 @@ minetest.register_entity("vehicles:lightcycle", {
 			place_node = "vehicles:light_barrier",
 			place_trigger = true,
 			death_node = "vehicles:light_barrier2",
+			handling = {initial=3, braking=2.2}
 		})
 	end,
 })
@@ -1521,6 +1525,7 @@ minetest.register_entity("vehicles:lightcycle2", {
 			place_node = "vehicles:light_barrier2",
 			place_trigger = true,
 			death_node = "vehicles:light_barrier",
+			handling = {initial=3, braking=2.2}
 		})
 	end,
 })
@@ -1533,7 +1538,7 @@ minetest.register_entity("vehicles:boat", {
 	textures = {"vehicles_boat.png"},
 	velocity = 15,
 	acceleration = -5,
-	stepheight = 1,
+	stepheight = 0,
 	hp_max = 200,
 	physical = true,
 	collisionbox = {-1, 0.2, -1, 1.3, 1, 1},
@@ -1551,6 +1556,12 @@ minetest.register_entity("vehicles:boat", {
 			decell = 0.85,
 			is_watercraft = true,
 			gravity = 0,
+			boost = true,
+			boost_duration = 10,
+			boost_effect = "vehicles_splash.png",
+			brakes = true,
+			braking_effect = "vehicles_splash.png",
+			handling = {initial=1.8, braking=2.3}
 		})
 	end,
 })
@@ -1590,6 +1601,7 @@ minetest.register_entity("vehicles:jet", {
 			stand_anim = {x=1, y=1},
 			fly = true,
 			fly_mode = "rise",
+			braking_effect = "vehicles_trans.png",
 		})
 	end,
 })
@@ -2332,7 +2344,7 @@ minetest.register_node("vehicles:lights", {
 	tiles = {"vehicles_lights_top.png", "vehicles_lights_top.png", "vehicles_lights.png", "vehicles_lights.png", "vehicles_lights.png", "vehicles_lights.png"},
 	groups = {cracky=1},
 	paramtype2 = "facedir",
-	light_source = 20,
+	light_source = 14,
 })
 
 if minetest.get_modpath("stairs") then
@@ -2358,7 +2370,7 @@ minetest.register_node("vehicles:neon_arrow", {
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
-	light_source = 50,
+	light_source = 14,
 	walkable = false,
 	is_ground_content = true,
 	selection_box = {
@@ -2382,7 +2394,7 @@ minetest.register_node("vehicles:neon_arrow_flp", {
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
-	light_source = 50,
+	light_source = 14,
 	walkable = false,
 	is_ground_content = true,
 	selection_box = {
@@ -2402,7 +2414,7 @@ minetest.register_node("vehicles:add_arrow", {
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
-	light_source = 50,
+	light_source = 14,
 	walkable = false,
 	is_ground_content = true,
 	selection_box = {
@@ -2422,7 +2434,7 @@ minetest.register_node("vehicles:add_arrow_flp", {
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
-	light_source = 50,
+	light_source = 14,
 	walkable = false,
 	is_ground_content = true,
 	selection_box = {
@@ -2446,7 +2458,7 @@ minetest.register_node("vehicles:scifi_ad", {
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
-	light_source = 50,
+	light_source = 14,
 	walkable = false,
 	is_ground_content = true,
 	selection_box = {
@@ -2466,7 +2478,7 @@ minetest.register_node("vehicles:mt_sign", {
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
-	light_source = 50,
+	light_source = 14,
 	walkable = false,
 	is_ground_content = true,
 	selection_box = {
@@ -2486,7 +2498,7 @@ minetest.register_node("vehicles:pacman_sign", {
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
-	light_source = 50,
+	light_source = 14,
 	walkable = false,
 	is_ground_content = true,
 	selection_box = {
@@ -2506,7 +2518,7 @@ minetest.register_node("vehicles:whee_sign", {
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
-	light_source = 50,
+	light_source = 14,
 	walkable = false,
 	is_ground_content = true,
 	selection_box = {
