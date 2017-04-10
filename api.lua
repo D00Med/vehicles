@@ -102,7 +102,6 @@ timer = 0
 
 --New vehicle function, combines all of the others
 
-
 function vehicles.object_drive(entity, dtime, def)
 	--definition
 	local speed = def.speed or 10
@@ -147,11 +146,11 @@ function vehicles.object_drive(entity, dtime, def)
 	local handling = def.handling or {initial=1.1, braking=2.2}
 	local braking_effect = def.braking_effect or "vehicles_dust.png"
 	
-	local moving_anim = def.moving_anim
-	local stand_anim = def.stand_anim
-	local jump_anim = def.jump_anim
-	local shoot_anim = def.shoot_anim
-	local shoot_anim2 = def.shoot_anim2
+	local moving_anim = def.moving_anim or nil
+	local stand_anim = def.stand_anim or nil
+	local jump_anim = def.jump_anim or nil
+	local shoot_anim = def.shoot_anim or nil
+	local shoot_anim2 = def.shoot_anim2 or nil
 	
 	--variables
 	local ctrl = entity.driver:get_player_control()
@@ -162,12 +161,14 @@ function vehicles.object_drive(entity, dtime, def)
 	local yaw = entity.driver:get_look_yaw();
 	local pos = entity.object:getpos()
 	local node = minetest.get_node(pos).name
+	local node_under = minetest.get_node({x=pos.x, y=pos.y+2, z=pos.z})
 	local accell = 1
 	
 	--dummy variables
 	local vec_rise = {}
 	local vec_forward_simple = {}
 	local inv = nil
+	local hovering = nil
 	
 	--definition dependant variables
 	if fly then
@@ -306,7 +307,7 @@ function vehicles.object_drive(entity, dtime, def)
 		return node == "default:river_water_source" or node == "default:water_source" or node == "default:river_water_flowing" or node == "default:water_flowing"
 	end
 	entity.on_water = is_water(node)
-	entity.in_water = is_water(minetest.get_node({x=pos.x, y=pos.y+1, z=pos.z}).name) or is_water(minetest.get_node({x=pos.x, y=pos.y+2, z=pos.z}).name)
+	entity.in_water = is_water(minetest.get_node({x=pos.x, y=pos.y+1, z=pos.z}).name) or is_water(node_under.name)
 	
 	--apply water effects
 	if is_watercraft and entity.in_water then
@@ -426,7 +427,7 @@ function vehicles.object_drive(entity, dtime, def)
 		entity.moving = true
 	end
 	--move backward
-	elseif ctrl.down and not fixed then
+	elseif ctrl.down and not fixed and not fly then
 		if not is_watercraft then
 			if brakes and absolute_speed > 5 then
 				local velo2 = nil

@@ -245,7 +245,7 @@ minetest.register_entity("vehicles:bullet", {
 	on_activate = function(self)
 		local pos = self.object:getpos()
 		minetest.sound_play("shot", 
-		{to_player=self.driver:get_player_name(), gain = 0.4, max_hear_distance = 3, loop = false})
+		{gain = 0.4, max_hear_distance = 3, loop = false})
 	end,
 	on_step = function(self, obj, pos)
 		minetest.after(10, function()
@@ -1486,6 +1486,7 @@ minetest.register_entity("vehicles:lightcycle", {
 			place_node = "vehicles:light_barrier",
 			place_trigger = true,
 			death_node = "vehicles:light_barrier2",
+			handling = {initial=3, braking=2.2}
 		})
 	end,
 })
@@ -1524,6 +1525,7 @@ minetest.register_entity("vehicles:lightcycle2", {
 			place_node = "vehicles:light_barrier2",
 			place_trigger = true,
 			death_node = "vehicles:light_barrier",
+			handling = {initial=3, braking=2.2}
 		})
 	end,
 })
@@ -2342,7 +2344,7 @@ minetest.register_node("vehicles:lights", {
 	tiles = {"vehicles_lights_top.png", "vehicles_lights_top.png", "vehicles_lights.png", "vehicles_lights.png", "vehicles_lights.png", "vehicles_lights.png"},
 	groups = {cracky=1},
 	paramtype2 = "facedir",
-	light_source = 20,
+	light_source = 14,
 })
 
 if minetest.get_modpath("stairs") then
@@ -2368,7 +2370,7 @@ minetest.register_node("vehicles:neon_arrow", {
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
-	light_source = 50,
+	light_source = 14,
 	walkable = false,
 	is_ground_content = true,
 	selection_box = {
@@ -2392,7 +2394,7 @@ minetest.register_node("vehicles:neon_arrow_flp", {
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
-	light_source = 50,
+	light_source = 14,
 	walkable = false,
 	is_ground_content = true,
 	selection_box = {
@@ -2412,7 +2414,7 @@ minetest.register_node("vehicles:add_arrow", {
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
-	light_source = 50,
+	light_source = 14,
 	walkable = false,
 	is_ground_content = true,
 	selection_box = {
@@ -2432,7 +2434,7 @@ minetest.register_node("vehicles:add_arrow_flp", {
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
-	light_source = 50,
+	light_source = 14,
 	walkable = false,
 	is_ground_content = true,
 	selection_box = {
@@ -2456,7 +2458,7 @@ minetest.register_node("vehicles:scifi_ad", {
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
-	light_source = 50,
+	light_source = 14,
 	walkable = false,
 	is_ground_content = true,
 	selection_box = {
@@ -2476,7 +2478,7 @@ minetest.register_node("vehicles:mt_sign", {
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
-	light_source = 50,
+	light_source = 14,
 	walkable = false,
 	is_ground_content = true,
 	selection_box = {
@@ -2496,7 +2498,7 @@ minetest.register_node("vehicles:pacman_sign", {
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
-	light_source = 50,
+	light_source = 14,
 	walkable = false,
 	is_ground_content = true,
 	selection_box = {
@@ -2516,7 +2518,7 @@ minetest.register_node("vehicles:whee_sign", {
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,	
-	light_source = 50,
+	light_source = 14,
 	walkable = false,
 	is_ground_content = true,
 	selection_box = {
