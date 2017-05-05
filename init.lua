@@ -498,6 +498,8 @@ minetest.register_entity("vehicles:tractor", {
 			driving_sound = "engine",
 			sound_duration = 11,
 			destroy_node = "farming:wheat_8",
+			moving_anim = {x=3, y=18},
+			stand_anim = {x=1, y=1},
 			handling = {initial=1.3, braking=2},
 		})
 	end,
