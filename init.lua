@@ -67,7 +67,7 @@ minetest.register_entity("vehicles:missile", {
 		local objs = minetest.get_objects_inside_radius({x=pos.x,y=pos.y,z=pos.z}, 2)	
 			for k, obj in pairs(objs) do
 				if obj:get_luaentity() ~= nil then
-					if obj:get_luaentity().name ~= "vehicles:missile" and obj ~= self.launcher and obj:get_luaentity().name ~= "__builtin:item" then
+					if obj:get_luaentity().name ~= "vehicles:missile" and obj ~= self.vehicle and obj ~= self.launcher and obj:get_luaentity().name ~= "__builtin:item" then
 						obj:punch(self.object, 1.0, {
 							full_punch_interval=1.0,
 							damage_groups={fleshy=12},
@@ -1898,6 +1898,7 @@ minetest.register_tool("vehicles:rc", {
 			local obj = minetest.env:add_entity({x=playerpos.x+0+dir.x,y=playerpos.y+1+dir.y,z=playerpos.z+0+dir.z}, "vehicles:missile")
 			local object = obj:get_luaentity()
 			object.launcher = placer
+			object.vehicle = nil
 			local vec = {x=dir.x*6,y=dir.y*6,z=dir.z*6}
 			obj:setvelocity(vec)
 			return item
