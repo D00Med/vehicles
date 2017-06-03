@@ -40,14 +40,12 @@ minetest.register_entity("vehicles:missile", {
 		minetest.after(10, function()
 			self.object:remove()
 		end)
-		for _, player in ipairs(minetest.get_connected_players()) do
-		--never tested with multiple players
+		local player = self.launcher
 		local dir = player:get_look_dir();
 		local vec = {x=dir.x*16,y=dir.y*16,z=dir.z*16}
 		local yaw = player:get_look_yaw();
 		self.object:setyaw(yaw+math.pi/2)
 		self.object:setvelocity(vec)
-		end
 		local pos = self.object:getpos()
 		local vec = self.object:getvelocity()
 		minetest.add_particlespawner({
@@ -69,7 +67,7 @@ minetest.register_entity("vehicles:missile", {
 		local objs = minetest.get_objects_inside_radius({x=pos.x,y=pos.y,z=pos.z}, 2)	
 			for k, obj in pairs(objs) do
 				if obj:get_luaentity() ~= nil then
-					if obj:get_luaentity().name ~= "vehicles:missile" and obj ~= self.vehicle and obj:get_luaentity().name ~= "__builtin:item" then
+					if obj:get_luaentity().name ~= "vehicles:missile" and obj ~= self.launcher and obj:get_luaentity().name ~= "__builtin:item" then
 						obj:punch(self.object, 1.0, {
 							full_punch_interval=1.0,
 							damage_groups={fleshy=12},
@@ -1898,6 +1896,8 @@ minetest.register_tool("vehicles:rc", {
 			if inv:contains_item("main", "vehicles:missile_2_item") then
 			local remov = inv:remove_item("main", "vehicles:missile_2_item")
 			local obj = minetest.env:add_entity({x=playerpos.x+0+dir.x,y=playerpos.y+1+dir.y,z=playerpos.z+0+dir.z}, "vehicles:missile")
+			local object = obj:get_luaentity()
+			object.launcher = placer
 			local vec = {x=dir.x*6,y=dir.y*6,z=dir.z*6}
 			obj:setvelocity(vec)
 			return item
