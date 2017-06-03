@@ -98,7 +98,7 @@ end)
 --mixed code(from this mod and lib_mount)
 
 
-timer = 0
+local vtimer = 0
 
 --New vehicle function, combines all of the others
 
@@ -187,10 +187,10 @@ function vehicles.object_drive(entity, dtime, def)
 	--decell = (absolute_speed/100)+((def.decell)-(speed/100))
 	local anim_speed = (math.floor(absolute_speed*1.5)/1)+animation_speed
 	if absolute_speed <= speed and ctrl.up then
-	timer = timer + 1*dtime
+	vtimer = vtimer + 1*dtime
 	end
 	if not ctrl.up then
-	timer = 0
+	vtimer = 0
 	end
 	
 	--boost reset
@@ -341,8 +341,8 @@ function vehicles.object_drive(entity, dtime, def)
 			false, --collisiondetection
 			braking_effect --texture
 		)
-		if timer >= 0.5 then
-		timer = timer-timer/10
+		if vtimer >= 0.5 then
+		vtimer = vtimer-vtimer/10
 		end
 	--[[elseif ctrl.jump and ctrl.up and brakes then
 		local velo3 = nil
@@ -373,7 +373,7 @@ function vehicles.object_drive(entity, dtime, def)
 	
 	--boost
 	elseif ctrl.up and not shoots2 and ctrl.aux1 and entity.boost then
-		entity.object:setvelocity({x=dir.x*(speed*0.2)*math.log(timer+0.5)+8*dir.x,y=velo.y-gravity/2,z=dir.z*(speed*0.2)*math.log(timer+0.5)+8*dir.z})
+		entity.object:setvelocity({x=dir.x*(speed*0.2)*math.log(vtimer+0.5)+8*dir.x,y=velo.y-gravity/2,z=dir.z*(speed*0.2)*math.log(timer+0.5)+8*dir.z})
 		if boost_effect ~= nil then
 		local effect_pos = {x=pos.x-dir.x*2, y=pos.y, z=pos.z-dir.z*2}
 			minetest.add_particlespawner(
@@ -415,11 +415,11 @@ function vehicles.object_drive(entity, dtime, def)
 	--move forward
 	elseif ctrl.up and not fixed then
 		if not fly and not is_watercraft then
-		entity.object:setvelocity({x=(dir.x*(speed*0.2)*math.log(timer+0.5)+4*dir.x)/(braking*(0.1)+1),y=velo.y-0.5,z=(dir.z*(speed*0.2)*math.log(timer+0.5)+4*dir.z)/(braking*(0.1)+1)})
+		entity.object:setvelocity({x=(dir.x*(speed*0.2)*math.log(vtimer+0.5)+4*dir.x)/(braking*(0.1)+1),y=velo.y-0.5,z=(dir.z*(speed*0.2)*math.log(vtimer+0.5)+4*dir.z)/(braking*(0.1)+1)})
 		elseif not fly then
-		entity.object:setvelocity({x=dir.x*(speed*0.2)*math.log(timer+0.5)+4*dir.x,y=0,z=dir.z*(speed*0.2)*math.log(timer+0.5)+4*dir.z})
+		entity.object:setvelocity({x=dir.x*(speed*0.2)*math.log(vtimer+0.5)+4*dir.x,y=0,z=dir.z*(speed*0.2)*math.log(vtimer+0.5)+4*dir.z})
 		else
-		entity.object:setvelocity({x=dir.x*(speed*0.2)*math.log(timer+0.5)+4*dir.x,y=dir.y*(speed*0.2)*math.log(timer+0.5)+4*dir.y+1,z=dir.z*(speed*0.2)*math.log(timer+0.5)+4*dir.z})
+		entity.object:setvelocity({x=dir.x*(speed*0.2)*math.log(vtimer+0.5)+4*dir.x,y=dir.y*(speed*0.2)*math.log(vtimer+0.5)+4*dir.y+1,z=dir.z*(speed*0.2)*math.log(vtimer+0.5)+4*dir.z})
 		end
 	--animation
 	if moving_anim ~= nil and not entity.moving and not hovering then
@@ -452,8 +452,8 @@ function vehicles.object_drive(entity, dtime, def)
 			false, --collisiondetection
 			braking_effect --texture
 		)
-		if timer >= 0.5 then
-		timer = timer-timer/10
+		if vtimer >= 0.5 then
+		vtimer = vtimer-vtimer/10
 		end
 			else
 			entity.object:setvelocity({x=-dir.x*(speed/4)*accell,y=velo.y-0.5,z=-dir.z*(speed/4)*accell})
@@ -482,8 +482,8 @@ function vehicles.object_drive(entity, dtime, def)
 			false, --collisiondetection
 			braking_effect --texture
 		)
-		if timer >= 0.5 then
-		timer = timer-timer/10
+		if vtimer >= 0.5 then
+		vtimer = vtimer-vtimer/10
 		end
 			else
 		entity.object:setvelocity({x=-dir.x*(speed/4)*accell,y=0,z=-dir.z*(speed/4)*accell})
@@ -557,7 +557,7 @@ function vehicles.object_drive(entity, dtime, def)
 		local vec_hover = {x=velo.x+0,y=hover_speed,z=velo.z+0}
 		entity.object:setvelocity(vec_hover)
 		else
-		entity.object:setvelocity({x=dir.x*(speed*0.2)*math.log(timer+0.5)+4*dir.x,y=hover_speed,z=dir.z*(speed*0.2)*math.log(timer+0.5)+4*dir.z})
+		entity.object:setvelocity({x=dir.x*(speed*0.2)*math.log(vtimer+0.5)+4*dir.x,y=hover_speed,z=dir.z*(speed*0.2)*math.log(vtimer+0.5)+4*dir.z})
 		end
 		hovering = true
 		if jump_anim ~= nil and entity.object:get_animation().range ~= jump_anim and hovering then
@@ -577,7 +577,7 @@ function vehicles.object_drive(entity, dtime, def)
 		local vec_jump = {x=velo.x+0,y=jump_speed,z=velo.z+0}
 		entity.object:setvelocity(vec_jump)
 		else
-		entity.object:setvelocity({x=dir.x*speed/4*math.atan(0.5*timer-2)+8*dir.x,y=jump_speed,z=dir.z*speed/4*math.atan(0.5*timer-2)+8*dir.z})
+		entity.object:setvelocity({x=dir.x*speed/4*math.atan(0.5*vtimer-2)+8*dir.x,y=jump_speed,z=dir.z*speed/4*math.atan(0.5*vtimer-2)+8*dir.z})
 		end
 		hovering = true
 		if jump_anim ~= nil and entity.object:get_animation().range ~= jump_anim and hovering then
