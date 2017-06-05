@@ -373,7 +373,7 @@ function vehicles.object_drive(entity, dtime, def)
 	
 	--boost
 	elseif ctrl.up and not shoots2 and ctrl.aux1 and entity.boost then
-		entity.object:setvelocity({x=dir.x*(speed*0.2)*math.log(vtimer+0.5)+8*dir.x,y=velo.y-gravity/2,z=dir.z*(speed*0.2)*math.log(timer+0.5)+8*dir.z})
+		entity.object:setvelocity({x=dir.x*(speed*0.2)*math.log(vtimer+0.5)+8*dir.x,y=velo.y-gravity/2,z=dir.z*(speed*0.2)*math.log(vtimer+0.5)+8*dir.z})
 		if boost_effect ~= nil then
 		local effect_pos = {x=pos.x-dir.x*2, y=pos.y, z=pos.z-dir.z*2}
 			minetest.add_particlespawner(
