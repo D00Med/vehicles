@@ -791,7 +791,7 @@ function vehicles.object_no_drive(entity, dtime, def)
 	--stop
 		entity.object:setvelocity(vec_stop)
 		--animation
-		if moving_anim ~= nil and entity.moving and not hovering then
+		if entity.moving_anim ~= nil and entity.moving and not hovering then
 			entity.object:set_animation(stand_anim, 20, 0)
 			entity.moving = false
 		end

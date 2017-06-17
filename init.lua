@@ -41,11 +41,13 @@ minetest.register_entity("vehicles:missile", {
 			self.object:remove()
 		end)
 		local player = self.launcher
-		local dir = player:get_look_dir();
-		local vec = {x=dir.x*16,y=dir.y*16,z=dir.z*16}
-		local yaw = player:get_look_yaw();
-		self.object:setyaw(yaw+math.pi/2)
-		self.object:setvelocity(vec)
+        if player ~= nil then
+            local dir = player:get_look_dir();
+            local vec = {x=dir.x*16,y=dir.y*16,z=dir.z*16}
+            local yaw = player:get_look_yaw();
+            self.object:setyaw(yaw+math.pi/2)
+            self.object:setvelocity(vec)
+        end
 		local pos = self.object:getpos()
 		local vec = self.object:getvelocity()
 		minetest.add_particlespawner({
