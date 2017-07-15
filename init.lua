@@ -41,6 +41,9 @@ minetest.register_entity("vehicles:missile", {
 			self.object:remove()
 		end)
 		local player = self.launcher
+		if player == nil then
+			self.object:remove()
+		end
 		local dir = player:get_look_dir();
 		local vec = {x=dir.x*16,y=dir.y*16,z=dir.z*16}
 		local yaw = player:get_look_yaw();
