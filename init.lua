@@ -2322,7 +2322,7 @@ minetest.register_craft({
 
 --decorative nodes
 
-if minetest.setting_get("vehicles_nodes") == nil then
+if minetest.settings:get("vehicles_nodes") == nil then
 minetest.setting_set("vehicles_nodes", "true")
 end
 
