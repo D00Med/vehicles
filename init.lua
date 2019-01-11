@@ -2322,11 +2322,11 @@ minetest.register_craft({
 
 --decorative nodes
 
-if minetest.setting_get("vehicles_nodes") == nil then
-minetest.setting_set("vehicles_nodes", "true")
+if minetest.settings:get("vehicles_nodes") == nil then
+minetest.settings:set("vehicles_nodes", "true")
 end
 
-if minetest.setting_get("vehicles_nodes") then
+if minetest.settings:get("vehicles_nodes") then
 function vehicles.register_simplenode(name, desc, texture, light)
 minetest.register_node("vehicles:"..name, {
 	description = desc,
