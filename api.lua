@@ -154,7 +154,6 @@ function vehicles.object_drive(entity, dtime, def)
 
 	--variables
 	local velo = entity.object:getvelocity()
-	local vec_backward = {x=-dir.x*speed/4,y=velo.y+1*-2,z=-dir.z*speed/4}
 	local vec_stop = {x=velo.x*decell,y=velo.y+1*-2,z=velo.z*decell}
 	local pos = entity.object:getpos()
 	local node = minetest.get_node(pos).name
@@ -210,6 +209,7 @@ function vehicles.object_drive(entity, dtime, def)
 		--variables
 		local ctrl = entity.driver:get_player_control()
 		local dir = entity.driver:get_look_dir()
+		local vec_backward = {x=-dir.x*speed/4,y=velo.y+1*-2,z=-dir.z*speed/4}
 		local yaw = entity.driver:get_look_yaw()
 		
 		--dummy variables
