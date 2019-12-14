@@ -682,11 +682,12 @@ minetest.register_craftitem(vehicle.."_spawner", {
 	on_place = function(item, placer, pointed_thing)
 			local dir = placer:get_look_dir()
 			local playerpos = placer:getpos()
+			local creative_mode = creative and creative.is_enabled_for and creative.is_enabled_for(placer:get_player_name())
 			if pointed_thing.type == "node" and not is_boat then
 			local obj = minetest.env:add_entity(pointed_thing.above, vehicle)
 			local object = obj:get_luaentity()
 			object.owner = placer
-			if not minetest.setting_getbool("creative_mode") then
+			if not creative_mode then
 			item:take_item()
 			return item
 			end
@@ -695,7 +696,7 @@ minetest.register_craftitem(vehicle.."_spawner", {
 			obj:setvelocity({x=0, y=-1, z=0})
 			local object = obj:get_luaentity()
 			object.owner = placer
-			if not minetest.setting_getbool("creative_mode") then
+			if not creative_mode then
 			item:take_item()
 			return item
 			end
