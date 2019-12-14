@@ -61,4 +61,4 @@ neon arrows (right) =
 pacman sign = 
 scifi_nodes sign = 
 tyre stack =
-whee sign 
+whee sign =
