@@ -1,4 +1,4 @@
-# Template
+# textdomain: vehicles
 Ambulance =
 Armor plating =
 Aston Maaton (white) =
