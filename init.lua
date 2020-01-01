@@ -1738,6 +1738,7 @@ minetest.register_entity("vehicles:parachute", {
 		vehicles.object_glide(self, dtime, 8, 0.92, -0.2, "", "")
 		return false
 		end
+		self.object:remove()
 		return true
 	end,
 })

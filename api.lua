@@ -617,36 +617,36 @@ function vehicles.object_drive(entity, dtime, def)
 
 end
 
-function vehicles.object_glide(entity, dtime, speed, decell, gravity, moving_anim, stand_anim)
-	if entity.driver == nil or entity.driver:get_player_name() == "" then
-		entity.object:remove()
+function vehicles.object_glide(self, dtime, speed, decell, gravity, moving_anim, stand_anim)
+	if self.driver == nil or self.driver:get_player_name() == "" then
+		self.object:remove()
 		return
 	else
-		local b1, b2 = pcall(function() return entity.driver:get_attach():get_luaentity() == self end)
+		local b1, b2 = pcall(function() return self.driver:get_attach():get_luaentity() == self end)
 		if not (b1 and b2) then
-			pcall(force_detach, entity.driver)
-			entity.object:remove()
+			pcall(force_detach, self.driver)
+			self.object:remove()
 			return
 		end
 	end
-	local ctrl = entity.driver:get_player_control()
-	local dir = entity.driver:get_look_dir()
-	local velo = entity.object:getvelocity()
+	local ctrl = self.driver:get_player_control()
+	local dir = self.driver:get_look_dir()
+	local velo = self.object:getvelocity()
 	local vec_glide = {x=dir.x*speed*decell, y=velo.y, z=dir.z*speed*decell}
-	local yaw = entity.driver:get_look_yaw()
+	local yaw = self.driver:get_look_yaw()
 	if not ctrl.sneak then
-		entity.object:setyaw(yaw+math.pi+math.pi/2)
-		entity.object:setvelocity(vec_glide)
-		entity.object:setacceleration({x=0, y=gravity, z=0})
+		self.object:setyaw(yaw+math.pi+math.pi/2)
+		self.object:setvelocity(vec_glide)
+		self.object:setacceleration({x=0, y=gravity, z=0})
 	end
 	if ctrl.sneak then
 		local vec = {x=0,y=gravity*15,z=0}
-		local yaw = entity.driver:get_look_yaw()
-		entity.object:setyaw(yaw+math.pi+math.pi/2)
-		entity.object:setvelocity(vec)
+		local yaw = self.driver:get_look_yaw()
+		self.object:setyaw(yaw+math.pi+math.pi/2)
+		self.object:setvelocity(vec)
 	end
 	if velo.y == 0 then
-		local pos = entity.object:getpos()
+		local pos = self.object:getpos()
 		for dx=-1,1 do
 			for dy=-1,1 do
 				for dz=-1,1 do
@@ -654,8 +654,8 @@ function vehicles.object_glide(entity, dtime, speed, decell, gravity, moving_ani
 					local t = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
 					local n = minetest.env:get_node(p).name
 					if n ~= "massdestruct:parachute" and n ~= "air" then
-						local pos = entity.object:getpos()
-						entity.object:remove()
+						local pos = self.object:getpos()
+						self.object:remove()
 						return
 					end
 				end
