@@ -4,20 +4,6 @@ vehicles = {}
 
 dofile(minetest.get_modpath("vehicles").."/api.lua")
 
---very laggy and buggy flight
--- minetest.register_globalstep(function(dtime)
-	-- for _, player in ipairs(minetest.get_connected_players()) do
-		-- local dir = player:get_look_dir();
-		-- local pos = player:getpos();
-		-- local ctrl = player:get_player_control();
-		-- local pos1 = {x=pos.x+dir.x*1,y=pos.y+dir.y*1,z=pos.z+dir.z*1}
-		-- if ctrl.up == true then
-		-- player:moveto(pos1, false)
-		-- else
-		-- end
-	-- end
--- end)
-
 local step = 1.1
 
 local enable_built_in = true
@@ -39,17 +25,13 @@ minetest.register_entity("vehicles:missile", {
 			self.object:remove()
 		end)
 		local player = self.launcher
-		if player == nil then
+		if player == nil or player:get_player_name() == "" then
 			self.object:remove()
 			return
 		end
-		local dir = player:get_look_dir();
-		if dir == nil then
-			self.object:remove()
-			return
-		end
+		local dir = player:get_look_dir()
 		local vec = {x=dir.x*16,y=dir.y*16,z=dir.z*16}
-		local yaw = player:get_look_yaw();
+		local yaw = player:get_look_yaw()
 		self.object:setyaw(yaw+math.pi/2)
 		self.object:setvelocity(vec)
 		local pos = self.object:getpos()
@@ -1773,9 +1755,9 @@ minetest.register_tool("vehicles:backpack", {
 		damage_groups = {fleshy=1},
 	},
 	on_use = function(item, placer, pointed_thing)
-			local dir = placer:get_look_dir();
-			local playerpos = placer:getpos();
-			local pname = placer:get_player_name();
+			local dir = placer:get_look_dir()
+			local playerpos = placer:getpos()
+			local pname = placer:get_player_name()
 			local obj = minetest.env:add_entity({x=playerpos.x+0+dir.x,y=playerpos.y+1+dir.y,z=playerpos.z+0+dir.z}, "vehicles:parachute")
 			local entity = obj:get_luaentity()
 			if obj.driver and placer == obj.driver then
@@ -1803,11 +1785,11 @@ minetest.register_entity("vehicles:wing_glider", {
 	collisionbox = {-0.5, -0.1, -0.5, 0.5, 0.1, 0.5},
 	on_step = function(self, dtime)
 	if self.driver then
-		local dir = self.driver:get_look_dir();
-		local velo = self.object:getvelocity();
+		local dir = self.driver:get_look_dir()
+		local velo = self.object:getvelocity()
 		local speed = math.sqrt(math.pow(velo.x, 2)+math.pow(velo.z, 2))
 		local vec = {x=dir.x*16,y=dir.y*16+1,z=dir.z*16}
-		local yaw = self.driver:get_look_yaw();
+		local yaw = self.driver:get_look_yaw()
 		self.object:setyaw(yaw+math.pi/2)
 		self.object:setvelocity(vec)
 		self.driver:set_animation({x=162, y=167}, 0, 0)
@@ -1851,8 +1833,8 @@ minetest.register_tool("vehicles:wings", {
 	},
 	on_use = function(item, placer, pointed_thing)
 			local wings_ready = true
-			local dir = placer:get_look_dir();
-			local playerpos = placer:getpos();
+			local dir = placer:get_look_dir()
+			local playerpos = placer:getpos()
 			local objs = minetest.get_objects_inside_radius({x=playerpos.x,y=playerpos.y,z=playerpos.z}, 2)	
 			for k, obj2 in pairs(objs) do
 				if obj2:get_luaentity() ~= nil and obj2:get_luaentity().name == "vehicles:wing_glider" then
@@ -1895,10 +1877,10 @@ minetest.register_tool("vehicles:rc", {
 		damage_groups = {fleshy=1},
 	},
 	on_use = function(item, placer, pointed_thing)
-			local dir = placer:get_look_dir();
-			local playerpos = placer:getpos();
-			local pname = placer:get_player_name();
-			local inv = minetest.get_inventory({type="player", name=pname});
+			local dir = placer:get_look_dir()
+			local playerpos = placer:getpos()
+			local pname = placer:get_player_name()
+			local inv = minetest.get_inventory({type="player", name=pname})
 			if inv:contains_item("main", "vehicles:missile_2_item") then
 			local remov = inv:remove_item("main", "vehicles:missile_2_item")
 			local obj = minetest.env:add_entity({x=playerpos.x+0+dir.x,y=playerpos.y+1+dir.y,z=playerpos.z+0+dir.z}, "vehicles:missile")

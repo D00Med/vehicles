@@ -30,8 +30,8 @@ local function force_detach(player)
 	local attached_to = player:get_attach()
 	if attached_to and attached_to:get_luaentity() then
 		local entity = attached_to:get_luaentity()
-		if entity.driver then
-			if entity ~= nil then entity.driver = nil end
+		if entity ~= nil and entity.driver then
+			entity.driver = nil
 		end
 		player:set_detach()
 	end
@@ -74,26 +74,6 @@ function vehicles.object_detach(entity, player, offset)
 		player:setpos(pos)
 	end)
 end
--------------------------------------------------------------------------------
-
-
-minetest.register_on_leaveplayer(function(player)
-	force_detach(player)
-end)
-
-minetest.register_on_shutdown(function()
-    local players = minetest.get_connected_players()
-	for i = 1,#players do
-		force_detach(players[i])
-	end
-end)
-
-minetest.register_on_dieplayer(function(player)
-	force_detach(player)
-	return true
-end)
-
--------------------------------------------------------------------------------
 
 --mixed code(from this mod and lib_mount)
 
@@ -179,10 +159,10 @@ function vehicles.object_drive(entity, dtime, def)
 	entity.in_water = is_water(minetest.get_node({x=pos.x, y=pos.y+1, z=pos.z}).name) or is_water(node_under.name)
 
 	local function is_watercraft_and_in_water()
-		entity.object:setvelocity({x=velo.x*0.9, y=velo.y+1, z=velo.z*0.9})
+		entity.object:setvelocity({x=velo.x*0.9, y=math.min(2, velo.y+0.5), z=velo.z*0.9})
 	end
 	local function is_watercraft_and_not_on_water()
-		entity.object:setvelocity({x=velo.x*decell,y=velo.y-1,z=velo.z*decell})
+		entity.object:setvelocity(vec_stop)
 	end
 	local function not_watercraft_and_on_or_in_water()
 		entity.object:setvelocity({x=velo.x*0.9, y=-1, z=velo.z*0.9})
@@ -192,7 +172,7 @@ function vehicles.object_drive(entity, dtime, def)
 		--apply water effects
 		if is_watercraft and entity.in_water then
 			is_watercraft_and_in_water()
-		elseif is_watercraft and entity.on_water == false then
+		elseif is_watercraft and not entity.on_water then
 			is_watercraft_and_not_on_water()
 		elseif (entity.on_water or entity.in_water) and not is_watercraft then
 			not_watercraft_and_on_or_in_water()
@@ -232,7 +212,6 @@ function vehicles.object_drive(entity, dtime, def)
 
 		--timer
 		local absolute_speed = math.sqrt(math.pow(velo.x, 2)+math.pow(velo.z, 2))
-		--decell = (absolute_speed/100)+((def.decell)-(speed/100))
 		local anim_speed = (math.floor(absolute_speed*1.5)/1)+animation_speed
 		if absolute_speed <= speed and ctrl.up then
 		vtimer = vtimer + 1*dtime
@@ -247,8 +226,6 @@ function vehicles.object_drive(entity, dtime, def)
 			entity.boost = true
 			end)
 		end
-
-		--minetest.chat_send_all("decell:"..decell.." speed"..absolute_speed)
 
 		--death_node
 		if death_node ~= nil and node == death_node then
@@ -328,8 +305,6 @@ function vehicles.object_drive(entity, dtime, def)
 			dir.x = -math.sin(entity_yaw)
 			dir.z = math.cos(entity_yaw)
 		else
-			--minetest.chat_send_all("yaw:"..entity_yaw)
-			--minetest.chat_send_all("dirx: "..dir.x.." dirz:"..dir.z)
 			if ctrl.left then
 				entity.object:setyaw(entity_yaw+(math.pi/360)*absolute_speed/2)
 			end
@@ -343,7 +318,7 @@ function vehicles.object_drive(entity, dtime, def)
 		--apply water effects
 		if is_watercraft and entity.in_water then
 			is_watercraft_and_in_water()
-		elseif is_watercraft and entity.on_water == false then
+		elseif is_watercraft and not entity.on_water then
 			is_watercraft_and_not_on_water()
 		elseif (entity.on_water or entity.in_water) and not is_watercraft then
 			not_watercraft_and_on_or_in_water()
@@ -375,36 +350,16 @@ function vehicles.object_drive(entity, dtime, def)
 			if vtimer >= 0.5 then
 			vtimer = vtimer-vtimer/10
 			end
-		--[[elseif ctrl.jump and ctrl.up and brakes then
-			local velo3 = nil
-			if velo3 == nil then
-				velo3 = velo
-			end
-			local effect_pos = {x=pos.x-dir.x*2, y=pos.y, z=pos.z-dir.z*2}
-			entity.object:setvelocity({x=velo.x*(decell), y=velo.y, z=velo.z*(decell)})
-					minetest.add_particlespawner(
-				4, --amount
-				0.5, --time
-				{x=effect_pos.x, y=effect_pos.y, z=effect_pos.z}, --minpos
-				{x=effect_pos.x, y=effect_pos.y, z=effect_pos.z}, --maxpos
-				{x=0, y=0, z=0}, --minvel
-				{x=-velo3.x, y=0.4, z=-velo3.z}, --maxvel
-				{x=-0,y=-0,z=-0}, --minacc
-				{x=0,y=0,z=0}, --maxacc
-				0.5, --minexptime
-				1, --maxexptime
-				10, --minsize
-				15, --maxsize
-				false, --collisiondetection
-				"vehicles_dust.png" --texture
-			)
-			if timer >= 0.5 then
-			timer = timer-timer/25
-			end]]
 
 		--boost
 		elseif ctrl.up and not shoots2 and ctrl.aux1 and entity.boost then
-			entity.object:setvelocity({x=dir.x*(speed*0.2)*math.log(vtimer+0.5)+8*dir.x,y=velo.y-gravity/2,z=dir.z*(speed*0.2)*math.log(vtimer+0.5)+8*dir.z})
+			local new_x=dir.x*(speed*0.2)*math.log(vtimer+0.5)+8*dir.x
+			local new_y=velo.y-gravity/2
+			local new_z=dir.z*(speed*0.2)*math.log(vtimer+0.5)+8*dir.z}
+			if is_watercraft then
+				new_y = 0
+			end
+			entity.object:setvelocity({x=new_x,y=new_y,z=new_z)
 			if boost_effect ~= nil then
 			local effect_pos = {x=pos.x-dir.x*2, y=pos.y, z=pos.z-dir.z*2}
 				minetest.add_particlespawner(
@@ -638,6 +593,16 @@ function vehicles.object_drive(entity, dtime, def)
 end
 
 function vehicles.object_glide(entity, dtime, speed, decell, gravity, moving_anim, stand_anim)
+	if entity.driver == nil or entity.driver:get_player_name() == "" then
+		entity.object:remove()
+		return
+	else
+		if entity.driver:get_attach():get_luaentity() ~= self then
+			force_detach(entity.driver)
+			entity.object:remove()
+			return
+		end
+	end
 	local ctrl = entity.driver:get_player_control()
 	local dir = entity.driver:get_look_dir()
 	local velo = entity.object:getvelocity()
@@ -764,6 +729,14 @@ function vehicles.on_punch(self, puncher)
 end
 
 function vehicles.on_step(self, dtime, def, have_driver, no_driver)
+	if self.driver == nil or self.driver:get_player_name() == "" then
+		self.driver = nil
+	else
+		if self.driver:get_attach():get_luaentity() ~= self then
+			force_detach(self.driver)
+			self.driver = nil
+		end
+	end
 	vehicles.object_drive(self, dtime, def)
 	if self.driver then
 		if have_driver ~= nil then
