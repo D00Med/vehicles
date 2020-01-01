@@ -622,8 +622,9 @@ function vehicles.object_glide(entity, dtime, speed, decell, gravity, moving_ani
 		entity.object:remove()
 		return
 	else
-		if entity.driver:get_attach():get_luaentity() ~= self then
-			force_detach(entity.driver)
+		local b1, b2 = pcall(function() return entity.driver:get_attach():get_luaentity() == self end)
+		if not (b1 and b2) then
+			pcall(force_detach, entity.driver)
 			entity.object:remove()
 			return
 		end
@@ -757,8 +758,9 @@ function vehicles.on_step(self, dtime, def, have_driver, no_driver)
 	if self.driver == nil or self.driver:get_player_name() == "" then
 		self.driver = nil
 	else
-		if self.driver:get_attach():get_luaentity() ~= self then
-			force_detach(self.driver)
+		local b1, b2 = pcall(function() return self.driver:get_attach():get_luaentity() == self end)
+		if not (b1 and b2) then
+			pcall(force_detach, self.driver)
 			self.driver = nil
 		end
 	end
