@@ -1,5 +1,0 @@
-default
-tnt
-dye
-stairs?
-creative?
