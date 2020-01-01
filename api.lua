@@ -356,9 +356,6 @@ function vehicles.object_drive(entity, dtime, def)
 			local new_x=dir.x*(speed*0.2)*math.log(vtimer+0.5)+8*dir.x
 			local new_y=velo.y-gravity/2
 			local new_z=dir.z*(speed*0.2)*math.log(vtimer+0.5)+8*dir.z
-			if is_watercraft then
-				new_y = 0
-			end
 			entity.object:setvelocity({x=new_x,y=new_y,z=new_z})
 			if boost_effect ~= nil then
 			local effect_pos = {x=pos.x-dir.x*2, y=pos.y, z=pos.z-dir.z*2}
