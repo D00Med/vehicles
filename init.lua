@@ -9,6 +9,72 @@ local step = 1.1
 local enable_built_in = true
 
 if enable_built_in then
+local function missile_bullet_hit_check(self, obj, pos)
+	local pos = self.object:getpos()
+	do
+		local return_v = {}
+		local if_return = false
+		for _, obj in ipairs(minetest.get_objects_inside_radius({x=pos.x,y=pos.y,z=pos.z}, 2)) do
+			if obj:get_luaentity() ~= nil and obj ~= self.object and obj ~= self.vehicle and obj ~= self.launcher and obj ~= self.launcher:get_attach() and obj:get_luaentity().name ~= "__builtin:item" then
+				if_return = true
+				return_v[#return_v+1]=obj
+			end
+		end
+		if if_return then
+			return return_v
+		end
+	end
+
+	for dx=-1,1 do
+		for dy=-1,1 do
+			for dz=-1,1 do
+				local p = {x=pos.x+dx, y=pos.y, z=pos.z+dz}
+				local t = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
+				local n = minetest.env:get_node(p)
+				if n.name ~= "air" and n.drawtype ~= "airlike" then
+					return {}
+				end
+			end
+		end
+	end
+	return false
+end
+local function missile_on_step_auxiliary(self, obj, pos)
+	minetest.after(10, function()
+		self.object:remove()
+	end)
+	local pos = self.object:getpos()
+	local vec = self.object:getvelocity()
+	minetest.add_particlespawner({
+		amount = 1,
+		time = 0.5,
+		minpos = {x=pos.x-0.2, y=pos.y, z=pos.z-0.2},
+		maxpos = {x=pos.x+0.2, y=pos.y, z=pos.z+0.2},
+		minvel = {x=-vec.x/2, y=-vec.y/2, z=-vec.z/2},
+		maxvel = {x=-vec.x, y=-vec.y, z=-vec.z},
+		minacc = {x=0, y=-1, z=0},
+		maxacc = {x=0, y=-1, z=0},
+		minexptime = 0.2,
+		maxexptime = 0.6,
+		minsize = 3,
+		maxsize = 4,
+		collisiondetection = false,
+		texture = "vehicles_smoke.png",
+	})
+	local objs = missile_bullet_hit_check(self, obj, pos)
+	if objs then
+		for _, obj in ipairs(objs) do
+			local puncher = self.object
+			if self.launcher then puncher = self.launcher end
+			obj:punch(puncher, 1.0, {
+				full_punch_interval=1.0,
+				damage_groups={fleshy=12},
+			}, nil)
+		end
+		tnt.boom(self.object:getpos(), {damage_radius=5,radius=5,ignore_protection=false})
+		self.object:remove()
+	end
+end
 minetest.register_entity("vehicles:missile", {
 	visual = "mesh",
 	mesh = "missile.b3d",
@@ -21,9 +87,6 @@ minetest.register_entity("vehicles:missile", {
 		clicker:set_attach(self.object, "", {x=0,y=0,z=0}, {x=0,y=1,z=0})
 	end,
 	on_step = function(self, obj, pos)
-		minetest.after(10, function()
-			self.object:remove()
-		end)
 		local player = self.launcher
 		if player == nil or player:get_player_name() == "" then
 			self.object:remove()
@@ -34,54 +97,7 @@ minetest.register_entity("vehicles:missile", {
 		local yaw = player:get_look_yaw()
 		self.object:setyaw(yaw+math.pi/2)
 		self.object:setvelocity(vec)
-		local pos = self.object:getpos()
-		local vec = self.object:getvelocity()
-		minetest.add_particlespawner({
-			amount = 1,
-			time = 0.5,
-			minpos = {x=pos.x-0.2, y=pos.y, z=pos.z-0.2},
-			maxpos = {x=pos.x+0.2, y=pos.y, z=pos.z+0.2},
-			minvel = {x=-vec.x/2, y=-vec.y/2, z=-vec.z/2},
-			maxvel = {x=-vec.x, y=-vec.y, z=-vec.z},
-			minacc = {x=0, y=-1, z=0},
-			maxacc = {x=0, y=-1, z=0},
-			minexptime = 0.2,
-			maxexptime = 0.6,
-			minsize = 3,
-			maxsize = 4,
-			collisiondetection = false,
-			texture = "vehicles_smoke.png",
-		})
-		local objs = minetest.get_objects_inside_radius({x=pos.x,y=pos.y,z=pos.z}, 2)
-		for k, obj in pairs(objs) do
-			if obj:get_luaentity() ~= nil then
-				if obj:get_luaentity().name ~= "vehicles:missile" and obj ~= self.vehicle and obj ~= self.launcher and obj:get_luaentity().name ~= "__builtin:item" then
-					obj:punch(self.object, 1.0, {
-						full_punch_interval=1.0,
-						damage_groups={fleshy=12},
-					}, nil)
-					local pos = self.object:getpos()
-					tnt.boom(pos, {damage_radius=5,radius=5,ignore_protection=false})
-					self.object:remove()
-				end
-			end
-		end
-
-		for dx=-1,1 do
-			for dy=-1,1 do
-				for dz=-1,1 do
-					local p = {x=pos.x+dx, y=pos.y, z=pos.z+dz}
-					local t = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
-					local n = minetest.env:get_node(p).name
-					if n ~= "vehicles:missile" and n ~= "vehicles:jet" and n ~= "air" then
-						local pos = self.object:getpos()
-						tnt.boom(pos, {damage_radius=5,radius=5,ignore_protection=false})
-						self.object:remove()
-						return
-					end
-				end
-			end
-		end
+		missile_on_step_auxiliary(self, obj, pos)
 	end,
 })
 
@@ -106,9 +122,6 @@ minetest.register_entity("vehicles:missile_2", {
 	damage = 2,
 	collisionbox = {0, 0, 0, 0, 0, 0},
 	on_step = function(self, obj, pos)
-		minetest.after(10, function()
-			self.object:remove()
-		end)
 		local velo = self.object:getvelocity()
 		if velo.y <= 1.2 and velo.y >= -1.2 then
 			self.object:set_animation({x=1, y=1}, 5, 0)
@@ -117,67 +130,7 @@ minetest.register_entity("vehicles:missile_2", {
 		elseif velo.y >= 1.2 then
 			self.object:set_animation({x=2, y=2}, 5, 0)
 		end
-		local pos = self.object:getpos()
-		minetest.add_particlespawner({
-			amount = 2,
-			time = 0.5,
-			minpos = {x=pos.x-0.2, y=pos.y, z=pos.z-0.2},
-			maxpos = {x=pos.x+0.2, y=pos.y, z=pos.z+0.2},
-			minvel = {x=-velo.x/2, y=-velo.y/2, z=-velo.z/2},
-			maxvel = {x=-velo.x, y=-velo.y, z=-velo.z},
-			minacc = {x=0, y=-1, z=0},
-			maxacc = {x=0, y=-1, z=0},
-			minexptime = 0.2,
-			maxexptime = 0.6,
-			minsize = 3,
-			maxsize = 4,
-			collisiondetection = false,
-			texture = "vehicles_smoke.png",
-		})
-		local objs = minetest.get_objects_inside_radius({x=pos.x,y=pos.y,z=pos.z}, 2)
-		for k, obj in pairs(objs) do
-			if obj:get_luaentity() ~= nil then
-				if obj:get_luaentity().name ~= "vehicles:missile_2" and obj ~= self.vehicle and obj:get_luaentity().name ~= "__builtin:item" then
-					obj:punch(self.launcher, 1.0, {
-						full_punch_interval=1.0,
-						damage_groups={fleshy=12},
-					}, nil)
-					self.object:remove()
-				end
-			end
-		end
-
-		for dx=-1,1 do
-			for dy=-1,1 do
-				for dz=-1,1 do
-					local p = {x=pos.x+dx, y=pos.y, z=pos.z+dz}
-					local t = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
-					local n = minetest.env:get_node(p).name
-					if n ~= "vehicles:missile_2" and n ~= "vehicles:tank" and n ~= "vehicles:jet" and n ~= "air" then
-						local pos = self.object:getpos()
-						minetest.add_particlespawner({
-							amount = 30,
-							time = 0.5,
-							minpos = {x=pos.x-0.5, y=pos.y-0.5, z=pos.z-0.5},
-							maxpos = {x=pos.x+0.5, y=pos.y+0.5, z=pos.z+0.5},
-							minvel = {x=-1, y=-1, z=-1},
-							maxvel = {x=1, y=1, z=1},
-							minacc = {x=0, y=0.2, z=0},
-							maxacc = {x=0, y=0.6, z=0},
-							minexptime = 0.5,
-							maxexptime = 1,
-							minsize = 10,
-							maxsize = 20,
-							collisiondetection = false,
-							texture = "vehicles_explosion.png"
-						})
-						tnt.boom(pos, {damage_radius=5,radius=5,ignore_protection=false})
-						self.object:remove()
-						return
-					end
-				end
-			end
-		end
+		missile_on_step_auxiliary(self, obj, pos)
 	end,
 })
 
@@ -237,32 +190,15 @@ minetest.register_entity("vehicles:bullet", {
 		minetest.after(10, function()
 			self.object:remove()
 		end)
-		local pos = self.object:getpos()
-		local objs = minetest.get_objects_inside_radius({x=pos.x,y=pos.y,z=pos.z}, 2)
-		for k, obj in pairs(objs) do
-			if obj:get_luaentity() ~= nil then
-				if obj:get_luaentity().name ~= "vehicles:bullet" and obj ~= self.vehicle and obj:get_luaentity().name ~= "__builtin:item" then
-					obj:punch(self.launcher, 1.0, {
-						full_punch_interval=1.0,
-						damage_groups={fleshy=5},
-					}, nil)
-					self.object:remove()
-				end
+		local objs = missile_bullet_hit_check(self, obj, pos)
+		if objs then
+			for _, obj in ipairs(objs) do
+				obj:punch(self.launcher, 1.0, {
+					full_punch_interval=1.0,
+					damage_groups={fleshy=5},
+				}, nil)
 			end
-		end
-
-		for dx=-1,1 do
-			for dy=-1,1 do
-				for dz=-1,1 do
-					local p = {x=pos.x+dx, y=pos.y, z=pos.z+dz}
-					local t = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
-					local n = minetest.env:get_node(p).name
-					if n ~= "vehicles:bullet" and n ~= "air" then
-						self.object:remove()
-						return
-					end
-				end
-			end
+			self.object:remove()
 		end
 	end,
 })
@@ -1883,7 +1819,8 @@ minetest.register_tool("vehicles:rc", {
 		local pname = placer:get_player_name()
 		local inv = minetest.get_inventory({type="player", name=pname})
 		if inv:contains_item("main", "vehicles:missile_2_item") then
-			local remov = inv:remove_item("main", "vehicles:missile_2_item")
+			local creative_mode = creative and creative.is_enabled_for and creative.is_enabled_for(placer:get_player_name())
+			if not creative_mode then inv:remove_item("main", "vehicles:missile_2_item") end
 			local obj = minetest.env:add_entity({x=playerpos.x+0+dir.x,y=playerpos.y+1+dir.y,z=playerpos.z+0+dir.z}, "vehicles:missile")
 			local object = obj:get_luaentity()
 			object.launcher = placer

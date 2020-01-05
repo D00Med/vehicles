@@ -195,6 +195,7 @@ function vehicles.object_drive(entity, dtime, def)
 		local dir = entity.driver:get_look_dir()
 		local vec_backward = {x=-dir.x*speed/4,y=velo.y+1*-2,z=-dir.z*speed/4}
 		local yaw = entity.driver:get_look_yaw()
+		local creative_mode = creative and creative.is_enabled_for and creative.is_enabled_for(entity.driver:get_player_name())
 
 		--dummy variables
 		local vec_rise = {}
@@ -508,7 +509,7 @@ function vehicles.object_drive(entity, dtime, def)
 		--shoot weapons
 		if ctrl.sneak and shoots and entity.loaded then
 			if inv:contains_item("main", arrow.."_item") or infinite_arrow then
-				local remov = inv:remove_item("main", arrow.."_item")
+				if not creative_mode then inv:remove_item("main", arrow.."_item") end
 				entity.loaded = false
 				local obj = minetest.env:add_entity({x=pos.x+0+dir.x*2,y=pos.y+shoot_y+dir.y,z=pos.z+0+dir.z*2}, arrow)
 				local vec = {x=dir.x*14,y=dir.y*14+shoot_angle,z=dir.z*14}
@@ -532,7 +533,7 @@ function vehicles.object_drive(entity, dtime, def)
 
 		if ctrl.aux1 and shoots2 and entity.loaded2 then
 			if inv:contains_item("main", arrow2.."_item") or infinite_arrow2 then
-				local remov = inv:remove_item("main", arrow2.."_item")
+				if not creative_mode then inv:remove_item("main", arrow2.."_item") end
 				entity.loaded2 = false
 				local obj = minetest.env:add_entity({x=pos.x+0+dir.x*2,y=pos.y+shoot_y2+dir.y,z=pos.z+0+dir.z*2}, arrow2)
 				local vec = {x=dir.x*20,y=dir.y*20+shoot_angle,z=dir.z*20}
@@ -742,8 +743,7 @@ function vehicles.on_punch(self, puncher)
 		end
 		vehicles.explodinate(self, 5)
 	end
-	if not self.driver then
-		return end
+	if not self.driver then return end
 	local creative_mode = creative and creative.is_enabled_for and creative.is_enabled_for(self.driver:get_player_name())
 	if self.driver == puncher and (hp == self.hp_max-5 or hp == self.hp_max or creative_mode) then
 		local name = self.object:get_luaentity().name
