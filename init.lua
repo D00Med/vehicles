@@ -16,7 +16,7 @@ local function missile_bullet_hit_check(self, obj, pos)
 		local if_return = false
 		for _, obj in ipairs(minetest.get_objects_inside_radius({x=pos.x,y=pos.y,z=pos.z}, 2)) do
 			function no_launcher_or_not_attched()
-				local b1, b2 = pcall(function() return obj ~= self.launcher:get_attach())
+				local b1, b2 = pcall(function() return obj ~= self.launcher:get_attach() end)
 				if not b1 then
 					return true -- no launcher
 				else
