@@ -10,16 +10,20 @@ local enable_built_in = true
 
 if enable_built_in then
 local function missile_bullet_hit_check(self, obj, pos)
-	local function or_false(f)
-		local b1, b2 = pcall(f)
-		return b1 and b2
-	end
 	local pos = self.object:getpos()
 	do
 		local return_v = {}
 		local if_return = false
 		for _, obj in ipairs(minetest.get_objects_inside_radius({x=pos.x,y=pos.y,z=pos.z}, 2)) do
-			if obj:get_luaentity() ~= nil and obj ~= self.object and obj ~= self.vehicle and obj ~= self.launcher and obj ~= or_false(function() return self.launcher:get_attach() end) and obj:get_luaentity().name ~= "__builtin:item" then
+			function no_launcher_or_not_attched()
+				local b1, b2 = pcall(function() return obj ~= self.launcher:get_attach())
+				if not b1 then
+					return true -- no launcher
+				else
+					return b2 -- obj ~= attched object
+				end
+			end
+			if obj:get_luaentity() ~= nil and obj ~= self.object and obj ~= self.vehicle and obj ~= self.launcher and no_launcher_or_not_attched() and obj:get_luaentity().name ~= "__builtin:item" then
 				if_return = true
 				return_v[#return_v+1]=obj
 			end
