@@ -451,7 +451,8 @@ minetest.register_entity("vehicles:geep", {
 		if self.driver and clicker == self.driver then
 			vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif self.driver and clicker ~= self.driver and not self.rider then
-			clicker:set_attach(self.object, "", {x=0, y=5, z=-5}, false, {x=0, y=0, z=-2})
+			-- clicker:set_attach(self.object, "", {x=0, y=5, z=-5}, false, {x=0, y=0, z=-2})
+			clicker:set_attach(self.object, "", {x=0, y=5, z=-5}, {x=0, y=0, z=-2})
 			self.rider = true
 		elseif self.driver and clicker ~=self.driver and self.rider then
 			clicker:set_detach()
@@ -519,7 +520,7 @@ minetest.register_entity("vehicles:ambulance", {
 		if self.driver and clicker == self.driver then
 			vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif self.driver and clicker ~= self.driver and not self.rider then
-			clicker:set_attach(self.object, clicker, {x=0, y=5, z=4}, false, {x=0, y=7, z=10})
+			clicker:set_attach(self.object, clicker, {x=0, y=5, z=4}, {x=0, y=7, z=10})
 			self.rider = true
 			clicker:set_hp(20)
 		elseif self.driver and clicker ~= self.driver and self.rider then
@@ -579,7 +580,7 @@ minetest.register_entity("vehicles:ute", {
 		if self.driver and clicker == self.driver then
 			vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif self.driver and clicker ~= self.driver and not self.rider then
-			clicker:set_attach(self.object, clicker, {x=0, y=5, z=-5}, false, {x=0, y=0, z=-2})
+			clicker:set_attach(self.object, clicker, {x=0, y=5, z=-5}, {x=0, y=0, z=-2})
 			self.rider = true
 		elseif self.driver and clicker ~=self.driver and self.rider then
 			clicker:set_detach()
