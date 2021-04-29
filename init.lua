@@ -1549,7 +1549,7 @@ minetest.register_entity("vehicles:apache", {
 	hp_max = 200,
 	animation_speed = 5,
 	physical = true,
-	collisionbox = {-1.8, 0, -1.8, 1.8, 1.5, 1.8},
+	collisionbox = {-3, 0, -3, 3, 1.5, 3},
 	on_rightclick = function(self, clicker)
 		if self.driver and clicker == self.driver then
 			vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
