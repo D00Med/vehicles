@@ -745,7 +745,7 @@ function vehicles.on_punch(self, puncher)
 	end
 	if not self.driver then return end
 	local creative_mode = creative and creative.is_enabled_for and creative.is_enabled_for(self.driver:get_player_name())
-	if self.driver == puncher and (hp == self.hp_max-5 or hp == self.hp_max or creative_mode) then
+	if self.driver == puncher then
 		local name = self.object:get_luaentity().name
 		local pos = self.object:getpos()
 		minetest.env:add_item(pos, name.."_spawner")
