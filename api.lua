@@ -735,9 +735,9 @@ function vehicles.explodinate(ent, radius)
 	end)
 end
 
-function vehicles.on_punch(self, puncher)
+function vehicles.on_punch(self, puncher, time_from_last_punch, tool_capabilities, direction, damage)
 	local hp = self.object:get_hp()
-	if hp == 0 then
+	if (hp - damage) < 1 then
 		if self.driver then
 			vehicles.object_detach(self, self.driver, {x=1, y=0, z=1})
 		end
