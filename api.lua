@@ -35,7 +35,7 @@ local function force_detach(player)
 		end
 		player:set_detach()
 	end
-	default.player_attached[player:get_player_name()] = false
+	player_api.player_attached[player:get_player_name()] = false
 	player:set_eye_offset({x=0, y=0, z=0}, {x=0, y=0, z=0})
 	player:set_properties({visual_size = {x=1, y=1}})
 end
@@ -53,9 +53,9 @@ function vehicles.object_attach(entity, player, attach_at, visible, eye_offset)
 		player:set_properties({visual_size = {x=1, y=1}})
 	end
 	player:set_eye_offset(eye_offset, {x=eye_offset.x, y=eye_offset.y+1, z=-40})
-	default.player_attached[player:get_player_name()] = true
+	player_api.player_attached[player:get_player_name()] = true
 	minetest.after(0.2, function()
-		default.player_set_animation(player, "sit" , 30)
+		player_api.set_animation(player, "sit" , 30)
 	end)
 	entity.object:setyaw(player:get_look_yaw() - math.pi / 2)
 end
@@ -64,8 +64,8 @@ function vehicles.object_detach(entity, player, offset)
 	entity.driver = nil
 	entity.object:setvelocity({x=0, y=0, z=0})
 	player:set_detach()
-	default.player_attached[player:get_player_name()] = false
-	default.player_set_animation(player, "stand" , 30)
+	player_api.player_attached[player:get_player_name()] = false
+	player_api.set_animation(player, "stand" , 30)
 	player:set_properties({visual_size = {x=1, y=1}})
 	player:set_eye_offset({x=0, y=0, z=0}, {x=0, y=0, z=0})
 	local pos = player:getpos()
@@ -77,6 +77,18 @@ end
 
 --mixed code(from this mod and lib_mount)
 
+
+-- Cache water and lava nodes
+local cache = { water = {}, lava = {} }
+minetest.register_on_mods_loaded(function()
+	for name, def in pairs(minetest.registered_nodes) do
+		if def.groups.water then
+			cache.water[name] = true
+		elseif def.groups.lava then
+			cache.lava[name] = true
+		end
+	end
+end)
 
 local vtimer = 0
 
@@ -141,7 +153,7 @@ function vehicles.object_drive(entity, dtime, def)
 	local accell = 1
 
 	--lava explode
-	if node == "default:lava_source" or node == "default:lava_flowing" then
+	if cache.lava[node] then
 		if entity.driver then
 			vehicles.object_detach(entity, entity.driver, {x=1, y=0, z=1})
 		end
@@ -153,10 +165,7 @@ function vehicles.object_drive(entity, dtime, def)
 	--respond to controls
 	--check for water
 	local function is_water(node)
-		return node == "default:river_water_source"
-			or node == "default:water_source"
-			or node == "default:river_water_flowing"
-			or node == "default:water_flowing"
+		return cache.water[node]
 	end
 	entity.on_water = is_water(node)
 	entity.in_water = is_water(minetest.get_node({x=pos.x, y=pos.y+1, z=pos.z}).name)

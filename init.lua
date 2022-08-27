@@ -9,6 +9,15 @@ local step = 1.1
 local enable_built_in = true
 
 if enable_built_in then
+
+local stone_sound = {}
+if minetest.global_exists("default") then
+	stone_sound = default.node_sound_stone_defaults()
+elseif minetest.global_exists("sounds") then
+	stone_sound = sounds.node_stone()
+end
+
+
 local function missile_bullet_hit_check(self, obj, pos)
 	local pos = self.object:getpos()
 	do
@@ -79,7 +88,9 @@ local function missile_on_step_auxiliary(self, obj, pos)
 				damage_groups={fleshy=12},
 			}, nil)
 		end
-		tnt.boom(self.object:getpos(), {damage_radius=5,radius=5,ignore_protection=false})
+		if minetest.get_modpath('tnt') then
+			tnt.boom(self.object:getpos(), {damage_radius=5,radius=5,ignore_protection=false})
+		end
 		self.object:remove()
 	end
 end
@@ -1842,6 +1853,8 @@ minetest.register_tool("vehicles:rc", {
 })
 
 --crafting recipes and materials
+-- (only if default and dye exists)
+if minetest.get_modpath("default") and minetest.get_modpath("dye") then
 
 minetest.register_craftitem("vehicles:wheel", {
 	description = S("Wheel"),
@@ -2243,8 +2256,7 @@ minetest.register_craft({
 	}
 })
 
-
-
+end -- end default and dye mod check
 
 
 --decorative nodes
@@ -2261,7 +2273,7 @@ function vehicles.register_simplenode(name, desc, texture, light)
 		groups = {cracky=1},
 		paramtype2 = "facedir",
 		light_source = light,
-		sound = default.node_sound_stone_defaults(),
+		sound = stone_sound,
 	})
 end--function vehicles.register_simplenode(name, desc, texture, light)
 
@@ -2291,7 +2303,7 @@ if minetest.get_modpath("stairs") then
 		{"vehicles_road.png"},
 		S("Road Surface Stair"),
 		S("Road Surface Slab"),
-		default.node_sound_stone_defaults())
+		stone_sound)
 end
 
 minetest.register_node("vehicles:neon_arrow", {
