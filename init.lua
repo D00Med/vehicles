@@ -11,12 +11,12 @@ local enable_built_in = true
 if enable_built_in then
 
 local function missile_bullet_hit_check(self, obj, pos)
-	local pos = self.object:getpos()
+	local pos = self.object:get_pos()
 	do
 		local return_v = {}
 		local if_return = false
 		for _, obj in ipairs(minetest.get_objects_inside_radius({x=pos.x,y=pos.y,z=pos.z}, 2)) do
-			function no_launcher_or_not_attched()
+			local function no_launcher_or_not_attched()
 				local b1, b2 = pcall(function() return obj ~= self.launcher:get_attach() end)
 				if not b1 then
 					return true -- no launcher
@@ -52,8 +52,8 @@ local function missile_on_step_auxiliary(self, obj, pos)
 	minetest.after(10, function()
 		self.object:remove()
 	end)
-	local pos = self.object:getpos()
-	local vec = self.object:getvelocity()
+	local pos = self.object:get_pos()
+	local vec = self.object:get_velocity()
 	minetest.add_particlespawner({
 		amount = 1,
 		time = 0.5,
@@ -81,7 +81,7 @@ local function missile_on_step_auxiliary(self, obj, pos)
 			}, nil)
 		end
 		if minetest.get_modpath('tnt') then
-			tnt.boom(self.object:getpos(), {damage_radius=5,radius=5,ignore_protection=false})
+			tnt.boom(self.object:get_pos(), {damage_radius=5,radius=5,ignore_protection=false})
 		end
 		self.object:remove()
 	end
@@ -105,9 +105,9 @@ minetest.register_entity("vehicles:missile", {
 		end
 		local dir = player:get_look_dir()
 		local vec = {x=dir.x*16,y=dir.y*16,z=dir.z*16}
-		local yaw = player:get_look_yaw()
-		self.object:setyaw(yaw+math.pi/2)
-		self.object:setvelocity(vec)
+		local yaw = player:get_look_horizontal()
+		self.object:set_yaw(yaw+math.pi)
+		self.object:set_velocity(vec)
 		missile_on_step_auxiliary(self, obj, pos)
 	end,
 })
@@ -133,7 +133,7 @@ minetest.register_entity("vehicles:missile_2", {
 	damage = 2,
 	collisionbox = {0, 0, 0, 0, 0, 0},
 	on_step = function(self, obj, pos)
-		local velo = self.object:getvelocity()
+		local velo = self.object:get_velocity()
 		if velo.y <= 1.2 and velo.y >= -1.2 then
 			self.object:set_animation({x=1, y=1}, 5, 0)
 		elseif velo.y <= -1.2 then
@@ -159,7 +159,7 @@ minetest.register_entity("vehicles:water", {
 		minetest.after(5, function()
 			self.object:remove()
 		end)
-		local pos = self.object:getpos()
+		local pos = self.object:get_pos()
 		minetest.add_particlespawner({
 			amount = 1,
 			time = 1,
@@ -193,7 +193,7 @@ minetest.register_entity("vehicles:bullet", {
 	damage = 2,
 	collisionbox = {0, 0, 0, 0, 0, 0},
 	on_activate = function(self)
-		local pos = self.object:getpos()
+		local pos = self.object:get_pos()
 		minetest.sound_play("shot",
 			{gain = 0.4, max_hear_distance = 3, loop = false})
 	end,
@@ -304,7 +304,7 @@ minetest.register_entity("vehicles:turret", {
 	end,
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
-		self.object:setvelocity({x=0, y=-1, z=0})
+		self.object:set_velocity({x=0, y=-1, z=0})
 		if self.driver then
 			vehicles.object_drive(self, dtime, {
 				fixed = true,
@@ -486,7 +486,7 @@ minetest.register_entity("vehicles:geep", {
 			brakes = true,
 		},
 		function()
-			local pos = self.object:getpos()
+			local pos = self.object:get_pos()
 			minetest.add_particlespawner(
 				4, --amount
 				1, --time
@@ -557,7 +557,7 @@ minetest.register_entity("vehicles:ambulance", {
 		function()
 			if not self.siren_ready then
 				minetest.sound_play("ambulance",
-					{pos=self.object:getpos(), gain = 0.1, max_hear_distance = 3, loop = false})
+					{pos=self.object:get_pos(), gain = 0.1, max_hear_distance = 3, loop = false})
 				self.siren_ready = true
 				minetest.after(4, function()
 					self.siren_ready = false
@@ -614,7 +614,7 @@ minetest.register_entity("vehicles:ute", {
 			brakes = true,
 		},
 		function()
-			local pos = self.object:getpos()
+			local pos = self.object:get_pos()
 			minetest.add_particlespawner(
 				15, --amount
 				1, --time
@@ -768,7 +768,7 @@ minetest.register_entity("vehicles:nizzan", {
 			brakes = true,
 		},
 		function()
-			local pos = self.object:getpos()
+			local pos = self.object:get_pos()
 			minetest.add_particlespawner(
 				15, --amount
 				1, --time
@@ -830,7 +830,7 @@ minetest.register_entity("vehicles:nizzan2", {
 			brakes = true,
 		},
 		function()
-			local pos = self.object:getpos()
+			local pos = self.object:get_pos()
 			minetest.add_particlespawner(
 				15, --amount
 				1, --time
@@ -1705,7 +1705,7 @@ minetest.register_tool("vehicles:backpack", {
 	},
 	on_use = function(item, placer, pointed_thing)
 		local dir = placer:get_look_dir()
-		local playerpos = placer:getpos()
+		local playerpos = placer:get_pos()
 		local pname = placer:get_player_name()
 		local obj = minetest.env:add_entity({x=playerpos.x+0+dir.x,y=playerpos.y+1+dir.y,z=playerpos.z+0+dir.z}, "vehicles:parachute")
 		local entity = obj:get_luaentity()
@@ -1735,12 +1735,12 @@ minetest.register_entity("vehicles:wing_glider", {
 	on_step = function(self, dtime)
 		if self.driver then
 			local dir = self.driver:get_look_dir()
-			local velo = self.object:getvelocity()
+			local velo = self.object:get_velocity()
 			local speed = math.sqrt(math.pow(velo.x, 2)+math.pow(velo.z, 2))
 			local vec = {x=dir.x*16,y=dir.y*16+1,z=dir.z*16}
-			local yaw = self.driver:get_look_yaw()
-			self.object:setyaw(yaw+math.pi/2)
-			self.object:setvelocity(vec)
+			local yaw = self.driver:get_look_horizontal()
+			self.object:set_yaw(yaw+math.pi)
+			self.object:set_velocity(vec)
 			self.driver:set_animation({x=162, y=167}, 0, 0)
 			if not self.anim then
 				self.object:set_animation({x=25, y=45}, 10, 0)
@@ -1755,7 +1755,7 @@ minetest.register_entity("vehicles:wing_glider", {
 	on_punch = function(self, puncher)
 		if not self.driver then
 			local name = self.object:get_luaentity().name
-			local pos = self.object:getpos()
+			local pos = self.object:get_pos()
 			minetest.env:add_item(pos, name.."_spawner")
 			self.object:remove()
 		end
@@ -1783,7 +1783,7 @@ minetest.register_tool("vehicles:wings", {
 	on_use = function(item, placer, pointed_thing)
 		local wings_ready = true
 		local dir = placer:get_look_dir()
-		local playerpos = placer:getpos()
+		local playerpos = placer:get_pos()
 		local objs = minetest.get_objects_inside_radius({x=playerpos.x,y=playerpos.y,z=playerpos.z}, 2)
 		for k, obj2 in pairs(objs) do
 			if obj2:get_luaentity() ~= nil and obj2:get_luaentity().name == "vehicles:wing_glider" then
@@ -1827,7 +1827,7 @@ minetest.register_tool("vehicles:rc", {
 	},
 	on_use = function(item, placer, pointed_thing)
 		local dir = placer:get_look_dir()
-		local playerpos = placer:getpos()
+		local playerpos = placer:get_pos()
 		local pname = placer:get_player_name()
 		local inv = minetest.get_inventory({type="player", name=pname})
 		if inv:contains_item("main", "vehicles:missile_2_item") then
@@ -1838,7 +1838,7 @@ minetest.register_tool("vehicles:rc", {
 			object.launcher = placer
 			object.vehicle = nil
 			local vec = {x=dir.x*6,y=dir.y*6,z=dir.z*6}
-			obj:setvelocity(vec)
+			obj:set_velocity(vec)
 			return item
 		end
 	end,
