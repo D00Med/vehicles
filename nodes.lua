@@ -3,6 +3,13 @@
 
 local S = minetest.get_translator("vehicles")
 
+local stone_sound = {}
+if minetest.global_exists("default") then
+	stone_sound = default.node_sound_stone_defaults()
+elseif minetest.global_exists("sounds") then
+	stone_sound = sounds.node_stone()
+end
+
 function vehicles.register_simplenode(name, desc, texture, light)
 	minetest.register_node("vehicles:"..name, {
 		description = desc,
@@ -17,7 +24,7 @@ end--function vehicles.register_simplenode(name, desc, texture, light)
 vehicles.register_simplenode("road", S("Road surface"), "vehicles_road.png", 0)
 vehicles.register_simplenode("concrete", S("Concrete"), "vehicles_concrete.png", 0)
 vehicles.register_simplenode("arrows", S("Turning Arrows(left)"), "vehicles_arrows.png", 10)
-vehicles.register_simplenode("arrows_flp", S("Turning Arrows(right)"), "vehicles_arrows_flp.png", 10)
+vehicles.register_simplenode("arrows_flp", S("Turning Arrows(right)"), "vehicles_arrows.png^[transformFX", 10)
 vehicles.register_simplenode("checker", S("Checkered surface"), "vehicles_checker.png", 0)
 vehicles.register_simplenode("stripe", S("Road surface (stripe)"), "vehicles_road_stripe.png", 0)
 vehicles.register_simplenode("stripe2", S("Road surface (double stripe)"), "vehicles_road_stripe2.png", 0)
@@ -115,9 +122,9 @@ minetest.register_node("vehicles:add_arrow_flp", {
 	description = S("arrows(right)"),
 	drawtype = "signlike",
 	visual_scale = 2.0,
-	tiles = {"vehicles_arrows_flp.png"},
-	inventory_image = "vehicles_arrows_flp.png",
 	use_texture_alpha = true,
+	tiles = {"vehicles_arrows.png^[transformFX"},
+	inventory_image = "vehicles_arrows.png^[transformFX",
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,

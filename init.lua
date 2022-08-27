@@ -10,14 +10,6 @@ local enable_built_in = true
 
 if enable_built_in then
 
-local stone_sound = {}
-if minetest.global_exists("default") then
-	stone_sound = default.node_sound_stone_defaults()
-elseif minetest.global_exists("sounds") then
-	stone_sound = sounds.node_stone()
-end
-
-
 local function missile_bullet_hit_check(self, obj, pos)
 	local pos = self.object:getpos()
 	do
