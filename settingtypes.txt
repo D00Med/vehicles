@@ -1,0 +1,2 @@
+#    Whether the decorative nodes should be registered
+vehicles_nodes (Register decorative nodes) bool true
