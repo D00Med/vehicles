@@ -38,7 +38,6 @@ local function missile_bullet_hit_check(self, obj, pos)
 		for dy=-1,1 do
 			for dz=-1,1 do
 				local p = {x=pos.x+dx, y=pos.y, z=pos.z+dz}
-				local t = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
 				local n = minetest.env:get_node(p)
 				if n.name ~= "air" and n.drawtype ~= "airlike" then
 					return {}
@@ -193,7 +192,6 @@ minetest.register_entity("vehicles:bullet", {
 	damage = 2,
 	collisionbox = {0, 0, 0, 0, 0, 0},
 	on_activate = function(self)
-		local pos = self.object:get_pos()
 		minetest.sound_play("shot",
 			{gain = 0.4, max_hear_distance = 3, loop = false})
 	end,
@@ -1706,7 +1704,6 @@ minetest.register_tool("vehicles:backpack", {
 	on_use = function(item, placer, pointed_thing)
 		local dir = placer:get_look_dir()
 		local playerpos = placer:get_pos()
-		local pname = placer:get_player_name()
 		local obj = minetest.env:add_entity({x=playerpos.x+0+dir.x,y=playerpos.y+1+dir.y,z=playerpos.z+0+dir.z}, "vehicles:parachute")
 		local entity = obj:get_luaentity()
 		if obj.driver and placer == obj.driver then
@@ -1735,8 +1732,6 @@ minetest.register_entity("vehicles:wing_glider", {
 	on_step = function(self, dtime)
 		if self.driver then
 			local dir = self.driver:get_look_dir()
-			local velo = self.object:get_velocity()
-			local speed = math.sqrt(math.pow(velo.x, 2)+math.pow(velo.z, 2))
 			local vec = {x=dir.x*16,y=dir.y*16+1,z=dir.z*16}
 			local yaw = self.driver:get_look_horizontal()
 			self.object:set_yaw(yaw+math.pi)
@@ -1803,7 +1798,6 @@ minetest.register_tool("vehicles:wings", {
 			local entity = obj:get_luaentity()
 			placer:set_attach(entity.object, "", {x=0,y=-5,z=0}, {x=0,y=-3,z=0})
 			entity.driver = placer
-			local dir = placer:get_look_dir()
 			placer:set_properties({
 				visual_size = {x=1, y=-1},
 			})
@@ -1831,7 +1825,7 @@ minetest.register_tool("vehicles:rc", {
 		local pname = placer:get_player_name()
 		local inv = minetest.get_inventory({type="player", name=pname})
 		if inv:contains_item("main", "vehicles:missile_2_item") then
-			local creative_mode = creative and creative.is_enabled_for and creative.is_enabled_for(placer:get_player_name())
+			local creative_mode = minetest.is_creative_enabled(placer:get_player_name())
 			if not creative_mode then inv:remove_item("main", "vehicles:missile_2_item") end
 			local obj = minetest.env:add_entity({x=playerpos.x+0+dir.x,y=playerpos.y+1+dir.y,z=playerpos.z+0+dir.z}, "vehicles:missile")
 			local object = obj:get_luaentity()
