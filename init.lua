@@ -9,13 +9,14 @@ local step = 1.1
 local enable_built_in = true
 
 if enable_built_in then
+
 local function missile_bullet_hit_check(self, obj, pos)
-	local pos = self.object:getpos()
+	local pos = self.object:get_pos()
 	do
 		local return_v = {}
 		local if_return = false
 		for _, obj in ipairs(minetest.get_objects_inside_radius({x=pos.x,y=pos.y,z=pos.z}, 2)) do
-			function no_launcher_or_not_attched()
+			local function no_launcher_or_not_attched()
 				local b1, b2 = pcall(function() return obj ~= self.launcher:get_attach() end)
 				if not b1 then
 					return true -- no launcher
@@ -37,7 +38,6 @@ local function missile_bullet_hit_check(self, obj, pos)
 		for dy=-1,1 do
 			for dz=-1,1 do
 				local p = {x=pos.x+dx, y=pos.y, z=pos.z+dz}
-				local t = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
 				local n = minetest.env:get_node(p)
 				if n.name ~= "air" and n.drawtype ~= "airlike" then
 					return {}
@@ -51,8 +51,8 @@ local function missile_on_step_auxiliary(self, obj, pos)
 	minetest.after(10, function()
 		self.object:remove()
 	end)
-	local pos = self.object:getpos()
-	local vec = self.object:getvelocity()
+	local pos = self.object:get_pos()
+	local vec = self.object:get_velocity()
 	minetest.add_particlespawner({
 		amount = 1,
 		time = 0.5,
@@ -79,7 +79,9 @@ local function missile_on_step_auxiliary(self, obj, pos)
 				damage_groups={fleshy=12},
 			}, nil)
 		end
-		tnt.boom(self.object:getpos(), {damage_radius=5,radius=5,ignore_protection=false})
+		if minetest.get_modpath('tnt') then
+			tnt.boom(self.object:get_pos(), {damage_radius=5,radius=5,ignore_protection=false})
+		end
 		self.object:remove()
 	end
 end
@@ -102,9 +104,9 @@ minetest.register_entity("vehicles:missile", {
 		end
 		local dir = player:get_look_dir()
 		local vec = {x=dir.x*16,y=dir.y*16,z=dir.z*16}
-		local yaw = player:get_look_yaw()
-		self.object:setyaw(yaw+math.pi/2)
-		self.object:setvelocity(vec)
+		local yaw = player:get_look_horizontal()
+		self.object:set_yaw(yaw+math.pi)
+		self.object:set_velocity(vec)
 		missile_on_step_auxiliary(self, obj, pos)
 	end,
 })
@@ -130,7 +132,7 @@ minetest.register_entity("vehicles:missile_2", {
 	damage = 2,
 	collisionbox = {0, 0, 0, 0, 0, 0},
 	on_step = function(self, obj, pos)
-		local velo = self.object:getvelocity()
+		local velo = self.object:get_velocity()
 		if velo.y <= 1.2 and velo.y >= -1.2 then
 			self.object:set_animation({x=1, y=1}, 5, 0)
 		elseif velo.y <= -1.2 then
@@ -156,7 +158,7 @@ minetest.register_entity("vehicles:water", {
 		minetest.after(5, function()
 			self.object:remove()
 		end)
-		local pos = self.object:getpos()
+		local pos = self.object:get_pos()
 		minetest.add_particlespawner({
 			amount = 1,
 			time = 1,
@@ -190,7 +192,6 @@ minetest.register_entity("vehicles:bullet", {
 	damage = 2,
 	collisionbox = {0, 0, 0, 0, 0, 0},
 	on_activate = function(self)
-		local pos = self.object:getpos()
 		minetest.sound_play("shot",
 			{gain = 0.4, max_hear_distance = 3, loop = false})
 	end,
@@ -301,7 +302,7 @@ minetest.register_entity("vehicles:turret", {
 	end,
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
-		self.object:setvelocity({x=0, y=-1, z=0})
+		self.object:set_velocity({x=0, y=-1, z=0})
 		if self.driver then
 			vehicles.object_drive(self, dtime, {
 				fixed = true,
@@ -483,7 +484,7 @@ minetest.register_entity("vehicles:geep", {
 			brakes = true,
 		},
 		function()
-			local pos = self.object:getpos()
+			local pos = self.object:get_pos()
 			minetest.add_particlespawner(
 				4, --amount
 				1, --time
@@ -554,7 +555,7 @@ minetest.register_entity("vehicles:ambulance", {
 		function()
 			if not self.siren_ready then
 				minetest.sound_play("ambulance",
-					{pos=self.object:getpos(), gain = 0.1, max_hear_distance = 3, loop = false})
+					{pos=self.object:get_pos(), gain = 0.1, max_hear_distance = 3, loop = false})
 				self.siren_ready = true
 				minetest.after(4, function()
 					self.siren_ready = false
@@ -611,7 +612,7 @@ minetest.register_entity("vehicles:ute", {
 			brakes = true,
 		},
 		function()
-			local pos = self.object:getpos()
+			local pos = self.object:get_pos()
 			minetest.add_particlespawner(
 				15, --amount
 				1, --time
@@ -765,7 +766,7 @@ minetest.register_entity("vehicles:nizzan", {
 			brakes = true,
 		},
 		function()
-			local pos = self.object:getpos()
+			local pos = self.object:get_pos()
 			minetest.add_particlespawner(
 				15, --amount
 				1, --time
@@ -827,7 +828,7 @@ minetest.register_entity("vehicles:nizzan2", {
 			brakes = true,
 		},
 		function()
-			local pos = self.object:getpos()
+			local pos = self.object:get_pos()
 			minetest.add_particlespawner(
 				15, --amount
 				1, --time
@@ -1702,8 +1703,7 @@ minetest.register_tool("vehicles:backpack", {
 	},
 	on_use = function(item, placer, pointed_thing)
 		local dir = placer:get_look_dir()
-		local playerpos = placer:getpos()
-		local pname = placer:get_player_name()
+		local playerpos = placer:get_pos()
 		local obj = minetest.env:add_entity({x=playerpos.x+0+dir.x,y=playerpos.y+1+dir.y,z=playerpos.z+0+dir.z}, "vehicles:parachute")
 		local entity = obj:get_luaentity()
 		if obj.driver and placer == obj.driver then
@@ -1732,12 +1732,10 @@ minetest.register_entity("vehicles:wing_glider", {
 	on_step = function(self, dtime)
 		if self.driver then
 			local dir = self.driver:get_look_dir()
-			local velo = self.object:getvelocity()
-			local speed = math.sqrt(math.pow(velo.x, 2)+math.pow(velo.z, 2))
 			local vec = {x=dir.x*16,y=dir.y*16+1,z=dir.z*16}
-			local yaw = self.driver:get_look_yaw()
-			self.object:setyaw(yaw+math.pi/2)
-			self.object:setvelocity(vec)
+			local yaw = self.driver:get_look_horizontal()
+			self.object:set_yaw(yaw+math.pi)
+			self.object:set_velocity(vec)
 			self.driver:set_animation({x=162, y=167}, 0, 0)
 			if not self.anim then
 				self.object:set_animation({x=25, y=45}, 10, 0)
@@ -1752,7 +1750,7 @@ minetest.register_entity("vehicles:wing_glider", {
 	on_punch = function(self, puncher)
 		if not self.driver then
 			local name = self.object:get_luaentity().name
-			local pos = self.object:getpos()
+			local pos = self.object:get_pos()
 			minetest.env:add_item(pos, name.."_spawner")
 			self.object:remove()
 		end
@@ -1780,7 +1778,7 @@ minetest.register_tool("vehicles:wings", {
 	on_use = function(item, placer, pointed_thing)
 		local wings_ready = true
 		local dir = placer:get_look_dir()
-		local playerpos = placer:getpos()
+		local playerpos = placer:get_pos()
 		local objs = minetest.get_objects_inside_radius({x=playerpos.x,y=playerpos.y,z=playerpos.z}, 2)
 		for k, obj2 in pairs(objs) do
 			if obj2:get_luaentity() ~= nil and obj2:get_luaentity().name == "vehicles:wing_glider" then
@@ -1800,7 +1798,6 @@ minetest.register_tool("vehicles:wings", {
 			local entity = obj:get_luaentity()
 			placer:set_attach(entity.object, "", {x=0,y=-5,z=0}, {x=0,y=-3,z=0})
 			entity.driver = placer
-			local dir = placer:get_look_dir()
 			placer:set_properties({
 				visual_size = {x=1, y=-1},
 			})
@@ -1824,830 +1821,30 @@ minetest.register_tool("vehicles:rc", {
 	},
 	on_use = function(item, placer, pointed_thing)
 		local dir = placer:get_look_dir()
-		local playerpos = placer:getpos()
+		local playerpos = placer:get_pos()
 		local pname = placer:get_player_name()
 		local inv = minetest.get_inventory({type="player", name=pname})
 		if inv:contains_item("main", "vehicles:missile_2_item") then
-			local creative_mode = creative and creative.is_enabled_for and creative.is_enabled_for(placer:get_player_name())
+			local creative_mode = minetest.is_creative_enabled(placer:get_player_name())
 			if not creative_mode then inv:remove_item("main", "vehicles:missile_2_item") end
 			local obj = minetest.env:add_entity({x=playerpos.x+0+dir.x,y=playerpos.y+1+dir.y,z=playerpos.z+0+dir.z}, "vehicles:missile")
 			local object = obj:get_luaentity()
 			object.launcher = placer
 			object.vehicle = nil
 			local vec = {x=dir.x*6,y=dir.y*6,z=dir.z*6}
-			obj:setvelocity(vec)
+			obj:set_velocity(vec)
 			return item
 		end
 	end,
 })
 
---crafting recipes and materials
-
-minetest.register_craftitem("vehicles:wheel", {
-	description = S("Wheel"),
-	inventory_image = "vehicles_wheel.png",
-})
-
-minetest.register_craftitem("vehicles:engine", {
-	description = S("Engine"),
-	inventory_image = "vehicles_engine.png",
-})
-
-minetest.register_craftitem("vehicles:body", {
-	description = S("Car Body"),
-	inventory_image = "vehicles_car_body.png",
-})
-
-minetest.register_craftitem("vehicles:armor", {
-	description = S("Armor plating"),
-	inventory_image = "vehicles_armor.png",
-})
-
-minetest.register_craftitem("vehicles:gun", {
-	description = S("Vehicle Gun"),
-	inventory_image = "vehicles_gun.png",
-})
-
-minetest.register_craftitem("vehicles:propeller", {
-	description = S("Propeller"),
-	inventory_image = "vehicles_propeller.png",
-})
-
-minetest.register_craftitem("vehicles:jet_engine", {
-	description = S("Jet Engine"),
-	inventory_image = "vehicles_jet_engine.png",
-})
-
-minetest.register_craft({
-	output = "vehicles:propeller",
-	recipe = {
-		{"default:steel_ingot", "", ""},
-		{"", "group:stick", ""},
-		{"", "", "default:steel_ingot"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:jet_engine",
-	recipe = {
-		{"", "default:steel_ingot", ""},
-		{"default:steel_ingot", "vehicles:propeller", "default:steel_ingot"},
-		{"", "default:steel_ingot", ""}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:armor",
-	recipe = {
-		{"", "default:gold_lump", ""},
-		{"", "default:iron_lump", ""},
-		{"", "default:copper_lump", ""}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:gun",
-	recipe = {
-		{"", "vehicles:armor", ""},
-		{"vehicles:armor", "default:coal_lump", "vehicles:armor"},
-		{"", "default:steel_ingot", ""}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:wheel",
-	recipe = {
-		{"", "default:coal_lump", ""},
-		{"default:coal_lump", "default:steel_ingot", "default:coal_lump"},
-		{"", "default:coal_lump", ""}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:engine",
-	recipe = {
-		{"default:copper_ingot", "", "default:copper_ingot"},
-		{"default:steel_ingot", "default:mese_crystal", "default:steel_ingot"},
-		{"", "default:steel_ingot", ""}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:body",
-	recipe = {
-		{"", "default:glass", ""},
-		{"default:glass", "default:steel_ingot", "default:glass"},
-		{"", "", ""}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:bullet_item 5",
-	recipe = {
-		{"default:coal_lump", "default:iron_lump",},
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:missile_2_item",
-	recipe = {
-		{"", "default:steel_ingot", ""},
-		{"", "default:torch", ""},
-		{"default:stick", "default:coal_lump", "default:stick"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:masda_spawner",
-	recipe = {
-		{"", "dye:magenta", ""},
-		{"", "vehicles:body", ""},
-		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:masda2_spawner",
-	recipe = {
-		{"", "dye:orange", ""},
-		{"", "vehicles:body", ""},
-		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:ute_spawner",
-	recipe = {
-		{"", "dye:brown", ""},
-		{"default:steel_ingot", "vehicles:body", ""},
-		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:ute2_spawner",
-	recipe = {
-		{"", "dye:white", ""},
-		{"default:steel_ingot", "vehicles:body", ""},
-		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:nizzan2_spawner",
-	recipe = {
-		{"", "dye:green", ""},
-		{"", "vehicles:body", ""},
-		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:nizzan_spawner",
-	recipe = {
-		{"", "dye:brown", ""},
-		{"", "vehicles:body", ""},
-		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:astonmaaton_spawner",
-	recipe = {
-		{"", "dye:white", ""},
-		{"", "vehicles:body", ""},
-		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:pooshe_spawner",
-	recipe = {
-		{"", "dye:red", ""},
-		{"", "vehicles:body", ""},
-		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:pooshe2_spawner",
-	recipe = {
-		{"", "dye:yellow", ""},
-		{"", "vehicles:body", ""},
-		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:lambogoni_spawner",
-	recipe = {
-		{"", "dye:grey", ""},
-		{"", "vehicles:body", ""},
-		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:lambogoni2_spawner",
-	recipe = {
-		{"", "dye:yellow", ""},
-		{"", "vehicles:body", "dye:grey"},
-		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:fewawi_spawner",
-	recipe = {
-		{"", "dye:red", ""},
-		{"", "vehicles:body", "default:glass"},
-		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:fewawi2_spawner",
-	recipe = {
-		{"", "dye:blue", ""},
-		{"", "vehicles:body", "default:glass"},
-		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:tractor_spawner",
-	recipe = {
-		{"", "", ""},
-		{"vehicles:engine", "vehicles:body", ""},
-		{"vehicles:wheel", "vehicles:wheel", "farming:hoe_steel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:musting_spawner",
-	recipe = {
-		{"", "dye:violet", ""},
-		{"", "vehicles:body", ""},
-		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:musting2_spawner",
-	recipe = {
-		{"", "dye:blue", ""},
-		{"", "vehicles:body", ""},
-		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:policecar_spawner",
-	recipe = {
-		{"", "dye:blue", "dye:red"},
-		{"", "vehicles:body", ""},
-		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:tank_spawner",
-	recipe = {
-		{"", "vehicles:gun", ""},
-		{"vehicles:armor", "vehicles:engine", "vehicles:armor"},
-		{"vehicles:wheel", "vehicles:wheel", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:tank2_spawner",
-	recipe = {
-		{"default:desert_sand", "vehicles:gun", ""},
-		{"vehicles:armor", "vehicles:engine", "vehicles:armor"},
-		{"vehicles:wheel", "vehicles:wheel", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:turret_spawner",
-	recipe = {
-		{"", "vehicles:gun", ""},
-		{"vehicles:armor", "vehicles:engine", "vehicles:armor"},
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:jet_spawner",
-	recipe = {
-		{"", "vehicles:gun", ""},
-		{"vehicles:jet_engine", "default:steel_ingot", "vehicles:jet_engine"},
-		{"", "default:steel_ingot", ""}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:plane_spawner",
-	recipe = {
-		{"", "vehicles:propeller", ""},
-		{"default:steel_ingot", "vehicles:engine", "default:steel_ingot"},
-		{"", "default:steel_ingot", ""}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:helicopter_spawner",
-	recipe = {
-		{"", "vehicles:propeller", ""},
-		{"vehicles:propeller", "vehicles:engine", "default:glass"},
-		{"", "default:steel_ingot", ""}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:apache_spawner",
-	recipe = {
-		{"", "vehicles:propeller", ""},
-		{"vehicles:propeller", "vehicles:engine", "default:glass"},
-		{"", "vehicles:armor", "default:steel_ingot"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:lightcycle_spawner",
-	recipe = {
-		{"default:steel_ingot", "vehicles:engine", "dye:cyan"},
-		{"vehicles:wheel", "default:steel_ingot", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:lightcycle2_spawner",
-	recipe = {
-		{"default:steel_ingot", "vehicles:engine", "dye:orange"},
-		{"vehicles:wheel", "default:steel_ingot", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:boat_spawner",
-	recipe = {
-		{"", "", ""},
-		{"default:steel_ingot", "vehicles:engine", "default:steel_ingot"},
-		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:firetruck_spawner",
-	recipe = {
-		{"", "dye:red", ""},
-		{"vehicles:body", "vehicles:engine", "vehicles:body"},
-		{"vehicles:wheel", "default:steel_ingot", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:geep_spawner",
-	recipe = {
-		{"", "", ""},
-		{"", "vehicles:engine", ""},
-		{"vehicles:wheel", "vehicles:armor", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:ambulance_spawner",
-	recipe = {
-		{"", "", ""},
-		{"vehicles:body", "vehicles:body", "dye:white"},
-		{"vehicles:wheel", "vehicles:engine", "vehicles:wheel"}
-	}
-})
-
-minetest.register_craft({
-	output = "vehicles:assaultsuit_spawner",
-	recipe = {
-		{"vehicles:gun", "default:glass", "vehicles:armor"},
-		{"", "vehicles:engine", ""},
-		{"vehicles:armor", "", "vehicles:armor"}
-	}
-})
-
-
-minetest.register_craft({
-	output = "vehicles:backpack",
-	recipe = {
-		{"group:grass", "group:grass", "group:grass"},
-		{"group:stick", "", "group:stick"},
-		{"", "group:wood", ""}
-	}
-})
-
-
-
-
-
---decorative nodes
-
-if minetest.settings:get("vehicles_nodes") == nil then
-	minetest.settings:set("vehicles_nodes", "true")
+if minetest.get_modpath("default") and minetest.get_modpath("dye") then
+	dofile(minetest.get_modpath(minetest.get_current_modname()).."/crafting.lua")
 end
 
-if minetest.settings:get("vehicles_nodes") then
-function vehicles.register_simplenode(name, desc, texture, light)
-	minetest.register_node("vehicles:"..name, {
-		description = desc,
-		tiles = {texture},
-		groups = {cracky=1},
-		paramtype2 = "facedir",
-		light_source = light,
-		sound = default.node_sound_stone_defaults(),
-	})
-end--function vehicles.register_simplenode(name, desc, texture, light)
-
-vehicles.register_simplenode("road", S("Road surface"), "vehicles_road.png", 0)
-vehicles.register_simplenode("concrete", S("Concrete"), "vehicles_concrete.png", 0)
-vehicles.register_simplenode("arrows", S("Turning Arrows(left)"), "vehicles_arrows.png", 10)
-vehicles.register_simplenode("arrows_flp", S("Turning Arrows(right)"), "vehicles_arrows_flp.png", 10)
-vehicles.register_simplenode("checker", S("Checkered surface"), "vehicles_checker.png", 0)
-vehicles.register_simplenode("stripe", S("Road surface (stripe)"), "vehicles_road_stripe.png", 0)
-vehicles.register_simplenode("stripe2", S("Road surface (double stripe)"), "vehicles_road_stripe2.png", 0)
-vehicles.register_simplenode("stripe3", S("Road surface (white stripes)"), "vehicles_road_stripes3.png", 0)
-vehicles.register_simplenode("stripe4", S("Road surface (yellow stripes)"), "vehicles_road_stripe4.png", 0)
-vehicles.register_simplenode("window", S("Building glass"), "vehicles_window.png", 0)
-vehicles.register_simplenode("stripes", S("Hazard stipes"), "vehicles_stripes.png", 10)
-
-minetest.register_node("vehicles:lights", {
-	description = S("Tunnel Lights"),
-	tiles = {"vehicles_lights_top.png", "vehicles_lights_top.png", "vehicles_lights.png", "vehicles_lights.png", "vehicles_lights.png", "vehicles_lights.png"},
-	groups = {cracky=1},
-	paramtype2 = "facedir",
-	light_source = 14,
-})
-
-if minetest.get_modpath("stairs") then
-	stairs.register_stair_and_slab("road_surface", "vehicles:road",
-		{cracky = 1},
-		{"vehicles_road.png"},
-		S("Road Surface Stair"),
-		S("Road Surface Slab"),
-		default.node_sound_stone_defaults())
+local vehicles_nodes = minetest.settings:get('vechicles_nodes') or true
+if vehicles_nodes then
+	dofile(minetest.get_modpath(minetest.get_current_modname()).."/nodes.lua")
 end
-
-minetest.register_node("vehicles:neon_arrow", {
-	description = S("neon arrows (left)"),
-	drawtype = "signlike",
-	visual_scale = 2.0,
-	tiles = {{
-		name = "vehicles_neon_arrow.png",
-		animation = {type = "vertical_frames", aspect_w = 32, aspect_h = 32, length = 1.00},
-	}},
-	inventory_image = "vehicles_neon_arrow_inv.png",
-	weild_image = "vehicles_neon_arrow_inv.png",
-	use_texture_alpha = true,
-	paramtype = "light",
-	paramtype2 = "wallmounted",
-	sunlight_propagates = true,
-	light_source = 14,
-	walkable = false,
-	is_ground_content = true,
-	selection_box = {
-		type = "wallmounted",
-		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
-	},
-	groups = {cracky=3,dig_immediate=3},
-})
-
-minetest.register_node("vehicles:neon_arrow_flp", {
-	description = S("neon arrows (right)"),
-	drawtype = "signlike",
-	visual_scale = 2.0,
-	tiles = {{
-		name = "vehicles_neon_arrow.png^[transformFX",
-		animation = {type = "vertical_frames", aspect_w = 32, aspect_h = 32, length = 1.00},
-	}},
-	inventory_image = "vehicles_neon_arrow_inv.png^[transformFX",
-	weild_image = "vehicles_neon_arrow_inv.png^[transformFX",
-	use_texture_alpha = true,
-	paramtype = "light",
-	paramtype2 = "wallmounted",
-	sunlight_propagates = true,
-	light_source = 14,
-	walkable = false,
-	is_ground_content = true,
-	selection_box = {
-		type = "wallmounted",
-		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
-	},
-	groups = {cracky=3,dig_immediate=3},
-})
-
-minetest.register_node("vehicles:add_arrow", {
-	description = S("arrows(left)"),
-	drawtype = "signlike",
-	visual_scale = 2.0,
-	tiles = {"vehicles_arrows.png"},
-	inventory_image = "vehicles_arrows.png",
-	use_texture_alpha = true,
-	paramtype = "light",
-	paramtype2 = "wallmounted",
-	sunlight_propagates = true,
-	light_source = 14,
-	walkable = false,
-	is_ground_content = true,
-	selection_box = {
-		type = "wallmounted",
-		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
-	},
-	groups = {cracky=3,dig_immediate=3},
-})
-
-minetest.register_node("vehicles:add_arrow_flp", {
-	description = S("arrows(right)"),
-	drawtype = "signlike",
-	visual_scale = 2.0,
-	tiles = {"vehicles_arrows_flp.png"},
-	inventory_image = "vehicles_arrows_flp.png",
-	use_texture_alpha = true,
-	paramtype = "light",
-	paramtype2 = "wallmounted",
-	sunlight_propagates = true,
-	light_source = 14,
-	walkable = false,
-	is_ground_content = true,
-	selection_box = {
-		type = "wallmounted",
-		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
-	},
-	groups = {cracky=3,dig_immediate=3},
-})
-
-minetest.register_node("vehicles:scifi_ad", {
-	description = S("scifi_nodes sign"),
-	drawtype = "signlike",
-	visual_scale = 3.0,
-	tiles = {{
-		name = "vehicles_scifinodes.png",
-		animation = {type = "vertical_frames", aspect_w = 58, aspect_h = 58, length = 1.00},
-	}},
-	inventory_image = "vehicles_scifinodes_inv.png",
-	weild_image = "vehicles_scifinodes_inv.png",
-	use_texture_alpha = true,
-	paramtype = "light",
-	paramtype2 = "wallmounted",
-	sunlight_propagates = true,
-	light_source = 14,
-	walkable = false,
-	is_ground_content = true,
-	selection_box = {
-		type = "wallmounted",
-		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
-	},
-	groups = {cracky=3,dig_immediate=3},
-})
-
-minetest.register_node("vehicles:mt_sign", {
-	description = S("mt sign"),
-	drawtype = "signlike",
-	visual_scale = 3.0,
-	tiles = {"vehicles_neonmt.png",},
-	inventory_image = "vehicles_neonmt.png",
-	use_texture_alpha = true,
-	paramtype = "light",
-	paramtype2 = "wallmounted",
-	sunlight_propagates = true,
-	light_source = 14,
-	walkable = false,
-	is_ground_content = true,
-	selection_box = {
-		type = "wallmounted",
-		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
-	},
-	groups = {cracky=3,dig_immediate=3},
-})
-
-minetest.register_node("vehicles:pacman_sign", {
-	description = S("pacman sign"),
-	drawtype = "signlike",
-	visual_scale = 2.0,
-	tiles = {"vehicles_pacman.png",},
-	inventory_image = "vehicles_pacman.png",
-	use_texture_alpha = true,
-	paramtype = "light",
-	paramtype2 = "wallmounted",
-	sunlight_propagates = true,
-	light_source = 14,
-	walkable = false,
-	is_ground_content = true,
-	selection_box = {
-		type = "wallmounted",
-		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
-	},
-	groups = {cracky=3,dig_immediate=3},
-})
-
-minetest.register_node("vehicles:whee_sign", {
-	description = S("whee sign"),
-	drawtype = "signlike",
-	visual_scale = 3.0,
-	tiles = {"vehicles_whee.png",},
-	inventory_image = "vehicles_whee.png",
-	use_texture_alpha = true,
-	paramtype = "light",
-	paramtype2 = "wallmounted",
-	sunlight_propagates = true,
-	light_source = 14,
-	walkable = false,
-	is_ground_content = true,
-	selection_box = {
-		type = "wallmounted",
-		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
-	},
-	groups = {cracky=3,dig_immediate=3},
-})
-
-minetest.register_node("vehicles:checker_sign", {
-	description = S("Checkered sign"),
-	drawtype = "signlike",
-	visual_scale = 3.0,
-	tiles = {"vehicles_checker2.png",},
-	inventory_image = "vehicles_checker2.png",
-	use_texture_alpha = true,
-	paramtype = "light",
-	paramtype2 = "wallmounted",
-	sunlight_propagates = true,
-	walkable = false,
-	light_source = 5,
-	is_ground_content = true,
-	selection_box = {
-		type = "wallmounted",
-		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
-	},
-	groups = {cracky=3,dig_immediate=3},
-})
-
-minetest.register_node("vehicles:car_sign", {
-	description = S("Car sign"),
-	drawtype = "signlike",
-	visual_scale = 3.0,
-	tiles = {"vehicles_sign1.png",},
-	inventory_image = "vehicles_sign1.png",
-	use_texture_alpha = true,
-	paramtype = "light",
-	paramtype2 = "wallmounted",
-	sunlight_propagates = true,
-	walkable = false,
-	light_source = 5,
-	is_ground_content = true,
-	selection_box = {
-		type = "wallmounted",
-		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
-	},
-	groups = {cracky=3,dig_immediate=3},
-})
-
-minetest.register_node("vehicles:nyan_sign", {
-	description = S("Nyancat sign"),
-	drawtype = "signlike",
-	visual_scale = 2.0,
-	tiles = {"vehicles_sign2.png",},
-	inventory_image = "vehicles_sign2.png",
-	use_texture_alpha = true,
-	paramtype = "light",
-	paramtype2 = "wallmounted",
-	sunlight_propagates = true,
-	walkable = false,
-	light_source = 5,
-	is_ground_content = true,
-	selection_box = {
-		type = "wallmounted",
-		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
-	},
-	groups = {cracky=3,dig_immediate=3},
-})
-
-minetest.register_node("vehicles:flag", {
-	description = S("Flag"),
-	drawtype = "torchlike",
-	visual_scale = 3.0,
-	tiles = {"vehicles_flag.png",},
-	inventory_image = "vehicles_flag.png",
-	use_texture_alpha = true,
-	paramtype = "light",
-	paramtype2 = "wallmounted",
-	sunlight_propagates = true,
-	walkable = false,
-	light_source = 5,
-	is_ground_content = true,
-	selection_box = {
-		type = "fixed",
-		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
-	},
-	groups = {cracky=3,dig_immediate=3},
-})
-
-
-minetest.register_node("vehicles:tyres", {
-	description = S("tyre stack"),
-	tiles = {
-		"vehicles_tyre.png",
-		"vehicles_tyre.png",
-		"vehicles_tyre_side.png",
-		"vehicles_tyre_side.png",
-		"vehicles_tyre_side.png",
-		"vehicles_tyre_side.png"
-	},
-	drawtype = "nodebox",
-	paramtype = "light",
-	node_box = {
-		type = "fixed",
-		fixed = {
-			{-0.4375, -0.5, -0.4375, 0.4375, 0.5, 0.4375}, -- NodeBox1
-			{-0.5, -0.4375, -0.4375, 0.5, -0.0625, 0.4375}, -- NodeBox2
-			{-0.5, 0, -0.4375, 0.5, 0.4375, 0.4375}, -- NodeBox3
-			{-0.4375, 0, -0.5, 0.4375, 0.4375, 0.5}, -- NodeBox4
-			{-0.4375, -0.4375, -0.5, 0.4375, -0.0625, 0.5}, -- NodeBox5
-		}
-	},
-	groups = {cracky=1, falling_node=1},
-})
-
---nodeboxes from xpanes
---[[
-(MIT)
-Copyright (C) 2014-2016 xyz
-Copyright (C) 2014-2016 BlockMen
-Copyright (C) 2016 Auke Kok <sofar@foo-projects.org>
-Copyright (C) 2014-2016 Various Minetest developers
-]]
-
-minetest.register_node("vehicles:light_barrier", {
-	description = S("Light Barrier"),
-	tiles = {
-		"vehicles_lightblock.png^[transformR90",
-		"vehicles_lightblock.png^[transformR90",
-		"vehicles_lightblock.png",
-	},
-	use_texture_alpha = true,
-	drawtype = "nodebox",
-	paramtype = "light",
-	paramtype2 = "facedir",
-	node_box = {
-		type = "connected",
-		fixed = {{-1/32, -1/2, -1/32, 1/32, 1/2, 1/32}},
-		connect_front = {{-1/32, -1/2, -1/2, 1/32, 1/2, -1/32}},
-		connect_left = {{-1/2, -1/2, -1/32, -1/32, 1/2, 1/32}},
-		connect_back = {{-1/32, -1/2, 1/32, 1/32, 1/2, 1/2}},
-		connect_right = {{1/32, -1/2, -1/32, 1/2, 1/2, 1/32}},
-	},
-	connects_to = {"vehicles:light_barrier",},
-	sunlight_propagates = true,
-	walkable = false,
-	light_source = 9,
-	groups = {cracky=3,dig_immediate=3,not_in_creative_inventory=1},
-	on_construct = function(pos, node)
-		minetest.get_node_timer(pos):start(4)
-		return
-	end,
-	on_timer = function(pos, elapsed)
-		minetest.remove_node(pos)
-	end,
-})
-
-minetest.register_node("vehicles:light_barrier2", {
-	description = S("Light Barrier 2"),
-	tiles = {
-		"vehicles_lightblock2.png^[transformR90",
-		"vehicles_lightblock2.png^[transformR90",
-		"vehicles_lightblock2.png",
-	},
-	use_texture_alpha = true,
-	drawtype = "nodebox",
-	paramtype = "light",
-	paramtype2 = "facedir",
-	node_box = {
-		type = "connected",
-		fixed = {{-1/32, -1/2, -1/32, 1/32, 1/2, 1/32}},
-		connect_front = {{-1/32, -1/2, -1/2, 1/32, 1/2, -1/32}},
-		connect_left = {{-1/2, -1/2, -1/32, -1/32, 1/2, 1/32}},
-		connect_back = {{-1/32, -1/2, 1/32, 1/32, 1/2, 1/2}},
-		connect_right = {{1/32, -1/2, -1/32, 1/2, 1/2, 1/32}},
-	},
-	connects_to = {"vehicles:light_barrier2",},
-	sunlight_propagates = true,
-	walkable = false,
-	light_source = 9,
-	groups = {cracky=3,dig_immediate=3,not_in_creative_inventory=1},
-	on_construct = function(pos, node)
-		minetest.get_node_timer(pos):start(4)
-		return
-	end,
-	on_timer = function(pos, elapsed)
-		minetest.remove_node(pos)
-	end,
-})
-
-
-end--if minetest.settings:get("vehicles_nodes") then
 
 end--if enable_built_in then
