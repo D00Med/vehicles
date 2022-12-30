@@ -1781,11 +1781,11 @@ minetest.register_tool("vehicles:wings", {
 		local playerpos = placer:get_pos()
 		local objs = minetest.get_objects_inside_radius({x=playerpos.x,y=playerpos.y,z=playerpos.z}, 2)
 		for k, obj2 in pairs(objs) do
-			if obj2:get_luaentity() ~= nil and obj2:get_luaentity().name == "vehicles:wing_glider" then
-				local wing = obj2:get_luaentity()
+			local wing = obj2:get_luaentity()
+			if wing ~= nil and wing.name == "vehicles:wing_glider" then
 				wing.driver = nil
+				vehicles.object_detach(wing, placer, {x=1, y=0, z=1})
 				obj2:remove()
-				vehicles.object_detach(obj2:get_luaentity(), placer, {x=1, y=0, z=1})
 				placer:set_properties({
 					visual_size = {x=1, y=1},
 				})
