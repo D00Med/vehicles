@@ -199,6 +199,7 @@ minetest.register_entity("vehicles:bullet", {
 		minetest.after(10, function()
 			self.object:remove()
 		end)
+		if not self.launcher then return end
 		local objs = missile_bullet_hit_check(self, obj, pos)
 		if objs then
 			for _, obj in ipairs(objs) do
@@ -578,12 +579,13 @@ minetest.register_entity("vehicles:ute", {
 	physical = true,
 	collisionbox = {-1.4, 0, -1.4, 1.4, 1, 1.4},
 	on_rightclick = function(self, clicker)
+		if not clicker then return end
 		if self.driver and clicker == self.driver then
 			vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif self.driver and clicker ~= self.driver and not self.rider then
 			clicker:set_attach(self.object, clicker, {x=0, y=5, z=-5}, {x=0, y=0, z=-2})
 			self.rider = true
-		elseif self.driver and clicker ~=self.driver and self.rider then
+		elseif self.driver and clicker ~= self.driver and self.rider then
 			clicker:set_detach()
 			self.rider = false
 		elseif not self.driver then
