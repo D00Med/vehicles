@@ -522,7 +522,7 @@ minetest.register_entity("vehicles:ambulance", {
 		if self.driver and clicker == self.driver then
 			vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif self.driver and clicker ~= self.driver and not self.rider then
-			clicker:set_attach(self.object, clicker, {x=0, y=5, z=4}, {x=0, y=7, z=10})
+			clicker:set_attach(self.object, "", {x=0, y=5, z=4}, {x=0, y=7, z=10})
 			self.rider = true
 			clicker:set_hp(20)
 		elseif self.driver and clicker ~= self.driver and self.rider then
@@ -583,7 +583,7 @@ minetest.register_entity("vehicles:ute", {
 		if self.driver and clicker == self.driver then
 			vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif self.driver and clicker ~= self.driver and not self.rider then
-			clicker:set_attach(self.object, clicker, {x=0, y=5, z=-5}, {x=0, y=0, z=-2})
+			clicker:set_attach(self.object, "", {x=0, y=5, z=-5}, {x=0, y=0, z=-2})
 			self.rider = true
 		elseif self.driver and clicker ~= self.driver and self.rider then
 			clicker:set_detach()
@@ -651,9 +651,9 @@ minetest.register_entity("vehicles:ute2", {
 		if self.driver and clicker == self.driver then
 			vehicles.object_detach(self, clicker, {x=1, y=0, z=1})
 		elseif self.driver and clicker ~= self.driver and not self.rider then
-			clicker:set_attach(self.object, clicker, {x=0, y=5, z=-5}, {x=0, y=0, z=0})
+			clicker:set_attach(self.object, "", {x=0, y=5, z=-5}, {x=0, y=0, z=0})
 			self.rider = true
-		elseif self.driver and clicker ~=self.driver and self.rider then
+		elseif self.driver and clicker ~= self.driver and self.rider then
 			clicker:set_detach()
 			self.rider = false
 		elseif not self.driver then
@@ -1734,6 +1734,7 @@ minetest.register_entity("vehicles:wing_glider", {
 	on_step = function(self, dtime)
 		if self.driver then
 			local dir = self.driver:get_look_dir()
+			if not dir then return false end
 			local vec = {x=dir.x*16,y=dir.y*16+1,z=dir.z*16}
 			local yaw = self.driver:get_look_horizontal()
 			self.object:set_yaw(yaw+math.pi)
